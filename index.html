@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Spelling Bee — Misael Pastrana Borrero School</title>
+    <link
+      rel="icon"
+      href="assets/img/bee.png"
+      type="image/png"
+    />
+    <script src="assets/sweetalert2.all.min.js"></script>
+    <link
+      rel="preconnect"
+      href="https://fonts.googleapis.com"
+    />
+    <link
+      rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+    :root {
+      --bg: #f5f1e8;
+      --surface: #fffdf8;
+      --surface-soft: #fff8dc;
+      --primary: #f6c515;
+      --primary-strong: #dca900;
+      --accent: #b87908;
+      --text-dark: #202124;
+      --text-medium: #55565a;
+      --text-light: #77787c;
+      --border: #eadfbd;
+      --shadow: 0 10px 30px rgba(62, 48, 12, 0.10);
+      --shadow-hover: 0 14px 34px rgba(62, 48, 12, 0.16);
+      --radius: 16px;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      padding-top: 108px;
+      padding-bottom: 92px;
+      font-family: "Inter", "Segoe UI", Tahoma, sans-serif;
+      background:
+        radial-gradient(circle at 10% 15%, rgba(246, 197, 21, 0.13), transparent 26%),
+        radial-gradient(circle at 90% 70%, rgba(184, 121, 8, 0.08), transparent 25%),
+        var(--bg);
+      color: var(--text-dark);
+      line-height: 1.6;
+    }
+
+    h1, h2, h3 {
+      font-family: "Playfair Display", Georgia, serif;
+      color: var(--text-dark);
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    ul, ol {
+      list-style: none;
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+      font: inherit;
+    }
+
+    /* HEADER */
+    header {
+      position: fixed;
+      inset: 0 0 auto;
+      z-index: 1000;
+      min-height: 86px;
+      padding: 0.8rem clamp(1rem, 4vw, 3rem);
+      display: grid;
+      grid-template-columns: 72px 1fr 72px;
+      align-items: center;
+      gap: 1rem;
+      background: rgba(255, 253, 248, 0.92);
+      border-bottom: 1px solid rgba(218, 169, 0, 0.22);
+      box-shadow: 0 6px 24px rgba(45, 39, 20, 0.08);
+      backdrop-filter: blur(14px);
+    }
+
+    header .logo,
+    header .logo-school {
+      width: 64px;
+      height: 64px;
+      object-fit: contain;
+      justify-self: center;
+      flex-shrink: 0;
+    }
+
+    header .logo {
+      filter: drop-shadow(0 4px 8px rgba(184, 121, 8, 0.16));
+      animation: bee-float 3.6s ease-in-out infinite;
+    }
+
+    @keyframes bee-float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-3px) rotate(1deg); }
+    }
+
+    header .logo-school {
+      opacity: 0.92;
+    }
+
+    header h1 {
+      text-align: center;
+      margin: 0;
+      font-size: clamp(1.35rem, 3vw, 2.35rem);
+      line-height: 1.15;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+    }
+
+    header h1 .year {
+      color: var(--accent);
+    }
+
+    /* CATEGORY SELECTOR */
+    .category-buttons {
+      width: min(92%, 720px);
+      margin: 1.5rem auto 1.25rem;
+      padding: 0.45rem;
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      background: rgba(255, 253, 248, 0.8);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .category-buttons button {
+      flex: 1;
+      min-width: 0;
+      padding: 0.85rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      background: transparent;
+      color: var(--text-medium);
+      border: 1px solid transparent;
+      border-radius: 13px;
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+      transition:
+        transform 0.25s cubic-bezier(.2,.8,.2,1),
+        background 0.25s ease,
+        color 0.25s ease,
+        box-shadow 0.25s ease;
+    }
+
+    .category-buttons button::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        110deg,
+        transparent 20%,
+        rgba(255,255,255,0.62) 48%,
+        transparent 76%
+      );
+      transform: translateX(-140%);
+      transition: transform 0.55s ease;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .category-buttons button:hover::before {
+      transform: translateX(140%);
+    }
+
+    .category-buttons button:hover {
+      color: var(--text-dark);
+      background: var(--surface-soft);
+      transform: translateY(-1px);
+    }
+
+    .category-buttons button.active {
+      color: #29230f;
+      background: linear-gradient(135deg, #ffe36b, var(--primary));
+      border-color: rgba(184, 121, 8, 0.28);
+      box-shadow:
+        0 8px 20px rgba(246, 197, 21, 0.30),
+        inset 0 1px 0 rgba(255,255,255,0.55);
+      animation: active-category 0.38s cubic-bezier(.2,.8,.2,1);
+    }
+
+    .category-buttons button.active::after {
+      content: "";
+      position: absolute;
+      left: 14%;
+      right: 14%;
+      bottom: 5px;
+      height: 3px;
+      border-radius: 99px;
+      background: rgba(255,255,255,0.82);
+      transform: scaleX(0);
+      transform-origin: center;
+      animation: active-line 0.42s 0.08s ease-out forwards;
+    }
+
+    @keyframes active-category {
+      0% { transform: scale(0.97); opacity: 0.72; }
+      65% { transform: scale(1.025); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes active-line {
+      to { transform: scaleX(1); }
+    }
+
+    /* CATEGORY TITLE */
+    #category-title {
+      min-height: 34px;
+      margin: 0 auto 0.35rem;
+      text-align: center;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      animation: title-float 2.8s ease-in-out infinite;
+    }
+
+    @keyframes title-float {
+      0%, 100% { transform: translateY(0); opacity: 0.86; }
+      50% { transform: translateY(-2px); opacity: 1; }
+    }
+
+    /* SEARCH */
+    .search-container {
+      position: relative;
+      width: min(92%, 520px);
+      margin: 0 auto 1.5rem;
+    }
+
+    .search-container input {
+      width: 100%;
+      height: 52px;
+      padding: 0 112px 0 1.15rem;
+      font-size: 1rem;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      text-align: left;
+      background: rgba(255, 253, 248, 0.95);
+      color: var(--text-dark);
+      box-shadow: 0 5px 18px rgba(62, 48, 12, 0.06);
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+
+    .search-container input::placeholder {
+      color: #999;
+    }
+
+    .search-container input:focus {
+      outline: none;
+      background: #fff;
+      border-color: var(--primary-strong);
+      box-shadow: 0 0 0 4px rgba(246, 197, 21, 0.16), var(--shadow);
+    }
+
+    .search-container button {
+      position: absolute;
+      right: 6px;
+      top: 6px;
+      bottom: 6px;
+      padding: 0 1.15rem;
+      font-size: 0.9rem;
+      font-weight: 700;
+      background: var(--primary);
+      color: #2d270f;
+      border-radius: 10px;
+      transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .search-container button:hover {
+      background: #ffd83d;
+      transform: translateY(-1px);
+      box-shadow: 0 5px 14px rgba(246, 197, 21, 0.28);
+    }
+
+    /* WORD GRID */
+    .grid {
+      width: min(94%, 1050px);
+      margin: 0 auto;
+      display: grid;
+      gap: 8px;
+      padding: 0.35rem 0 2rem;
+      animation: grid-enter 0.45s cubic-bezier(.2,.8,.2,1);
+    }
+
+    @keyframes grid-enter {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .gridA,
+    .gridB {
+      grid-template-columns: repeat(10, minmax(0, 1fr));
+    }
+
+    .grid button {
+      min-height: 52px;
+      padding: 0.7rem 0.35rem;
+      font-size: 0.9rem;
+      background: rgba(255, 253, 248, 0.92);
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      color: var(--text-dark);
+      font-weight: 700;
+      box-shadow: 0 3px 10px rgba(62, 48, 12, 0.045);
+      transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .grid button::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.72) 50%, transparent 70%);
+      transform: translateX(-130%);
+      transition: transform 0.45s ease;
+      pointer-events: none;
+    }
+
+    .grid button:hover {
+      background: #fff9df;
+      border-color: var(--primary);
+      transform: translateY(-4px) scale(1.015);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .grid button:focus-visible {
+      animation: focus-pop 0.35s ease;
+    }
+
+    @keyframes focus-pop {
+      0% { transform: scale(0.98); }
+      60% { transform: scale(1.025); }
+      100% { transform: scale(1); }
+    }
+
+    .grid button:hover::before {
+      transform: translateX(130%);
+    }
+
+    .grid button:active {
+      transform: translateY(-1px) scale(0.98);
+    }
+
+    .grid button:focus-visible {
+      outline: 3px solid rgba(246, 197, 21, 0.45);
+      outline-offset: 2px;
+    }
+
+    .grid button.played {
+      background: linear-gradient(135deg, #fff8d8, #ffe77a);
+      border-color: var(--primary-strong);
+      animation: pulse-played 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-played {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(246, 197, 21, 0.32); }
+      50% { box-shadow: 0 0 0 9px rgba(246, 197, 21, 0); }
+    }
+
+    /* MODAL */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      background: rgba(29, 25, 14, 0.58);
+      backdrop-filter: blur(8px);
+    }
+
+    .modal::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(246, 197, 21, 0.08), transparent 55%);
+      pointer-events: none;
+    }
+
+    .modal-content {
+      animation: modal-enter 0.32s cubic-bezier(.2,.8,.2,1);
+    }
+
+    @keyframes modal-enter {
+      from { opacity: 0; transform: translateY(14px) scale(0.97); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+
+    .modal-content {
+      width: min(92%, 620px);
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: clamp(1.5rem, 4vw, 2.5rem);
+      position: relative;
+      text-align: center;
+      background: linear-gradient(145deg, #fffdf8, #fff8df);
+      border: 1px solid rgba(218, 169, 0, 0.25);
+      border-radius: 24px;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
+      transform: scale(0.92) translateY(20px);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .modal.active .modal-content {
+      transform: scale(1) translateY(0);
+    }
+
+    .modal-content .word-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 48px;
+      min-height: 30px;
+      margin-bottom: 0.9rem;
+      padding: 0.3rem 0.7rem;
+      color: var(--accent);
+      background: rgba(246, 197, 21, 0.14);
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .modal-content h2 {
+      margin-bottom: 1rem;
+      font-size: clamp(2.4rem, 8vw, 4.4rem);
+      line-height: 1;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--text-dark), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .modal-content p {
+      min-height: 1.4rem;
+      margin-bottom: 1.6rem;
+      font-size: 1rem;
+      color: var(--text-medium);
+    }
+
+    .modal-content .pronunciation-hint {
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .modal-content button {
+      min-width: 125px;
+      padding: 0.8rem 1.35rem;
+      margin: 0.35rem;
+      font-size: 0.95rem;
+      font-weight: 700;
+      border-radius: 11px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    .play-btn {
+      background: var(--primary);
+      color: #29230f;
+    }
+
+    .play-btn:hover {
+      background: #ffd83d;
+      transform: translateY(-2px);
+      box-shadow: 0 7px 18px rgba(246, 197, 21, 0.3);
+    }
+
+    .close-btn {
+      background: #282828;
+      color: #fff;
+    }
+
+    .close-btn:hover {
+      background: #111;
+      transform: translateY(-2px);
+      box-shadow: 0 7px 18px rgba(0, 0, 0, 0.18);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeOut {
+      from { opacity: 1; transform: translateY(0); }
+      to { opacity: 0; transform: translateY(10px); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0s !important;
+        transition-duration: 0s !important;
+      }
+    }
+
+    /* FOOTER */
+    footer {
+      position: fixed;
+      inset: auto 0 0;
+      z-index: 999;
+      padding: 0.9rem 1rem;
+      text-align: center;
+      color: #4a401f;
+      background: rgba(255, 253, 248, 0.94);
+      border-top: 1px solid rgba(218, 169, 0, 0.22);
+      box-shadow: 0 -6px 24px rgba(45, 39, 20, 0.07);
+      backdrop-filter: blur(12px);
+    }
+
+    footer p {
+      font-size: 0.8rem;
+    }
+
+    footer .year {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    @media (max-width: 900px) {
+      body {
+        padding-top: 96px;
+      }
+
+      header {
+        grid-template-columns: 58px 1fr 58px;
+        min-height: 76px;
+      }
+
+      header .logo,
+      header .logo-school {
+        width: 52px;
+        height: 52px;
+      }
+
+      .gridA,
+      .gridB {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding-top: 142px;
+        padding-bottom: 78px;
+      }
+
+      header {
+        min-height: 126px;
+        padding: 0.7rem 1rem;
+        grid-template-columns: 48px 1fr 48px;
+        gap: 0.45rem;
+      }
+
+      header .logo,
+      header .logo-school {
+        width: 44px;
+        height: 44px;
+      }
+
+      header h1 {
+        font-size: 1.1rem;
+      }
+
+      .category-buttons {
+        width: min(94%, 420px);
+        margin-top: 1rem;
+      }
+
+      .category-buttons button {
+        padding: 0.7rem 0.5rem;
+        font-size: 0.78rem;
+      }
+
+      .search-container {
+        width: min(94%, 420px);
+      }
+
+      .search-container input {
+        height: 48px;
+        padding-right: 96px;
+      }
+
+      .search-container button {
+        padding: 0 0.8rem;
+        font-size: 0.78rem;
+      }
+
+      .grid {
+        width: min(94%, 420px);
+        gap: 6px;
+      }
+
+      .gridA,
+      .gridB {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .grid button {
+        min-height: 48px;
+        padding: 0.55rem 0.2rem;
+        font-size: 0.78rem;
+        border-radius: 9px;
+      }
+
+      .modal-content {
+        width: 94%;
+        padding: 1.4rem 1rem;
+        border-radius: 20px;
+      }
+
+      .modal-content h2 {
+        font-size: 2.45rem;
+      }
+
+      .modal-content button {
+        min-width: 110px;
+        padding: 0.72rem 1rem;
+        font-size: 0.85rem;
+      }
+
+      footer {
+        padding: 0.7rem;
+        font-size: 0.72rem;
+      }
+    }
+
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <img src="assets/img/bee.png" alt="Abeja" class="logo" />
+      <h1>
+        &bull; Spelling Bee <span class="year"></span> &bull; <br />
+        Misael Pastrana Borrero School
+      </h1>
+      <img
+        src="assets/img/Misael Pastrana PNG.png"
+        alt="Logo Colegio"
+        class="logo-school"
+      />
+    </header>
+
+    <div class="category-buttons">
+      <button onclick="loadCategory('A')" data-category="A">Category A</button>
+      <button onclick="loadCategory('B')" data-category="B">Category B</button>
+    </div>
+
+    <div id="category-title"></div>
+
+    <div id="search-container" class="search-container">
+      <input
+        type="number"
+        id="search-number"
+        placeholder="Number"
+        min="1"
+        max="100"
+      />
+      <button onclick="searchWord()">Search</button>
+    </div>
+
+    <div id="grid-container" class="grid gridA"></div>
+
+    <div id="wordModal" class="modal" role="dialog" aria-modal="true">
+      <div class="modal-content" role="document">
+        <div id="modalNumber" class="word-number"></div>
+        <h2 id="modalWord"></h2>
+        <p id="modalPronunciation" class="pronunciation-hint"></p>
+        <button class="play-btn" onclick="playAudio()">🔊 Listen</button>
+        <button class="close-btn" onclick="closeModal()">Close</button>
+      </div>
+    </div>
+
+    <footer>
+      &copy; Misael Pastrana Borrero School<br />
+      <span class="year"></span> | Time: <span id="time"></span>
+    </footer>
+
+    <script>
+      // Listas de palabras para las categorías A y B
+      // Estas listas deben coincidir con las que se usan en descar_sonidos.py
+      // Si desean cambiar las palabras, deben hacerlo aquí y en descar_sonidos.py
+      const categoryA = [
+        "KITCHEN",
+        "KITE",
+        "KOALA",
+        "LADYBUG",
+        "LANDMARK",
+        "LANGUAGE",
+        "LEADERSHIP",
+        "LEAFLET",
+        "LIFEGUARD",
+        "LIFESTYLE",
+        "RADAR",
+        "RAINBOW",
+        "REPAIRMAN",
+        "RESTROOM",
+        "RIVERSIDE",
+        "ROAD",
+        "ROOMMATE",
+        "RUNWAY",
+        "RUBBER",
+        "SAILBOAT",
+        "SALESPERSON",
+        "SANDCASTLE",
+        "SCISSORS",
+        "SEESAW",
+        "SEMITROPICAL",
+        "SHOEBOX",
+        "SKATEBOARD",
+        "SKYDIVER",
+        "SNAPSHOT",
+        "SOUND",
+        "SURFACE",
+        "TABLECLOTH",
+        "TELEVISION",
+        "THOUSAND",
+        "THREAT",
+        "THROAT",
+        "TORNADO",
+        "TRANSPORTATION",
+        "TURTLE",
+        "UMBRELLA",
+        "UNDERAGE",
+        "UNDERSTAND",
+        "UNKNOWN",
+        "UPLOAD",
+        "UPSET",
+        "UPTOWN",
+        "VALUE",
+        "VIEW",
+        "VOICE",
+        "VEGETABLE",
+        "VILLAGE",
+        "WARM",
+        "WAVE",
+        "WEIGH",
+        "WEIRD",
+        "WELCOME",
+        "WINDSURF",
+        "WONDER",
+        "WORLD",
+        "ZOOKEEPER",
+      ];
+
+      const categoryB = [
+        "ADULTHOOD",
+        "AFTERNOON",
+        "ANNOUNCEMENT",
+        "ANXIOUS",
+        "ASSIGNMENT",
+        "AUDIOVISUAL",
+        "AVALANCHE",
+        "BACKACHE",
+        "BASEMENT",
+        "BESTSELLER",
+        "BIRTHPLACE",
+        "BRAINSTORM",
+        "BRILLIANT",
+        "BROCCOLI",
+        "BUSINESSMAN",
+        "CHECKPOINT",
+        "CHEERLEADER",
+        "CHICKENPOX",
+        "CLASSMATE",
+        "COPYRIGHT",
+        "COUNTDOWN",
+        "CROSSWORD",
+        "CYBERSPACE",
+        "DEADLINE",
+        "DESTROY",
+        "DIGEST",
+        "DISAPPEAR",
+        "DISCOVERY",
+        "DISHWATER",
+        "DOUGHNUT",
+        "DOWNLOAD",
+        "DRAGONFLY",
+        "DRUGSTORE",
+        "EARPHONE",
+        "EARRING",
+        "EARTHQUAKE",
+        "EARWAX",
+        "EASYGOING",
+        "EGGSHELL",
+        "ELSEWHERE",
+        "EVERYBODY",
+        "EYEBALL",
+        "EXCITING",
+        "EQUIPMENT",
+        "FAITH",
+        "FASCINATE",
+        "FEEDBACK",
+        "FERRYBOAT",
+        "FINGERPRINT",
+        "FIREMAN",
+        "FLAGPOLE",
+        "FOOTPRINT",
+        "FOREHEAD",
+        "FRACTION",
+        "FRESHMAN",
+        "FRIENDSHIP",
+        "GOALKEEPER",
+        "GODPARENTS",
+        "GOODWILL",
+        "GRANDFATHER",
+        "GRAPEFRUIT",
+        "GRASSHOPPER",
+        "GREENHOUSE",
+        "GUNFIRE",
+        "HALLWAY",
+        "HANDSHAKE",
+        "HEADACHE",
+        "HEALTHCARE",
+        "HIGHWAY",
+        "HOMELESS",
+        "HONEYBEE",
+        "HOTDOG",
+        "HOUSEWORK",
+        "HYPOACTIVE",
+        "ICEBOX",
+        "INACTIVE",
+        "INDOOR",
+        "INORGANIC",
+        "INSECURITY",
+        "INSIDE",
+        "IMPATIENT",
+        "INSECT",
+        "INFORMAL",
+        "INFECTION",
+        "INTERVIEW",
+        "IRREGULAR",
+        "JACKET",
+        "JANUARY",
+        "JEALOUS",
+        "JIGSAW",
+        "JOURNAL",
+        "JOYSTICK",
+        "JOY",
+        "JUDGE",
+        "JUPITER",
+        "KANGAROO",
+        "KEYBOARD",
+        "KICKBALL",
+        "KINDNESS",
+        "KINGDOM",
+      ];
+
+      let currentCategory = [];
+      let selectedCategory = "";
+      let currentAudio = null;
+
+      function loadCategory(category) {
+        selectedCategory = category;
+        currentCategory = category === "A" ? categoryA : categoryB;
+
+        // Actualizar botones activos
+        document.querySelectorAll('.category-buttons button').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.category === category);
+        });
+        // Forzamos el estado visual
+        const buttons = document.querySelectorAll('.category-buttons button');
+        if (buttons[0].dataset.category === category) buttons[0].classList.add('active');
+        else buttons[1].classList.add('active');
+
+        Swal.fire({
+          icon: "info",
+          title: `You have selected Category ${category}`,
+          confirmButtonColor: "#ffcc00",
+          color: "#333",
+          background: "#fffbe6",
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+        });
+
+        document.getElementById(
+          "category-title"
+        ).textContent = `Category ${category}`;
+        document.getElementById("search-container").style.display = "block";
+
+        const gridContainer = document.getElementById("grid-container");
+        gridContainer.innerHTML = "";
+
+        const totalButtons = category === "B" ? 100 : 60;
+        const gridClass = category === "B" ? "gridB" : "gridA";
+        gridContainer.className = `grid ${gridClass}`;
+
+        for (let i = 1; i <= totalButtons; i++) {
+          const btn = document.createElement("button");
+          btn.textContent = i;
+          btn.dataset.index = i - 1;
+          btn.onclick = () => showWord(i - 1);
+          btn.tabIndex = 0;
+          gridContainer.appendChild(btn);
+        }
+      }
+
+      function showWord(index) {
+        if (!currentCategory[index]) {
+          Swal.fire({
+            icon: "warning",
+            text: "There is no word for this number.",
+            confirmButtonColor: "#ffcc00",
+            background: "#fffbe6",
+            allowEscapeKey: false,
+            allowOutsideClick: false,
+          });
+          return;
+        }
+
+        document.getElementById("modalNumber").textContent = `#${index + 1}`;
+        document.getElementById("modalWord").textContent =
+          currentCategory[index];
+
+        // Pronunciation hint
+        const pronunciationMap = {
+          A: ["KITCHEN: /ˈkɪtʃən/", "KOALA: /koʊˈɑːlə/", "LADYBUG: /ˈlædibʌɡ/", "VOICE: /vɔɪs/"],
+          B: ["BUSINESSMAN: /ˈbɪznəsmæn/", "KEYBOARD: /ˈkiːbɔːrd/", "VILLAIN: /ˈvɪləiən/"],
+        };
+        const hints = pronunciationMap[selectedCategory] || [];
+        const hint = hints.find(h => h.toUpperCase().startsWith(currentCategory[index].charAt(0))) || "";
+        document.getElementById("modalPronunciation").textContent = hint || "";
+
+        currentAudio = new Audio(
+          `assets/audios/${selectedCategory}_${index + 1}.mp3`
+        );
+
+        const modal = document.getElementById("wordModal");
+        const modalContent = modal.querySelector(".modal-content");
+
+        // Restablece y activa animación de entrada
+        modalContent.style.animation = "none";
+        void modalContent.offsetWidth; // trigger reflow
+        modalContent.style.animation = "fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards";
+
+        modal.style.display = "flex";
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function playAudio() {
+        if (currentAudio) {
+          currentAudio.play().catch(() => {
+            Swal.fire({
+              icon: "error",
+              text: "No audio was found for this word.",
+              confirmButtonColor: "#ffcc00",
+              background: "#fffbe6",
+              allowEscapeKey: false,
+              allowOutsideClick: false,
+            });
+          });
+        }
+      }
+
+      function closeModal() {
+        const modal = document.getElementById("wordModal");
+        const modalContent = modal.querySelector(".modal-content");
+
+        // Animación de salida
+        modalContent.style.animation = "fadeOut 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards";
+
+        setTimeout(() => {
+          modal.style.display = "none";
+          modalContent.style.animation = "fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards"; // restablece para próxima vez
+          modal.setAttribute('aria-hidden', 'true');
+          document.body.style.overflow = '';
+          if (currentAudio) {
+            currentAudio.pause();
+            currentAudio.currentTime = 0;
+          }
+        }, 300);
+      }
+
+        // Cerrar modal al hacer clic fuera
+        const modal = document.getElementById("wordModal");
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) {
+            closeModal();
+          }
+        });
+
+      function searchWord() {
+        const num = parseInt(document.getElementById("search-number").value);
+        const maxNum = selectedCategory === "B" ? 100 : 60;
+        if (isNaN(num) || num < 1 || num > maxNum) {
+          Swal.fire({
+            icon: "warning",
+            text: `Enter a number between 1 and ${maxNum}.`,
+            confirmButtonColor: "#ffcc00",
+            background: "#fffbe6",
+            allowEscapeKey: false,
+            allowOutsideClick: false,
+          });
+          return;
+        }
+        showWord(num - 1);
+      }
+
+      // Cerrar con tecla Escape
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          closeModal();
+        }
+      });
+
+      // Año actual
+      const years = document.getElementsByClassName("year");
+      for (let i = 0; i < years.length; i++) {
+        years[i].textContent = new Date().getFullYear();
+      }
+
+      // Reloj en tiempo real
+      function updateTime() {
+        const options = {
+          timeZone: "America/Bogota",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        };
+        const formatter = new Intl.DateTimeFormat("es-CO", options);
+        document.getElementById("time").textContent = formatter.format(
+          new Date()
+        );
+      }
+
+      setInterval(updateTime, 1000);
+      updateTime();
+    </script>
+  </body>
+</html>

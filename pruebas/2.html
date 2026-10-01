@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pronunciación</title>
+</head>
+<body>
+  <label for="palabra">Palabra:</label>
+  <input type="text" id="palabra" />
+
+  <br><br>
+
+  <label for="voz">Voz:</label>
+  <select id="voz"></select>
+
+  <br><br>
+
+  <label for="rate">Velocidad:</label>
+  <input type="range" id="rate" min="0.5" max="2" step="0.1" value="1.2" />
+  <span id="rateValue">1.2</span>
+
+  <br><br>
+
+  <label for="pitch">Tono:</label>
+  <input type="range" id="pitch" min="0" max="2" step="0.1" value="1" />
+  <span id="pitchValue">1</span>
+
+  <br><br>
+
+  <button onclick="pronounceWord()">Pronunciar</button>
+
+  <script>
+    let voices = [];
+    const preferredVoiceOnline = "Microsoft Guy Online (Natural) - English (United States)";
+    const preferredVoiceOffline = "Microsoft David Desktop - English (United States)"; // fallback
+
+    // Detectar si es Edge
+    const isEdge = navigator.userAgent.includes("Edg");
+
+    function populateVoiceList() {
+      voices = speechSynthesis.getVoices();
+      const voiceSelect = document.getElementById("voz");
+      voiceSelect.innerHTML = "";
+
+      if (!isEdge) {
+        alert("Esta aplicación está optimizada para Microsoft Edge. Algunas voces pueden no estar disponibles en otros navegadores.");
+      }
+
+      let defaultIndex = 0;
+
+      voices.forEach((voice, i) => {
+        if (voice.lang.startsWith("en")) {
+          const option = document.createElement("option");
+          option.value = i;
+          option.textContent = `${voice.name} (${voice.lang})`;
+
+          // Caso 1: Online + Edge → usar voz Guy Online
+          if (navigator.onLine && isEdge && voice.name === preferredVoiceOnline) {
+            defaultIndex = i;
+          }
+
+          // Caso 2: Offline → usar voz local (ej. David Desktop)
+          if (!navigator.onLine && voice.name === preferredVoiceOffline) {
+            defaultIndex = i;
+          }
+
+          // Caso 3: Fallback → primera voz en-US si no se cumple lo anterior
+          if (voice.lang === "en-US" && defaultIndex === 0) {
+            defaultIndex = i;
+          }
+
+          voiceSelect.appendChild(option);
+        }
+      });
+
+      voiceSelect.selectedIndex = defaultIndex;
+
+      console.log("Voces disponibles:");
+      voices.forEach((v, i) => {
+        console.log(`${i}: ${v.name} (${v.lang})`);
+      });
+
+      console.log("Index por defecto:", defaultIndex);
+      console.log("Voz seleccionada por defecto:", voices[defaultIndex]?.name || "Ninguna");
+      document.getElementById("voz").value = defaultIndex;
+    }
+
+    // Llenar lista de voces
+    if (speechSynthesis.onvoiceschanged !== undefined) {
+      speechSynthesis.onvoiceschanged = populateVoiceList;
+    }
+
+    // Reaccionar a cambios de conexión
+    window.addEventListener("offline", populateVoiceList);
+    window.addEventListener("online", populateVoiceList);
+
+    function pronounceWord() {
+      const palabra = document.getElementById("palabra").value.trim();
+      if (!palabra) {
+        alert("Por favor, escribe una palabra.");
+        return;
+      }
+
+    const selectedVoiceIndex = parseInt(document.getElementById("voz").value, 10);
+    let selectedVoice = voices[selectedVoiceIndex];
+
+    if (!selectedVoice) {
+      // fallback: usar la primera voz local disponible
+      selectedVoice = voices.find(v => v.localService) || voices[0];
+    }
+
+    if (!selectedVoice) {
+      alert("No hay voces disponibles en este dispositivo.");
+      return;
+    }
+
+      const rate = parseFloat(document.getElementById("rate").value);
+      const pitch = parseFloat(document.getElementById("pitch").value);
+
+      const utterance = new SpeechSynthesisUtterance(palabra);
+      utterance.voice = selectedVoice;
+      utterance.lang = selectedVoice.lang;
+      utterance.rate = rate;
+      utterance.pitch = pitch;
+
+      speechSynthesis.speak(utterance);
+    }
+
+    // Mostrar valores de velocidad y tono en tiempo real
+    document.getElementById("rate").addEventListener("input", function () {
+      document.getElementById("rateValue").textContent = this.value;
+    });
+    document.getElementById("pitch").addEventListener("input", function () {
+      document.getElementById("pitchValue").textContent = this.value;
+    });
+  </script>
+</body>
+</html>
