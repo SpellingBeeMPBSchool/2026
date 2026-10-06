@@ -958,24 +958,8 @@
         document.getElementById("modalWord").textContent =
           currentCategory[index];
 
-        // Pronunciation hint (only show if exact match exists)
-        const pronunciationMap = {
-          A: {
-            "KITCHEN": "/ˈkɪtʃən/",
-            "KOALA": "/koʊˈɑːlə/",
-            "LADYBUG": "/ˈlædibʌɡ/",
-            "VOICE": "/vɔɪs/"
-          },
-          B: {
-            "BUSINESSMAN": "/ˈbɪznəsmæn/",
-            "KEYBOARD": "/ˈkiːbɔːrd/",
-            "VILLAIN": "/ˈvɪləiən/"
-          }
-        };
-        const hints = pronunciationMap[selectedCategory] || {};
-        const word = currentCategory[index];
-        const hint = hints[word] ? `${word}: ${hints[word]}` : "";
-        document.getElementById("modalPronunciation").textContent = hint;
+        // Clear pronunciation hint - not needed
+        document.getElementById("modalPronunciation").textContent = "";
 
         currentAudio = new Audio(
           `assets/audios/${selectedCategory}_${index + 1}.mp3`
