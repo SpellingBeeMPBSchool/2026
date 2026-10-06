@@ -1,719 +1,1593 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#071426" />
     <title>Spelling Bee — Misael Pastrana Borrero School</title>
+
+    <link rel="icon" href="assets/img/bee.png" type="image/png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      rel="icon"
-      href="assets/img/bee.png"
-      type="image/png"
-    />
-    <script src="assets/sweetalert2.all.min.js"></script>
-    <link
-      rel="preconnect"
-      href="https://fonts.googleapis.com"
-    />
-    <link
-      rel="preconnect"
-      href="https://fonts.gstatic.com"
-      crossorigin
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
+
+    <script src="assets/sweetalert2.all.min.js"></script>
+
     <style>
-    :root {
-      --bg: #f5f1e8;
-      --surface: #fffdf8;
-      --surface-soft: #fff8dc;
-      --primary: #f6c515;
-      --primary-strong: #dca900;
-      --accent: #b87908;
-      --text-dark: #202124;
-      --text-medium: #55565a;
-      --text-light: #77787c;
-      --border: #eadfbd;
-      --shadow: 0 10px 30px rgba(62, 48, 12, 0.10);
-      --shadow-hover: 0 14px 34px rgba(62, 48, 12, 0.16);
-      --radius: 16px;
-    }
+      :root {
+        --bg: #f5f1e8;
+        --surface: #fffdf8;
+        --surface-soft: #fff8dc;
+        --surface-raised: rgba(255, 253, 248, 0.94);
+        --primary: #f6c515;
+        --primary-strong: #dca900;
+        --accent: #a96e05;
+        --text-dark: #202124;
+        --text-medium: #5d5e62;
+        --text-light: #85868a;
+        --border: #eadfbd;
+        --shadow: 0 12px 34px rgba(62, 48, 12, 0.1);
+        --shadow-hover: 0 16px 38px rgba(62, 48, 12, 0.15);
+        --radius: 16px;
+        --practice-correct: #22c55e;
+        --practice-incorrect: #ef4444;
+        --practice-revealed: #3b82f6;
+        --practice-pending: #303047;
 
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      min-height: 100vh;
-      padding-top: 108px;
-      padding-bottom: 92px;
-      font-family: "Inter", "Segoe UI", Tahoma, sans-serif;
-      background:
-        radial-gradient(circle at 10% 15%, rgba(246, 197, 21, 0.13), transparent 26%),
-        radial-gradient(circle at 90% 70%, rgba(184, 121, 8, 0.08), transparent 25%),
-        var(--bg);
-      color: var(--text-dark);
-      line-height: 1.6;
-    }
-
-    h1, h2, h3 {
-      font-family: "Playfair Display", Georgia, serif;
-      color: var(--text-dark);
-    }
-
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
-
-    img {
-      max-width: 100%;
-      height: auto;
-    }
-
-    ul, ol {
-      list-style: none;
-    }
-
-    button {
-      cursor: pointer;
-      border: none;
-      font-family: inherit;
-      font: inherit;
-    }
-
-    /* HEADER */
-    header {
-      position: fixed;
-      inset: 0 0 auto;
-      z-index: 1000;
-      min-height: 86px;
-      padding: 0.8rem clamp(1rem, 4vw, 3rem);
-      display: grid;
-      grid-template-columns: 72px 1fr 72px;
-      align-items: center;
-      gap: 1rem;
-      background: rgba(255, 253, 248, 0.92);
-      border-bottom: 1px solid rgba(218, 169, 0, 0.22);
-      box-shadow: 0 6px 24px rgba(45, 39, 20, 0.08);
-      backdrop-filter: blur(14px);
-    }
-
-    header .logo,
-    header .logo-school {
-      width: 64px;
-      height: 64px;
-      object-fit: contain;
-      justify-self: center;
-      flex-shrink: 0;
-    }
-
-    header .logo {
-      filter: drop-shadow(0 4px 8px rgba(184, 121, 8, 0.16));
-      animation: bee-float 3.6s ease-in-out infinite;
-    }
-
-    @keyframes bee-float {
-      0%, 100% { transform: translateY(0) rotate(0deg); }
-      50% { transform: translateY(-3px) rotate(1deg); }
-    }
-
-    header .logo-school {
-      opacity: 0.92;
-    }
-
-    header h1 {
-      text-align: center;
-      margin: 0;
-      font-size: clamp(1.35rem, 3vw, 2.35rem);
-      line-height: 1.15;
-      font-weight: 700;
-      letter-spacing: -0.025em;
-    }
-
-    header h1 .year {
-      color: var(--accent);
-    }
-
-    /* CATEGORY SELECTOR */
-    .category-buttons {
-      width: min(92%, 720px);
-      margin: 1.5rem auto 1.25rem;
-      padding: 0.45rem;
-      display: flex;
-      justify-content: center;
-      gap: 0.5rem;
-      background: rgba(255, 253, 248, 0.8);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      box-shadow: var(--shadow);
-    }
-
-    .category-buttons button {
-      flex: 1;
-      min-width: 0;
-      padding: 0.85rem 1.5rem;
-      font-size: 1rem;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      background: transparent;
-      color: var(--text-medium);
-      border: 1px solid transparent;
-      border-radius: 13px;
-      position: relative;
-      overflow: hidden;
-      isolation: isolate;
-      transition:
-        transform 0.25s cubic-bezier(.2,.8,.2,1),
-        background 0.25s ease,
-        color 0.25s ease,
-        box-shadow 0.25s ease;
-    }
-
-    .category-buttons button::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        110deg,
-        transparent 20%,
-        rgba(255,255,255,0.62) 48%,
-        transparent 76%
-      );
-      transform: translateX(-140%);
-      transition: transform 0.55s ease;
-      pointer-events: none;
-      z-index: -1;
-    }
-
-    .category-buttons button:hover::before {
-      transform: translateX(140%);
-    }
-
-    .category-buttons button:hover {
-      color: var(--text-dark);
-      background: var(--surface-soft);
-      transform: translateY(-1px);
-    }
-
-    .category-buttons button.active {
-      color: #29230f;
-      background: linear-gradient(135deg, #ffe36b, var(--primary));
-      border-color: rgba(184, 121, 8, 0.28);
-      box-shadow:
-        0 8px 20px rgba(246, 197, 21, 0.30),
-        inset 0 1px 0 rgba(255,255,255,0.55);
-      animation: active-category 0.38s cubic-bezier(.2,.8,.2,1);
-    }
-
-    .category-buttons button.active::after {
-      content: "";
-      position: absolute;
-      left: 14%;
-      right: 14%;
-      bottom: 5px;
-      height: 3px;
-      border-radius: 99px;
-      background: rgba(255,255,255,0.82);
-      transform: scaleX(0);
-      transform-origin: center;
-      animation: active-line 0.42s 0.08s ease-out forwards;
-    }
-
-    @keyframes active-category {
-      0% { transform: scale(0.97); opacity: 0.72; }
-      65% { transform: scale(1.025); }
-      100% { transform: scale(1); opacity: 1; }
-    }
-
-    @keyframes active-line {
-      to { transform: scaleX(1); }
-    }
-
-    /* CATEGORY TITLE */
-    #category-title {
-      min-height: 34px;
-      margin: 0 auto 0.35rem;
-      text-align: center;
-      font-size: 0.85rem;
-      font-weight: 700;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--accent);
-      animation: title-float 2.8s ease-in-out infinite;
-    }
-
-    @keyframes title-float {
-      0%, 100% { transform: translateY(0); opacity: 0.86; }
-      50% { transform: translateY(-2px); opacity: 1; }
-    }
-
-    /* SEARCH */
-    .search-container {
-      position: relative;
-      width: min(92%, 520px);
-      margin: 0 auto 1.5rem;
-    }
-
-    .search-container input {
-      width: 100%;
-      height: 52px;
-      padding: 0 112px 0 1.15rem;
-      font-size: 1rem;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      text-align: left;
-      background: rgba(255, 253, 248, 0.95);
-      color: var(--text-dark);
-      box-shadow: 0 5px 18px rgba(62, 48, 12, 0.06);
-      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
-    }
-
-    .search-container input::placeholder {
-      color: #999;
-    }
-
-    .search-container input:focus {
-      outline: none;
-      background: #fff;
-      border-color: var(--primary-strong);
-      box-shadow: 0 0 0 4px rgba(246, 197, 21, 0.16), var(--shadow);
-    }
-
-    .search-container button {
-      position: absolute;
-      right: 6px;
-      top: 6px;
-      bottom: 6px;
-      padding: 0 1.15rem;
-      font-size: 0.9rem;
-      font-weight: 700;
-      background: var(--primary);
-      color: #2d270f;
-      border-radius: 10px;
-      transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .search-container button:hover {
-      background: #ffd83d;
-      transform: translateY(-1px);
-      box-shadow: 0 5px 14px rgba(246, 197, 21, 0.28);
-    }
-
-    /* WORD GRID */
-    .grid {
-      width: min(94%, 1050px);
-      margin: 0 auto;
-      display: grid;
-      gap: 8px;
-      padding: 0.35rem 0 2rem;
-      animation: grid-enter 0.45s cubic-bezier(.2,.8,.2,1);
-    }
-
-    @keyframes grid-enter {
-      from {
-        opacity: 0;
-        transform: translateY(12px);
+        --galaxy-bg: #0a0a1a;
+        --galaxy-surface: #14142e;
+        --galaxy-surface-soft: #1e1e3a;
+        --galaxy-primary: #00d4ff;
+        --galaxy-primary-strong: #00b8d4;
+        --galaxy-accent: #7c3aed;
+        --galaxy-accent-2: #ec4899;
+        --galaxy-text-dark: #f0f0f5;
+        --galaxy-text-medium: #a8a8bd;
+        --galaxy-text-light: #767696;
+        --galaxy-border: #2b2b4d;
+        --galaxy-shadow: 0 14px 36px rgba(0, 0, 0, 0.38);
+        --galaxy-shadow-hover: 0 18px 42px rgba(0, 0, 0, 0.5);
       }
-      to {
-        opacity: 1;
-        transform: translateY(0);
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
       }
-    }
 
-    .gridA,
-    .gridB {
-      grid-template-columns: repeat(10, minmax(0, 1fr));
-    }
-
-    .grid button {
-      min-height: 52px;
-      padding: 0.7rem 0.35rem;
-      font-size: 0.9rem;
-      background: rgba(255, 253, 248, 0.92);
-      border: 1px solid var(--border);
-      border-radius: 11px;
-      color: var(--text-dark);
-      font-weight: 700;
-      box-shadow: 0 3px 10px rgba(62, 48, 12, 0.045);
-      transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .grid button::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.72) 50%, transparent 70%);
-      transform: translateX(-130%);
-      transition: transform 0.45s ease;
-      pointer-events: none;
-    }
-
-    .grid button:hover {
-      background: #fff9df;
-      border-color: var(--primary);
-      transform: translateY(-4px) scale(1.015);
-      box-shadow: var(--shadow-hover);
-    }
-
-    .grid button:focus-visible {
-      animation: focus-pop 0.35s ease;
-    }
-
-    @keyframes focus-pop {
-      0% { transform: scale(0.98); }
-      60% { transform: scale(1.025); }
-      100% { transform: scale(1); }
-    }
-
-    .grid button:hover::before {
-      transform: translateX(130%);
-    }
-
-    .grid button:active {
-      transform: translateY(-1px) scale(0.98);
-    }
-
-    .grid button:focus-visible {
-      outline: 3px solid rgba(246, 197, 21, 0.45);
-      outline-offset: 2px;
-    }
-
-    .grid button.played {
-      background: linear-gradient(135deg, #fff8d8, #ffe77a);
-      border-color: var(--primary-strong);
-      animation: pulse-played 2s ease-in-out infinite;
-    }
-
-    @keyframes pulse-played {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(246, 197, 21, 0.32); }
-      50% { box-shadow: 0 0 0 9px rgba(246, 197, 21, 0); }
-    }
-
-    /* MODAL */
-    .modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 2000;
-      align-items: center;
-      justify-content: center;
-      padding: 1rem;
-      background: rgba(29, 25, 14, 0.58);
-      backdrop-filter: blur(8px);
-    }
-
-    .modal::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at center, rgba(246, 197, 21, 0.08), transparent 55%);
-      pointer-events: none;
-    }
-
-    .modal-content {
-      animation: modal-enter 0.32s cubic-bezier(.2,.8,.2,1);
-    }
-
-    @keyframes modal-enter {
-      from { opacity: 0; transform: translateY(14px) scale(0.97); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-
-    .modal-content {
-      width: min(92%, 620px);
-      max-height: 90vh;
-      overflow-y: auto;
-      padding: clamp(1.5rem, 4vw, 2.5rem);
-      position: relative;
-      text-align: center;
-      background: linear-gradient(145deg, #fffdf8, #fff8df);
-      border: 1px solid rgba(218, 169, 0, 0.25);
-      border-radius: 24px;
-      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
-      transform: scale(0.92) translateY(20px);
-      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .modal.active .modal-content {
-      transform: scale(1) translateY(0);
-    }
-
-    .modal-content .word-number {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 48px;
-      min-height: 30px;
-      margin-bottom: 0.9rem;
-      padding: 0.3rem 0.7rem;
-      color: var(--accent);
-      background: rgba(246, 197, 21, 0.14);
-      border-radius: 999px;
-      font-size: 0.85rem;
-      font-weight: 700;
-    }
-
-    .modal-content h2 {
-      margin-bottom: 1rem;
-      font-size: clamp(2.4rem, 8vw, 4.4rem);
-      line-height: 1;
-      font-weight: 700;
-      background: linear-gradient(135deg, var(--text-dark), var(--accent));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .modal-content p {
-      min-height: 1.4rem;
-      margin-bottom: 1.6rem;
-      font-size: 1rem;
-      color: var(--text-medium);
-    }
-
-    .modal-content .pronunciation-hint {
-      padding-top: 1rem;
-      border-top: 1px solid var(--border);
-    }
-
-    .modal-content button {
-      min-width: 125px;
-      padding: 0.8rem 1.35rem;
-      margin: 0.35rem;
-      font-size: 0.95rem;
-      font-weight: 700;
-      border-radius: 11px;
-      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-    }
-
-    .play-btn {
-      background: var(--primary);
-      color: #29230f;
-    }
-
-    .play-btn:hover {
-      background: #ffd83d;
-      transform: translateY(-2px);
-      box-shadow: 0 7px 18px rgba(246, 197, 21, 0.3);
-    }
-
-    .close-btn {
-      background: #282828;
-      color: #fff;
-    }
-
-    .close-btn:hover {
-      background: #111;
-      transform: translateY(-2px);
-      box-shadow: 0 7px 18px rgba(0, 0, 0, 0.18);
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes fadeOut {
-      from { opacity: 1; transform: translateY(0); }
-      to { opacity: 0; transform: translateY(10px); }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: 0s !important;
-        transition-duration: 0s !important;
+      html {
+        scroll-behavior: smooth;
       }
-    }
 
-    /* FOOTER */
-    footer {
-      position: fixed;
-      inset: auto 0 0;
-      z-index: 999;
-      padding: 0.9rem 1rem;
-      text-align: center;
-      color: #4a401f;
-      background: rgba(255, 253, 248, 0.94);
-      border-top: 1px solid rgba(218, 169, 0, 0.22);
-      box-shadow: 0 -6px 24px rgba(45, 39, 20, 0.07);
-      backdrop-filter: blur(12px);
-    }
-
-    footer p {
-      font-size: 0.8rem;
-    }
-
-    footer .year {
-      color: var(--accent);
-      font-weight: 700;
-    }
-
-    @media (max-width: 900px) {
       body {
-        padding-top: 96px;
+        min-height: 100vh;
+        padding-top: 108px;
+        padding-bottom: 92px;
+        font-family: "Inter", "Segoe UI", Tahoma, sans-serif;
+        background:
+          radial-gradient(circle at 10% 15%, rgba(246, 197, 21, 0.13), transparent 27%),
+          radial-gradient(circle at 90% 75%, rgba(184, 121, 8, 0.08), transparent 26%),
+          var(--bg);
+        color: var(--text-dark);
+        line-height: 1.6;
+        overflow-x: hidden;
+        transition: background 0.45s ease, color 0.45s ease;
       }
 
+      body.galaxy-theme {
+        background:
+          radial-gradient(ellipse at 20% 12%, rgba(124, 58, 237, 0.18), transparent 36%),
+          radial-gradient(ellipse at 82% 76%, rgba(236, 72, 153, 0.12), transparent 30%),
+          radial-gradient(ellipse at 50% 50%, rgba(0, 212, 255, 0.08), transparent 44%),
+          var(--galaxy-bg);
+        color: var(--galaxy-text-dark);
+      }
+
+      body.modal-open {
+        overflow: hidden;
+      }
+
+      body,
+      header,
+      footer,
+      .category-buttons,
+      .mode-toggle-inner,
+      .search-container input,
+      .grid button,
+      .modal-content,
+      .practice-key,
+      .practice-word-display,
+      .practice-btn,
+      #category-title {
+        transition:
+          background 0.4s ease,
+          background-color 0.4s ease,
+          border-color 0.4s ease,
+          color 0.4s ease,
+          box-shadow 0.4s ease;
+      }
+
+      h1,
+      h2,
+      h3 {
+        font-family: "Playfair Display", Georgia, serif;
+      }
+
+      button,
+      input {
+        font: inherit;
+      }
+
+      button {
+        border: 0;
+        cursor: pointer;
+      }
+
+      button:focus-visible,
+      input:focus-visible {
+        outline: 3px solid rgba(0, 212, 255, 0.32);
+        outline-offset: 3px;
+      }
+
+      img {
+        max-width: 100%;
+        height: auto;
+      }
+
+      /* HEADER */
       header {
-        grid-template-columns: 58px 1fr 58px;
-        min-height: 76px;
+        position: fixed;
+        inset: 0 0 auto;
+        z-index: 1000;
+        min-height: 84px;
+        padding: 0.75rem clamp(1rem, 4vw, 3rem);
+        display: grid;
+        grid-template-columns: 68px minmax(0, 1fr) 68px;
+        align-items: center;
+        gap: 1rem;
+        background: rgba(255, 253, 248, 0.9);
+        border-bottom: 1px solid rgba(218, 169, 0, 0.2);
+        box-shadow: 0 6px 24px rgba(45, 39, 20, 0.08);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
       }
 
       header .logo,
       header .logo-school {
-        width: 52px;
-        height: 52px;
+        width: 60px;
+        height: 60px;
+        object-fit: contain;
+        justify-self: center;
       }
 
-      .gridA,
-      .gridB {
-        grid-template-columns: repeat(5, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 600px) {
-      body {
-        padding-top: 142px;
-        padding-bottom: 78px;
+      header .logo {
+        filter: drop-shadow(0 5px 9px rgba(184, 121, 8, 0.16));
+        animation: bee-float 3.6s ease-in-out infinite;
       }
 
-      header {
-        min-height: 126px;
-        padding: 0.7rem 1rem;
-        grid-template-columns: 48px 1fr 48px;
-        gap: 0.45rem;
+      @keyframes bee-float {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-3px) rotate(1deg); }
       }
 
-      header .logo,
       header .logo-school {
-        width: 44px;
-        height: 44px;
+        opacity: 0.92;
       }
 
       header h1 {
-        font-size: 1.1rem;
+        text-align: center;
+        font-size: clamp(1.2rem, 2.6vw, 2.05rem);
+        line-height: 1.16;
+        font-weight: 700;
+        letter-spacing: -0.025em;
       }
 
+      header h1 .year {
+        color: var(--accent);
+      }
+
+      /* CATEGORY */
       .category-buttons {
-        width: min(94%, 420px);
-        margin-top: 1rem;
+        width: min(92%, 720px);
+        margin: 1.65rem auto 1.1rem;
+        padding: 0.32rem;
+        display: flex;
+        gap: 0.4rem;
+        background: rgba(255, 253, 248, 0.68);
+        border: 1px solid var(--border);
+        border-radius: 17px;
+        box-shadow: var(--shadow);
       }
 
       .category-buttons button {
-        padding: 0.7rem 0.5rem;
-        font-size: 0.78rem;
+        flex: 1;
+        min-width: 0;
+        padding: 0.78rem 1rem;
+        border-radius: 13px;
+        border: 1px solid transparent;
+        background: transparent;
+        color: var(--text-medium);
+        font-size: 0.95rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.22s ease, background-color 0.22s ease, color 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+      }
+
+      .category-buttons button::after {
+        content: "";
+        position: absolute;
+        left: 20%;
+        right: 20%;
+        bottom: 4px;
+        height: 2px;
+        border-radius: 999px;
+        background: currentColor;
+        transform: scaleX(0);
+        opacity: 0;
+        transition: transform 0.3s ease, opacity 0.3s ease;
+      }
+
+      .category-buttons button:hover {
+        background: rgba(246, 197, 21, 0.08);
+        color: var(--text-dark);
+        transform: translateY(-1px);
+      }
+
+      .category-buttons button.active {
+        background: rgba(246, 197, 21, 0.13);
+        border-color: rgba(218, 169, 0, 0.28);
+        color: #9b6504;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+      }
+
+      .category-buttons button.active::after {
+        transform: scaleX(1);
+        opacity: 0.75;
+      }
+
+      /* MODE TOGGLE */
+      .mode-toggle {
+        width: min(92%, 720px);
+        margin: 0.15rem auto 2rem;
+        display: flex;
+        justify-content: center;
+      }
+
+      .mode-toggle-inner {
+        position: relative;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 30px;
+        width: min(100%, 520px);
+        padding: 5px;
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        background: rgba(255, 253, 248, 0.34);
+        box-shadow: 0 8px 24px rgba(62, 48, 12, 0.055);
+      }
+
+      .mode-toggle-inner::before {
+        content: "";
+        position: absolute;
+        z-index: 0;
+        left: 5px;
+        width: calc((100% - 45px) / 2);
+        height: 3px;
+        top: auto;
+        bottom: 5px;
+        border-radius: 999px;
+        background: rgba(218, 169, 0, 0.62);
+        border: 0;
+        box-shadow: 0 0 12px rgba(218, 169, 0, 0.16);
+        transition: transform 0.46s cubic-bezier(.16,1,.3,1), background 0.38s ease, border-color 0.38s ease, box-shadow 0.38s ease;
+        pointer-events: none;
+      }
+
+      body.practice-mode .mode-toggle-inner::before {
+        transform: translateX(calc(100% + 30px));
+        background: rgba(0, 212, 255, 0.85);
+        border-color: transparent;
+        box-shadow: 0 0 14px rgba(0, 212, 255, 0.32);
+      }
+
+      .mode-toggle button {
+        position: relative;
+        z-index: 1;
+        min-width: 0;
+        padding: 0.72rem 1rem;
+        border: 1px solid transparent;
+        border-radius: 13px;
+        background: transparent;
+        color: var(--text-medium);
+        font-size: 0.85rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        transition: color 0.25s ease, transform 0.25s ease;
+      }
+
+      .mode-toggle button:hover {
+        transform: translateY(-1px);
+        color: var(--text-dark);
+      }
+
+      .mode-toggle button.active {
+        color: #916000;
+      }
+
+      body.practice-mode .mode-toggle button.active {
+        color: #8eeeff;
+      }
+
+      body.practice-mode .mode-toggle button:not(.active) {
+        color: #d6d8ea;
+        text-shadow: 0 1px 8px rgba(255,255,255,0.08);
+      }
+
+      body.practice-mode .mode-toggle button:not(.active):hover {
+        color: #d0d0e2;
+      }
+
+      body.view-mode .mode-toggle button:not(.active) {
+        color: #70727a;
+      }
+
+      .utility-actions {
+        width: min(92%, 520px);
+        margin: -0.55rem auto 1.25rem;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.6rem;
+      }
+
+      .utility-btn {
+        min-width: 0;
+        min-height: 44px;
+        padding: 0.65rem 0.8rem;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: rgba(255, 253, 248, 0.7);
+        color: var(--text-medium);
+        font-size: 0.82rem;
+        font-weight: 800;
+        transition: transform 0.22s cubic-bezier(.2,.8,.2,1), background-color 0.28s ease,
+          border-color 0.28s ease, color 0.28s ease, box-shadow 0.28s ease;
+      }
+
+      .utility-btn:hover:not(:disabled) {
+        transform: translateY(-2px);
+        background: var(--surface-soft);
+        border-color: rgba(218, 169, 0, 0.42);
+        color: var(--text-dark);
+        box-shadow: var(--shadow);
+      }
+
+      .reset-btn:hover:not(:disabled) {
+        color: #b42318;
+        border-color: rgba(180, 35, 24, 0.24);
+        background: rgba(180, 35, 24, 0.05);
+      }
+
+      body.galaxy-theme .utility-btn {
+        background: rgba(20, 20, 46, 0.58);
+        border-color: var(--galaxy-border);
+        color: var(--galaxy-text-medium);
+      }
+
+      body.galaxy-theme .utility-btn:hover:not(:disabled) {
+        background: var(--galaxy-surface-soft);
+        border-color: rgba(0, 212, 255, 0.32);
+        color: var(--galaxy-text-dark);
+        box-shadow: var(--galaxy-shadow);
+      }
+
+      body.galaxy-theme .reset-btn:hover:not(:disabled) {
+        color: #ff8f8f;
+        border-color: rgba(239, 68, 68, 0.3);
+        background: rgba(239, 68, 68, 0.07);
+      }
+
+      .grid button.word-state {
+        min-height: 66px;
+      }
+
+      .grid button.practice-correct .grid-number,
+      .grid button.practice-incorrect .grid-number,
+      .grid button.practice-revealed .grid-number {
+        opacity: 0.86;
+        font-size: 0.7rem;
+      }
+
+      .grid button.practice-correct .grid-word,
+      .grid button.practice-incorrect .grid-word,
+      .grid button.practice-revealed .grid-word {
+        font-size: clamp(0.58rem, 0.78vw, 0.77rem);
+        letter-spacing: 0.025em;
+        font-weight: 900;
+        text-transform: capitalize;
+      }
+
+      body.practice-mode #grid-container button[data-progress="correct"] .grid-word,
+      body.practice-mode #grid-container button[data-progress="incorrect"] .grid-word,
+      body.practice-mode #grid-container button[data-progress="revealed"] .grid-word {
+        color: #fff !important;
+      }
+
+      /* CATEGORY TITLE + SEARCH */
+      #category-title {
+        min-height: 26px;
+        margin: 0 auto 0.45rem;
+        text-align: center;
+        font-size: 0.82rem;
+        font-weight: 800;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+
+      body.practice-mode #category-title {
+        color: var(--galaxy-primary);
       }
 
       .search-container {
-        width: min(94%, 420px);
+        width: min(92%, 520px);
+        margin: 0 auto 1.55rem;
+        display: flex;
+        gap: 0.55rem;
       }
 
       .search-container input {
-        height: 48px;
-        padding-right: 96px;
+        min-width: 0;
+        flex: 1;
+        height: 50px;
+        padding: 0 1rem;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        background: rgba(255, 253, 248, 0.94);
+        color: var(--text-dark);
+        box-shadow: 0 5px 18px rgba(62, 48, 12, 0.06);
+      }
+
+      .search-container input:focus {
+        border-color: var(--primary-strong);
+        box-shadow: 0 0 0 4px rgba(246, 197, 21, 0.14), var(--shadow);
       }
 
       .search-container button {
-        padding: 0 0.8rem;
-        font-size: 0.78rem;
+        flex: 0 0 auto;
+        min-width: 100px;
+        height: 50px;
+        padding: 0 1rem;
+        border-radius: 13px;
+        background: var(--primary);
+        color: #2d270f;
+        font-size: 0.9rem;
+        font-weight: 800;
+        transition: transform 0.22s ease, box-shadow 0.22s ease, background-color 0.22s ease;
       }
 
+      .search-container button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 18px rgba(246, 197, 21, 0.24);
+        background: #ffd83d;
+      }
+
+      /* GRID */
       .grid {
-        width: min(94%, 420px);
-        gap: 6px;
+        width: min(94%, 1050px);
+        margin: 0 auto;
+        display: grid;
+        gap: 8px;
+        padding: 0.2rem 0 2rem;
+        animation: grid-enter 0.42s cubic-bezier(.2,.8,.2,1);
+      }
+
+      @keyframes grid-enter {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
       }
 
       .gridA,
       .gridB {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
+        grid-template-columns: repeat(10, minmax(0, 1fr));
       }
 
       .grid button {
-        min-height: 48px;
-        padding: 0.55rem 0.2rem;
-        font-size: 0.78rem;
-        border-radius: 9px;
+        min-width: 0;
+        min-height: 58px;
+        padding: 0.45rem 0.3rem;
+        border: 1px solid var(--border);
+        border-radius: 11px;
+        background: rgba(255, 253, 248, 0.92);
+        color: var(--text-dark);
+        font-size: 0.88rem;
+        font-weight: 800;
+        box-shadow: 0 3px 10px rgba(62, 48, 12, 0.045);
+        overflow: hidden;
+        transition: transform 0.28s cubic-bezier(.2,.8,.2,1), background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
+      }
+
+      .grid button .grid-number {
+        display: block;
+        font-size: 0.72rem;
+        line-height: 1;
+        opacity: 0.72;
+        margin-bottom: 0.18rem;
+      }
+
+      .grid button .grid-word {
+        display: block;
+        width: 100%;
+        line-height: 1.08;
+        font-size: clamp(0.62rem, 0.85vw, 0.82rem);
+        font-weight: 900;
+        letter-spacing: 0.015em;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        white-space: normal;
+      }
+
+      .grid button.word-state {
+        min-height: 64px;
+      }
+
+      .grid button:hover {
+        transform: translateY(-3px) scale(1.012);
+        background: #fff9df;
+        border-color: var(--primary);
+        box-shadow: var(--shadow-hover);
+      }
+
+      .grid button:active {
+        transform: translateY(-1px) scale(0.985);
+      }
+
+      .grid button.played {
+        background: linear-gradient(135deg, #fff8d8, #ffe77a);
+        border-color: var(--primary-strong);
+        animation: pulse-played 2s ease-in-out infinite;
+      }
+
+      @keyframes pulse-played {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(246, 197, 21, 0.28); }
+        50% { box-shadow: 0 0 0 8px rgba(246, 197, 21, 0); }
+      }
+
+      /* GALAXY */
+      body.galaxy-theme header {
+        background: rgba(20, 20, 46, 0.86);
+        border-bottom-color: rgba(0, 212, 255, 0.18);
+        box-shadow: 0 7px 25px rgba(0, 0, 0, 0.3);
+      }
+
+      body.galaxy-theme header h1 .year {
+        color: var(--galaxy-primary);
+      }
+
+      body.galaxy-theme .category-buttons {
+        background: rgba(20, 20, 46, 0.52);
+        border-color: var(--galaxy-border);
+        box-shadow: var(--galaxy-shadow);
+      }
+
+      body.galaxy-theme .category-buttons button {
+        color: var(--galaxy-text-medium);
+      }
+
+      body.galaxy-theme .category-buttons button:hover {
+        background: rgba(0, 212, 255, 0.06);
+        color: var(--galaxy-text-dark);
+      }
+
+      body.galaxy-theme .category-buttons button.active {
+        background: rgba(0, 212, 255, 0.08);
+        border-color: rgba(0, 212, 255, 0.18);
+        color: var(--galaxy-primary);
+      }
+
+      body.galaxy-theme .search-container input {
+        background: rgba(20, 20, 46, 0.88);
+        border-color: var(--galaxy-border);
+        color: var(--galaxy-text-dark);
+        box-shadow: 0 5px 18px rgba(0, 0, 0, 0.22);
+      }
+
+      body.galaxy-theme .search-container input:focus {
+        border-color: var(--galaxy-primary);
+        box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.11), var(--galaxy-shadow);
+      }
+
+      body.galaxy-theme .search-container button {
+        background: linear-gradient(135deg, var(--galaxy-primary), var(--galaxy-primary-strong));
+        color: #06131a;
+      }
+
+      body.galaxy-theme .search-container button:hover {
+        background: linear-gradient(135deg, #22ddff, #00b8d4);
+        box-shadow: 0 8px 19px rgba(0, 212, 255, 0.24);
+      }
+
+      body.galaxy-theme .grid button {
+        background: rgba(20, 20, 46, 0.9);
+        border-color: var(--galaxy-border);
+        color: var(--galaxy-text-dark);
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.24);
+      }
+
+      body.galaxy-theme .grid button:hover:not(.practice-correct):not(.practice-incorrect):not(.practice-revealed) {
+        background: var(--galaxy-surface-soft);
+        border-color: var(--galaxy-primary);
+        box-shadow: var(--galaxy-shadow-hover);
+      }
+
+      /* PRACTICE STATES — isolated to the grid while Practice is active */
+      body.practice-mode #grid-container button.practice-pending {
+        background: linear-gradient(145deg, rgba(31, 31, 56, 0.96), rgba(20, 20, 42, 0.96)) !important;
+        border-color: #2b2b4d !important;
+        color: #8585a6 !important;
+      }
+
+      body.practice-mode #grid-container button.practice-pending:hover {
+        transform: translateY(-3px) scale(1.01);
+        border-color: rgba(0, 212, 255, 0.45) !important;
+        color: #e9faff !important;
+        box-shadow: 0 12px 26px rgba(0, 212, 255, 0.09);
+      }
+
+      body.practice-mode #grid-container button[data-progress="correct"],
+      body.practice-mode #grid-container button.practice-correct {
+        background: linear-gradient(135deg, #22c55e, #16a34a) !important;
+        border-color: #4ade80 !important;
+        color: #fff !important;
+        animation: state-in 0.38s cubic-bezier(.16,1,.3,1) both, pulse-correct 2.2s ease-in-out infinite 0.38s;
+      }
+
+      body.practice-mode #grid-container button[data-progress="incorrect"],
+      body.practice-mode #grid-container button.practice-incorrect {
+        background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+        border-color: #fb7185 !important;
+        color: #fff !important;
+        animation: state-in 0.38s cubic-bezier(.16,1,.3,1) both, pulse-incorrect 2.2s ease-in-out infinite 0.38s;
+      }
+
+      body.practice-mode #grid-container button[data-progress="revealed"],
+      body.practice-mode #grid-container button.practice-revealed {
+        background: linear-gradient(135deg, #3b82f6, #2563eb) !important;
+        border-color: #60a5fa !important;
+        color: #fff !important;
+        animation: state-in 0.38s cubic-bezier(.16,1,.3,1) both;
+      }
+
+      body.practice-mode #grid-container button.practice-correct:hover,
+      body.practice-mode #grid-container button.practice-incorrect:hover,
+      body.practice-mode #grid-container button.practice-revealed:hover {
+        transform: translateY(-2px) scale(1.01);
+        color: #fff !important;
+      }
+
+      @keyframes state-in {
+        from { opacity: 0.55; transform: scale(0.96); }
+        to { opacity: 1; transform: scale(1); }
+      }
+
+      @keyframes pulse-correct {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.34); }
+        50% { box-shadow: 0 0 0 8px rgba(34, 197, 94, 0); }
+      }
+
+      @keyframes pulse-incorrect {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.28); }
+        50% { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
+      }
+
+      /* MODAL */
+      .modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 2000;
+        align-items: center;
+        justify-content: center;
+        padding: clamp(0.75rem, 2vw, 1.25rem);
+        background: rgba(29, 25, 14, 0.58);
+        backdrop-filter: blur(9px);
+        -webkit-backdrop-filter: blur(9px);
+        overflow: hidden;
+      }
+
+      .modal::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at center, rgba(246, 197, 21, 0.07), transparent 58%);
+        pointer-events: none;
       }
 
       .modal-content {
-        width: 94%;
-        padding: 1.4rem 1rem;
-        border-radius: 20px;
+        width: min(680px, calc(100vw - 24px));
+        max-height: min(88vh, 820px);
+        overflow-y: auto;
+        overflow-x: hidden;
+        scrollbar-gutter: stable;
+        padding: clamp(1.3rem, 3vw, 2rem);
+        position: relative;
+        isolation: isolate;
+        text-align: center;
+        background: linear-gradient(145deg, #fffdf8, #fff8df);
+        border: 1px solid rgba(218, 169, 0, 0.25);
+        border-radius: 24px;
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.32);
+        animation: modal-in 0.34s cubic-bezier(.2,.8,.2,1) both;
+      }
+
+      .modal-content > * {
+        min-width: 0;
+      }
+
+      .modal-content::-webkit-scrollbar {
+        width: 9px;
+      }
+
+      .modal-content::-webkit-scrollbar-thumb {
+        border-radius: 999px;
+        background: rgba(90, 78, 45, 0.35);
+      }
+
+      @keyframes modal-in {
+        from { opacity: 0; transform: translateY(14px) scale(0.97); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+      }
+
+      @keyframes modal-out {
+        from { opacity: 1; transform: translateY(0) scale(1); }
+        to { opacity: 0; transform: translateY(10px) scale(0.985); }
+      }
+
+      .word-number {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 48px;
+        min-height: 31px;
+        margin-bottom: 0.65rem;
+        padding: 0.25rem 0.72rem;
+        border-radius: 999px;
+        background: rgba(246, 197, 21, 0.13);
+        color: var(--accent);
+        font-size: 0.85rem;
+        font-weight: 800;
       }
 
       .modal-content h2 {
-        font-size: 2.45rem;
+        margin-bottom: 1rem;
+        font-size: clamp(2.1rem, 7.5vw, 4.5rem);
+        line-height: 1;
+        overflow-wrap: anywhere;
+        background: linear-gradient(135deg, var(--text-dark), var(--accent));
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
       }
 
-      .modal-content button {
-        min-width: 110px;
-        padding: 0.72rem 1rem;
-        font-size: 0.85rem;
+      .modal-actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.6rem;
       }
 
+      .base-modal-btn {
+        min-width: 125px;
+        min-height: 45px;
+        padding: 0.72rem 1.2rem;
+        border-radius: 12px;
+        font-size: 0.9rem;
+        font-weight: 800;
+        transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+      }
+
+      .base-modal-btn:hover:not(:disabled) {
+        transform: translateY(-2px);
+      }
+
+      .play-btn {
+        background: var(--primary);
+        color: #29230f;
+      }
+
+      .play-btn:hover {
+        box-shadow: 0 8px 18px rgba(246, 197, 21, 0.3);
+        background: #ffd83d;
+      }
+
+      .close-btn {
+        background: #292929;
+        color: #fff;
+      }
+
+      .close-btn:hover {
+        background: #111;
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
+      }
+
+      /* PRACTICE MODAL */
+      .practice-shell {
+        display: grid;
+        gap: 0.85rem;
+      }
+
+      /* Hidden mode panels must stay hidden even when their class defines display. */
+      #practiceModeContent[hidden],
+      #viewModeContent[hidden],
+      body.view-mode #practiceModeContent,
+      body.practice-mode #viewModeContent {
+        display: none !important;
+      }
+
+      .practice-topbar {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+
+      .practice-stat {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.38rem;
+        padding: 0.48rem 0.7rem;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: rgba(255, 253, 248, 0.55);
+        color: var(--text-medium);
+        font-size: 0.84rem;
+      }
+
+      .practice-stat strong {
+        color: var(--text-dark);
+        font-size: 0.93rem;
+      }
+
+      .practice-word-display {
+        width: 100%;
+        max-width: 560px;
+        min-height: 72px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 0.34rem;
+        margin: 0.1rem auto;
+        padding: 0.85rem 0.75rem;
+        border: 1px solid var(--border);
+        border-radius: 17px;
+        background: rgba(255, 253, 248, 0.5);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
+        overflow: hidden;
+      }
+
+      .practice-slot {
+        min-width: 1.2rem;
+        min-height: 1.9rem;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0 0.1rem;
+        border-bottom: 2px solid var(--border);
+        color: var(--text-dark);
+        font-size: clamp(1.25rem, 4.3vw, 1.8rem);
+        font-weight: 800;
+        letter-spacing: 0.03em;
+        animation: letter-rise 0.22s ease both;
+      }
+
+      .practice-slot.filled {
+        border-bottom-color: var(--primary);
+        color: var(--text-dark);
+      }
+
+      .practice-slot.preview {
+        opacity: 0.48;
+        border-bottom-style: dashed;
+      }
+
+      .practice-slot.correct {
+        border-bottom-color: var(--practice-correct);
+        color: var(--practice-correct);
+      }
+
+      .practice-slot.present {
+        border-bottom-color: var(--galaxy-accent-2);
+        color: var(--galaxy-accent-2);
+      }
+
+      .practice-slot.incorrect {
+        border-bottom-color: var(--practice-incorrect);
+        color: var(--practice-incorrect);
+        animation: wrong-shake 0.42s ease;
+      }
+
+      .practice-slot.revealed {
+        border-bottom-color: var(--practice-revealed);
+        color: #60a5fa;
+      }
+
+      @keyframes letter-rise {
+        from { opacity: 0; transform: translateY(6px) scale(0.92); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+      }
+
+      @keyframes wrong-shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-4px); }
+        75% { transform: translateX(4px); }
+      }
+
+      .practice-result-message {
+        min-height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 0.5rem;
+        font-size: 0.97rem;
+        font-weight: 800;
+      }
+
+      .practice-result-message.success {
+        color: var(--practice-correct);
+        animation: result-pop 0.28s ease both;
+      }
+
+      .practice-result-message.error {
+        color: var(--practice-incorrect);
+        animation: result-pop 0.28s ease both;
+      }
+
+      .practice-result-message.revealed {
+        color: var(--practice-revealed);
+        animation: result-pop 0.28s ease both;
+      }
+
+      @keyframes result-pop {
+        from { opacity: 0; transform: translateY(4px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      .practice-help {
+        color: var(--text-light);
+        font-size: 0.77rem;
+      }
+
+      .practice-keyboard {
+        width: min(100%, 520px);
+        margin: 0.1rem auto 0;
+        display: grid;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        gap: 7px;
+      }
+
+      .practice-key {
+        width: 100%;
+        min-width: 0;
+        min-height: 48px;
+        padding: 0.4rem 0.2rem;
+        border: 1px solid var(--galaxy-border);
+        border-radius: 11px;
+        background: rgba(20, 20, 46, 0.82);
+        color: var(--galaxy-text-dark);
+        font-size: 1rem;
+        font-weight: 800;
+        transition: transform 0.18s ease, background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+      }
+
+      .practice-key:hover:not(:disabled) {
+        transform: translateY(-2px);
+        border-color: var(--galaxy-primary);
+        box-shadow: 0 7px 18px rgba(0, 212, 255, 0.12);
+      }
+
+      .practice-key:active:not(:disabled) {
+        transform: scale(0.96);
+      }
+
+      .practice-key.backspace {
+        font-size: 1.08rem;
+      }
+
+      .practice-key.correct {
+        background: #22c55e;
+        border-color: #22c55e;
+        color: white;
+      }
+
+      .practice-key.present {
+        background: #ec4899;
+        border-color: #ec4899;
+        color: white;
+      }
+
+      .practice-key.incorrect {
+        background: #3d3d4c;
+        border-color: #525264;
+        color: #bcbccc;
+      }
+
+      .practice-key:disabled {
+        opacity: 0.48;
+        cursor: not-allowed;
+      }
+
+      .voice-panel {
+        display: grid;
+        justify-items: center;
+        gap: 0.45rem;
+        padding-top: 0.15rem;
+      }
+
+      .voice-btn {
+        min-width: 190px;
+        min-height: 45px;
+        border: 1px solid rgba(0, 212, 255, 0.23);
+        border-radius: 12px;
+        background: rgba(0, 212, 255, 0.08);
+        color: var(--galaxy-primary);
+        font-size: 0.9rem;
+        font-weight: 800;
+        transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      }
+
+      .voice-btn:hover:not(:disabled) {
+        transform: translateY(-2px);
+        background: rgba(0, 212, 255, 0.13);
+        box-shadow: 0 7px 18px rgba(0, 212, 255, 0.12);
+      }
+
+      .voice-btn.listening {
+        background: rgba(236, 72, 153, 0.14);
+        border-color: rgba(236, 72, 153, 0.32);
+        color: #ff8fc7;
+        animation: mic-pulse 1.65s ease-in-out infinite;
+      }
+
+      @keyframes mic-pulse {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(236, 72, 153, 0.22); }
+        50% { box-shadow: 0 0 0 9px rgba(236, 72, 153, 0); }
+      }
+
+      .voice-status {
+        min-height: 19px;
+        color: var(--galaxy-text-medium);
+        font-size: 0.77rem;
+        text-align: center;
+      }
+
+      .voice-note {
+        max-width: 460px;
+        color: var(--galaxy-text-light);
+        font-size: 0.7rem;
+        line-height: 1.4;
+        text-align: center;
+        opacity: 0.92;
+      }
+
+      body.practice-mode .voice-btn.listening {
+        box-shadow: 0 0 0 1px rgba(236, 72, 153, 0.15), 0 10px 28px rgba(236, 72, 153, 0.08);
+      }
+
+      .practice-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
+        gap: 0.55rem;
+        margin-top: 0.15rem;
+      }
+
+      .practice-btn {
+        min-width: 0;
+        min-height: 44px;
+        padding: 0.65rem 0.8rem;
+        border-radius: 11px;
+        font-size: 0.84rem;
+        font-weight: 800;
+        transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, opacity 0.2s ease;
+      }
+
+      .practice-btn:hover:not(:disabled) {
+        transform: translateY(-2px);
+      }
+
+      .practice-btn:disabled {
+        opacity: 0.42;
+        cursor: not-allowed;
+        transform: none !important;
+        box-shadow: none !important;
+      }
+
+      .practice-listen-btn {
+        background: linear-gradient(135deg, #00d4ff, #00b8d4);
+        color: #06131a;
+      }
+
+      .practice-listen-btn:hover:not(:disabled) {
+        box-shadow: 0 8px 19px rgba(0, 212, 255, 0.23);
+      }
+
+      .verify-btn {
+        background: linear-gradient(135deg, #00d4ff, #00b8d4);
+        color: #06131a;
+      }
+
+      .verify-btn:hover:not(:disabled) {
+        box-shadow: 0 8px 18px rgba(0, 212, 255, 0.22);
+      }
+
+      .reveal-btn {
+        background: linear-gradient(135deg, #ec4899, #d13f87);
+        color: white;
+      }
+
+      .reveal-btn:hover:not(:disabled) {
+        box-shadow: 0 8px 18px rgba(236, 72, 153, 0.2);
+      }
+
+      .retry-btn {
+        background: #303047;
+        color: #f0f0f5;
+        border: 1px solid #45455f;
+      }
+
+      .retry-btn:hover:not(:disabled) {
+        background: #3a3a57;
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
+      }
+
+      body.galaxy-theme .modal {
+        background: rgba(4, 5, 18, 0.75);
+      }
+
+      body.galaxy-theme .modal::before {
+        background: radial-gradient(circle at center, rgba(0, 212, 255, 0.1), transparent 58%);
+      }
+
+      body.galaxy-theme .modal-content {
+        background: linear-gradient(145deg, #14142e, #0f1024);
+        border-color: rgba(0, 212, 255, 0.2);
+        box-shadow: 0 32px 86px rgba(0, 0, 0, 0.56);
+      }
+
+      body.galaxy-theme .modal-content .word-number {
+        color: var(--galaxy-primary);
+        background: rgba(0, 212, 255, 0.1);
+      }
+
+      body.galaxy-theme .modal-content h2 {
+        background: linear-gradient(135deg, var(--galaxy-text-dark), var(--galaxy-primary));
+        -webkit-background-clip: text;
+        background-clip: text;
+      }
+
+      body.galaxy-theme .practice-stat {
+        border-color: var(--galaxy-border);
+        background: rgba(20, 20, 46, 0.54);
+        color: var(--galaxy-text-medium);
+      }
+
+      body.galaxy-theme .practice-stat strong {
+        color: var(--galaxy-text-dark);
+      }
+
+      body.galaxy-theme .practice-word-display {
+        border-color: var(--galaxy-border);
+        background: rgba(20, 20, 46, 0.5);
+      }
+
+      body.galaxy-theme .practice-slot {
+        border-bottom-color: var(--galaxy-border);
+        color: var(--galaxy-text-dark);
+      }
+
+      body.galaxy-theme .practice-slot.filled {
+        border-bottom-color: var(--galaxy-primary);
+      }
+
+      body.galaxy-theme .practice-help {
+        color: var(--galaxy-text-light);
+      }
+
+      body.galaxy-theme .close-btn {
+        background: #292943;
+        color: var(--galaxy-text-dark);
+      }
+
+      body.galaxy-theme .close-btn:hover {
+        background: #1f1f35;
+      }
+
+      /* FOOTER */
       footer {
-        padding: 0.7rem;
-        font-size: 0.72rem;
+        position: fixed;
+        inset: auto 0 0;
+        z-index: 999;
+        padding: 0.8rem 1rem;
+        text-align: center;
+        color: #4a401f;
+        background: rgba(255, 253, 248, 0.91);
+        border-top: 1px solid rgba(218, 169, 0, 0.2);
+        box-shadow: 0 -6px 24px rgba(45, 39, 20, 0.06);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        font-size: 0.79rem;
       }
-    }
 
+      footer .year {
+        color: var(--accent);
+        font-weight: 800;
+      }
+
+      body.galaxy-theme footer {
+        color: var(--galaxy-text-medium);
+        background: rgba(20, 20, 46, 0.88);
+        border-top-color: rgba(0, 212, 255, 0.18);
+        box-shadow: 0 -7px 25px rgba(0, 0, 0, 0.24);
+      }
+
+      body.galaxy-theme footer .year {
+        color: var(--galaxy-primary);
+      }
+
+      body.practice-mode #grid-container {
+        animation: practice-grid-enter 0.35s cubic-bezier(.2,.8,.2,1) both;
+      }
+
+      @keyframes practice-grid-enter {
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      @media (max-width: 1100px) {
+        body.practice-mode #grid-container.gridA,
+        body.practice-mode #grid-container.gridB {
+          grid-template-columns: repeat(8, minmax(0, 1fr));
+        }
+      }
+
+      /* RESPONSIVE */
+      @media (max-width: 900px) {
+        body {
+          padding-top: 96px;
+        }
+
+        header {
+          grid-template-columns: 56px minmax(0, 1fr) 56px;
+          min-height: 74px;
+        }
+
+        header .logo,
+        header .logo-school {
+          width: 50px;
+          height: 50px;
+        }
+
+        .gridA,
+        .gridB {
+          grid-template-columns: repeat(5, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 600px) {
+        body {
+          padding-top: 134px;
+          padding-bottom: 78px;
+        }
+
+        header {
+          min-height: 120px;
+          padding: 0.65rem 0.8rem;
+          grid-template-columns: 44px minmax(0, 1fr) 44px;
+          gap: 0.45rem;
+        }
+
+        header .logo,
+        header .logo-school {
+          width: 40px;
+          height: 40px;
+        }
+
+        header h1 {
+          font-size: 1rem;
+        }
+
+        .category-buttons {
+          width: min(94%, 430px);
+          margin-top: 1rem;
+        }
+
+        .category-buttons button {
+          padding: 0.7rem 0.45rem;
+          font-size: 0.76rem;
+        }
+
+        .mode-toggle {
+          width: min(94%, 430px);
+          margin-bottom: 1.35rem;
+        }
+
+        .mode-toggle-inner {
+          width: 100%;
+          gap: 16px;
+        }
+
+        .mode-toggle-inner::before {
+          width: calc((100% - 33px) / 2);
+        }
+
+        .mode-toggle button {
+          padding: 0.68rem 0.45rem;
+          font-size: 0.75rem;
+        }
+
+        .search-container {
+          width: min(94%, 430px);
+        }
+
+        .utility-actions {
+          width: min(94%, 430px);
+          margin-top: -0.35rem;
+          gap: 0.45rem;
+        }
+
+        .utility-btn {
+          min-height: 42px;
+          padding: 0.6rem 0.55rem;
+          font-size: 0.76rem;
+        }
+
+        .search-container input,
+        .search-container button {
+          height: 47px;
+        }
+
+        .search-container button {
+          min-width: 87px;
+          padding: 0 0.75rem;
+          font-size: 0.8rem;
+        }
+
+        .grid {
+          width: min(94%, 430px);
+          gap: 6px;
+        }
+
+        .gridA,
+        .gridB {
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+
+        .grid button {
+          min-height: 46px;
+          border-radius: 9px;
+          font-size: 0.76rem;
+        }
+
+        .modal-content {
+          width: min(94vw, 680px);
+          max-height: 90vh;
+          padding: 1.05rem 0.8rem 1.1rem;
+          border-radius: 20px;
+        }
+
+        .modal-content h2 {
+          font-size: 2.35rem;
+        }
+
+        .practice-keyboard {
+          width: 100%;
+          grid-template-columns: repeat(6, minmax(0, 1fr));
+          gap: 5px;
+        }
+
+        .practice-key {
+          min-height: 43px;
+          border-radius: 9px;
+          font-size: 0.9rem;
+        }
+
+        .practice-slot {
+          min-width: 1.05rem;
+          font-size: 1.25rem;
+        }
+
+        .practice-word-display {
+          min-height: 62px;
+          gap: 0.18rem;
+          padding: 0.65rem 0.35rem;
+        }
+
+        .voice-btn {
+          width: 100%;
+          min-width: 0;
+        }
+
+        .voice-note {
+          padding: 0 0.35rem;
+        }
+
+        .practice-actions {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        footer {
+          padding: 0.65rem 0.5rem;
+          font-size: 0.7rem;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          scroll-behavior: auto !important;
+          animation-duration: 0s !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0s !important;
+        }
+      }
     </style>
   </head>
 
   <body>
     <header>
-      <img src="assets/img/bee.png" alt="Abeja" class="logo" />
+      <img src="assets/img/bee.png" alt="Bee" class="logo" />
       <h1>
         &bull; Spelling Bee <span class="year"></span> &bull; <br />
         Misael Pastrana Borrero School
       </h1>
       <img
         src="assets/img/Misael Pastrana PNG.png"
-        alt="Logo Colegio"
+        alt="School logo"
         class="logo-school"
       />
     </header>
 
-    <div class="category-buttons">
-      <button onclick="loadCategory('A')" data-category="A">Category A</button>
-      <button onclick="loadCategory('B')" data-category="B">Category B</button>
+    <div class="category-buttons" aria-label="Category selection">
+      <button type="button" data-category="A" onclick="loadCategory('A')">Category A</button>
+      <button type="button" data-category="B" onclick="loadCategory('B')">Category B</button>
     </div>
 
-    <div id="category-title"></div>
+    <div class="mode-toggle" aria-label="Study mode">
+      <div class="mode-toggle-inner" role="tablist" aria-label="Display mode">
+        <button
+          id="mode-view"
+          type="button"
+          role="tab"
+          aria-selected="true"
+          aria-controls="grid-container"
+          tabindex="0"
+          onclick="setMode('view')"
+        >
+          View
+        </button>
+        <button
+          id="mode-practice"
+          type="button"
+          role="tab"
+          aria-selected="false"
+          aria-controls="grid-container"
+          tabindex="0"
+          onclick="setMode('practice')"
+        >
+          Practice
+        </button>
+      </div>
+    </div>
 
-    <div id="search-container" class="search-container">
+    <div id="category-title" aria-live="polite"></div>
+
+    <form id="search-container" class="search-container">
       <input
         type="number"
         id="search-number"
         placeholder="Number"
         min="1"
         max="100"
+        inputmode="numeric"
+        aria-label="Word number"
       />
-      <button onclick="searchWord()">Search</button>
+      <button type="submit" aria-label="Search word number">Search</button>
+    </form>
+
+    <div class="utility-actions" aria-label="Word tools">
+      <button type="button" class="utility-btn random-btn" id="randomWordBtn" onclick="openRandomWord()">
+        🎲 Random word
+      </button>
+      <button type="button" class="utility-btn reset-btn" id="resetProgressBtn" onclick="resetCurrentCategoryProgress()">
+        ↻ Reset progress
+      </button>
     </div>
 
-    <div id="grid-container" class="grid gridA"></div>
+    <div id="grid-container" class="grid gridA" aria-live="polite"></div>
 
-    <div id="wordModal" class="modal" role="dialog" aria-modal="true">
+    <div id="wordModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Selected word">
       <div class="modal-content" role="document">
-        <div id="modalNumber" class="word-number"></div>
-        <h2 id="modalWord"></h2>
-        <p id="modalPronunciation" class="pronunciation-hint"></p>
-        <button class="play-btn" onclick="playAudio()">🔊 Listen</button>
-        <button class="close-btn" onclick="closeModal()">Close</button>
+        <section id="viewModeContent" aria-label="View mode">
+          <div id="modalNumber" class="word-number"></div>
+          <h2 id="modalWord"></h2>
+          <div class="modal-actions">
+            <button type="button" class="base-modal-btn play-btn" onclick="playAudio()">🔊 Listen</button>
+            <button type="button" class="base-modal-btn close-btn" onclick="closeModal()">Close</button>
+          </div>
+        </section>
+
+        <section id="practiceModeContent" class="practice-shell" aria-label="Practice mode" hidden>
+          <div id="practiceModalNumber" class="word-number"></div>
+
+          <div class="practice-topbar" aria-label="Practice statistics">
+            <div class="practice-stat">
+              <span>Attempts:</span>
+              <strong id="practiceAttempts">0</strong>
+            </div>
+            <div class="practice-stat">
+              <span>Word:</span>
+              <strong id="practiceWordLength">0 letters</strong>
+            </div>
+          </div>
+
+          <div
+            id="practiceInputDisplay"
+            class="practice-word-display"
+            aria-label="Entered letters"
+            aria-live="polite"
+          ></div>
+
+          <div id="practiceResultMessage" class="practice-result-message" aria-live="assertive"></div>
+
+          <div id="practiceKeyboard" class="practice-keyboard" aria-label="Spelling keyboard"></div>
+
+          <div class="voice-panel">
+            <button
+              type="button"
+              id="voiceBtn"
+              class="voice-btn"
+              onclick="toggleVoiceInput()"
+              aria-pressed="false"
+            >
+              🎙️ Spell by voice
+            </button>
+            <div id="voiceStatus" class="voice-status" aria-live="polite">
+              Say one English letter clearly, then pause briefly. You may also say several letters in one phrase.
+            </div>
+            <div class="voice-note">
+              Voice recognition can occasionally mishear a letter. For the most reliable result, you can use the keyboard instead.
+            </div>
+          </div>
+
+          <div class="practice-actions">
+            <button type="button" class="practice-btn practice-listen-btn" id="practiceListenBtn" onclick="playAudio()">
+              🔊 Listen to word
+            </button>
+            <button type="button" class="practice-btn verify-btn" id="verifyBtn" onclick="verifyPracticeWord()" disabled>
+              Check
+            </button>
+            <button type="button" class="practice-btn reveal-btn" id="revealBtn" onclick="revealPracticeWord()">
+              Reveal
+            </button>
+            <button type="button" class="practice-btn retry-btn" id="retryBtn" onclick="retryPracticeWord()" hidden>
+              Retry
+            </button>
+            <button type="button" class="practice-btn close-btn" onclick="closeModal()">
+              Close
+            </button>
+          </div>
+
+          <div class="practice-help">
+            You can also use your physical keyboard.
+          </div>
+        </section>
       </div>
     </div>
 
@@ -723,10 +1597,8 @@
     </footer>
 
     <script>
-      // Listas de palabras para las categorías A y B
-      // Estas listas deben coincidir con las que se usan en descar_sonidos.py
-      // Si desean cambiar las palabras, deben hacerlo aquí y en descar_sonidos.py
-      const categoryA = [
+      // Listas de palabras originales. Deben coincidir con descar_sonidos.py.
+const categoryA = [
         "KITCHEN",
         "KITE",
         "KOALA",
@@ -892,177 +1764,1408 @@
         "KINGDOM",
       ];
 
+      const PRACTICE_MODES = Object.freeze({ VIEW: "view", PRACTICE: "practice" });
+      const PRACTICE_STATUS = Object.freeze({
+        PENDING: "pending",
+        CORRECT: "correct",
+        INCORRECT: "incorrect",
+        REVEALED: "revealed",
+      });
+
+      const KEYBOARD_STATUS_PRIORITY = Object.freeze({
+        incorrect: 1,
+        present: 2,
+        correct: 3,
+      });
+
+      const keyboardLetters = [
+        "Q", "W", "E", "R", "T", "Y", "U",
+        "I", "O", "P", "A", "S", "D", "F",
+        "G", "H", "J", "K", "L", "Ñ", "Z",
+        "X", "C", "V", "B", "N", "M",
+      ];
+
       let currentCategory = [];
       let selectedCategory = "";
       let currentAudio = null;
+      let currentMode = PRACTICE_MODES.VIEW;
+      let currentPracticeIndex = -1;
+      let practiceInput = [];
+      let practiceBoxStates = [];
+      let practiceAttempts = 0;
+      let lastFocusedElement = null;
+      let closeModalTimer = null;
+      let speechListening = false;
+      let speechInterimLetters = [];
 
-      function loadCategory(category) {
-        selectedCategory = category;
-        currentCategory = category === "A" ? categoryA : categoryB;
+      const $ = (selector) => document.querySelector(selector);
+      const $$ = (selector) => [...document.querySelectorAll(selector)];
 
-        // Actualizar botones activos
-        document.querySelectorAll('.category-buttons button').forEach(btn => {
-          btn.classList.toggle('active', btn.dataset.category === category);
+      function safeStorageGet(key, fallback = null) {
+        try {
+          const value = localStorage.getItem(key);
+          return value === null ? fallback : value;
+        } catch {
+          return fallback;
+        }
+      }
+
+      function safeStorageSet(key, value) {
+        try {
+          localStorage.setItem(key, value);
+          return true;
+        } catch {
+          return false;
+        }
+      }
+
+      function getProgressKey(category) {
+        return category === "B" ? "spellingBeeProgressB" : "spellingBeeProgressA";
+      }
+
+      function getStoredProgress(category) {
+        const raw = safeStorageGet(getProgressKey(category), "{}");
+
+        try {
+          const parsed = JSON.parse(raw);
+          if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return {};
+
+          const source = category === "B" ? categoryB : categoryA;
+          const allowed = new Set(Object.values(PRACTICE_STATUS));
+          const cleaned = {};
+
+          Object.keys(parsed).forEach((index) => {
+            const numericIndex = Number(index);
+            const status = parsed[index];
+
+            if (
+              Number.isInteger(numericIndex) &&
+              numericIndex >= 0 &&
+              numericIndex < source.length &&
+              allowed.has(status)
+            ) {
+              cleaned[String(numericIndex)] = status;
+            }
+          });
+
+          return cleaned;
+        } catch {
+          return {};
+        }
+      }
+
+      function saveProgress(category, index, status) {
+        const progress = getStoredProgress(category);
+        progress[String(index)] = status;
+        safeStorageSet(getProgressKey(category), JSON.stringify(progress));
+      }
+
+      function formatPracticeGridWord(word) {
+        const value = String(word || "").trim();
+        if (!value) return "";
+        return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+      }
+
+      function updateGridAccessibility(button, status) {
+        const number = Number(button.dataset.index) + 1;
+        let label = `Word number ${number}`;
+
+        if (status === PRACTICE_STATUS.CORRECT) label += ", correct";
+        else if (status === PRACTICE_STATUS.INCORRECT) label += ", last attempt incorrect";
+        else if (status === PRACTICE_STATUS.REVEALED) label += ", word revealed";
+        else if (status === PRACTICE_STATUS.PENDING) label += ", pending";
+
+        button.setAttribute("aria-label", label);
+      }
+
+      function renderGridButton(button, status = null) {
+        const index = Number(button.dataset.index);
+        const number = index + 1;
+        const word = currentCategory[index] || "";
+
+        button.classList.remove(
+          "played",
+          "word-state",
+          "practice-pending",
+          "practice-correct",
+          "practice-incorrect",
+          "practice-revealed"
+        );
+        button.removeAttribute("data-progress");
+        button.removeAttribute("title");
+
+        if (currentMode === PRACTICE_MODES.PRACTICE) {
+          const finalStatus = status || PRACTICE_STATUS.PENDING;
+          button.dataset.progress = finalStatus;
+          button.classList.add(`practice-${finalStatus}`);
+          updateGridAccessibility(button, finalStatus);
+
+          if (finalStatus === PRACTICE_STATUS.CORRECT ||
+              finalStatus === PRACTICE_STATUS.INCORRECT ||
+              finalStatus === PRACTICE_STATUS.REVEALED) {
+            button.classList.add("word-state");
+
+            const numberSpan = document.createElement("span");
+            numberSpan.className = "grid-number";
+            numberSpan.textContent = `#${number}`;
+
+            const wordSpan = document.createElement("span");
+            wordSpan.className = "grid-word";
+            wordSpan.textContent = formatPracticeGridWord(word);
+
+            button.replaceChildren(numberSpan, wordSpan);
+            button.title = formatPracticeGridWord(word);
+          } else {
+            button.textContent = String(number);
+          }
+          return;
+        }
+
+        button.textContent = String(number);
+        updateGridAccessibility(button, null);
+      }
+
+      function applyStoredProgressToGrid() {
+        if (!selectedCategory) return;
+
+        const progress = currentMode === PRACTICE_MODES.PRACTICE
+          ? getStoredProgress(selectedCategory)
+          : {};
+
+        $$("#grid-container button").forEach((button) => {
+          const status = progress[button.dataset.index] || PRACTICE_STATUS.PENDING;
+          renderGridButton(button, status);
+
+          if (currentMode === PRACTICE_MODES.VIEW) {
+            button.classList.remove(
+              "practice-pending",
+              "practice-correct",
+              "practice-incorrect",
+              "practice-revealed",
+              "word-state"
+            );
+            button.removeAttribute("data-state-word");
+            button.replaceChildren(document.createTextNode(String(Number(button.dataset.index) + 1)));
+          }
         });
-        // Forzamos el estado visual
-        const buttons = document.querySelectorAll('.category-buttons button');
-        if (buttons[0].dataset.category === category) buttons[0].classList.add('active');
-        else buttons[1].classList.add('active');
+      }
 
-        Swal.fire({
-          icon: "info",
-          title: `You have selected Category ${category}`,
-          confirmButtonColor: "#ffcc00",
-          color: "#333",
-          background: "#fffbe6",
+      function openRandomWord() {
+        if (!selectedCategory || !currentCategory.length) {
+          showAlert({
+            icon: "warning",
+            text: "First select Category A or Category B.",
+          });
+          return;
+        }
+
+        let nextIndex = Math.floor(Math.random() * currentCategory.length);
+        if (currentCategory.length > 1 && nextIndex === currentPracticeIndex) {
+          nextIndex = (nextIndex + 1) % currentCategory.length;
+        }
+
+        const opener = $$("#grid-container button").find(
+          (button) => button.dataset.index === String(nextIndex)
+        );
+        showWord(nextIndex, opener);
+      }
+
+      async function resetCurrentCategoryProgress() {
+        if (!selectedCategory) {
+          showAlert({
+            icon: "warning",
+            text: "First select Category A or Category B.",
+          });
+          return;
+        }
+
+        const result = await Swal.fire({
+          icon: "question",
+          title: `Reset Category ${selectedCategory}?`,
+          text: `This will clear the saved practice result for every word in Category ${selectedCategory}.`,
+          showCancelButton: true,
+          confirmButtonText: "Reset progress",
+          cancelButtonText: "Cancel",
+          confirmButtonColor: currentMode === PRACTICE_MODES.PRACTICE ? "#00d4ff" : "#f6c515",
+          cancelButtonColor: "#555",
+          color: currentMode === PRACTICE_MODES.PRACTICE ? "#f0f0f5" : "#333",
+          background: currentMode === PRACTICE_MODES.PRACTICE ? "#14142e" : "#fffbe6",
           allowOutsideClick: false,
           allowEscapeKey: false,
         });
 
-        document.getElementById(
-          "category-title"
-        ).textContent = `Category ${category}`;
-        document.getElementById("search-container").style.display = "block";
+        if (!result.isConfirmed) return;
 
-        const gridContainer = document.getElementById("grid-container");
-        gridContainer.innerHTML = "";
+        safeStorageSet(getProgressKey(selectedCategory), "{}");
+        stopVoiceInput({ silent: true });
+        hideModalImmediately();
+        clearPracticeSession();
+        applyStoredProgressToGrid();
 
-        const totalButtons = category === "B" ? 100 : 60;
-        const gridClass = category === "B" ? "gridB" : "gridA";
-        gridContainer.className = `grid ${gridClass}`;
-
-        for (let i = 1; i <= totalButtons; i++) {
-          const btn = document.createElement("button");
-          btn.textContent = i;
-          btn.dataset.index = i - 1;
-          btn.onclick = () => showWord(i - 1);
-          btn.tabIndex = 0;
-          gridContainer.appendChild(btn);
-        }
+        showAlert({
+          icon: "success",
+          title: "Progress reset",
+          text: `Category ${selectedCategory} is ready to practice again.`,
+          timer: 1200,
+          showConfirmButton: false,
+        });
       }
 
-      function showWord(index) {
-        if (!currentCategory[index]) {
-          Swal.fire({
+      function showAlert(options = {}) {
+        const practice = currentMode === PRACTICE_MODES.PRACTICE;
+
+        return Swal.fire({
+          confirmButtonColor: practice ? "#00d4ff" : "#ffcc00",
+          color: practice ? "#f0f0f5" : "#333",
+          background: practice ? "#14142e" : "#fffbe6",
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          ...options,
+        });
+      }
+
+      function setMode(mode, persist = true) {
+        const nextMode = mode === PRACTICE_MODES.PRACTICE
+          ? PRACTICE_MODES.PRACTICE
+          : PRACTICE_MODES.VIEW;
+
+        stopVoiceInput({ silent: true });
+        hideModalImmediately();
+        currentMode = nextMode;
+
+        document.body.classList.toggle("practice-mode", currentMode === PRACTICE_MODES.PRACTICE);
+        document.body.classList.toggle("view-mode", currentMode === PRACTICE_MODES.VIEW);
+        document.body.classList.toggle("galaxy-theme", currentMode === PRACTICE_MODES.PRACTICE);
+
+        const isView = currentMode === PRACTICE_MODES.VIEW;
+        const viewButton = $("#mode-view");
+        const practiceButton = $("#mode-practice");
+
+        viewButton.classList.toggle("active", isView);
+        practiceButton.classList.toggle("active", !isView);
+        viewButton.setAttribute("aria-selected", String(isView));
+        practiceButton.setAttribute("aria-selected", String(!isView));
+
+        if (persist) safeStorageSet("spellingBeeMode", currentMode);
+
+        clearPracticeSession();
+        applyStoredProgressToGrid();
+      }
+
+      function loadCategory(category) {
+        if (category !== "A" && category !== "B") return;
+
+        stopVoiceInput({ silent: true });
+        closeModal({ immediate: true });
+
+        selectedCategory = category;
+        currentCategory = category === "A" ? categoryA : categoryB;
+
+        $$(".category-buttons button").forEach((button) => {
+          button.classList.toggle("active", button.dataset.category === category);
+        });
+
+        $("#category-title").textContent = `Category ${category}`;
+        $("#search-number").max = category === "B" ? "100" : "60";
+
+        const grid = $("#grid-container");
+        grid.innerHTML = "";
+        grid.className = `grid ${category === "B" ? "gridB" : "gridA"}`;
+
+        const totalButtons = category === "B" ? 100 : 60;
+
+        for (let i = 0; i < totalButtons; i++) {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.textContent = String(i + 1);
+          button.dataset.index = String(i);
+          button.dataset.number = String(i + 1);
+          button.tabIndex = 0;
+          button.addEventListener("click", () => showWord(i, button));
+          grid.appendChild(button);
+          renderGridButton(button, PRACTICE_STATUS.PENDING);
+        }
+
+        applyStoredProgressToGrid();
+
+        showAlert({
+          icon: "info",
+          title: `You have selected Category ${category}`,
+          text: currentMode === PRACTICE_MODES.PRACTICE
+            ? "Choose a number and start spelling."
+            : "Choose a number to listen to its word.",
+        });
+      }
+
+      function showWord(index, opener = null) {
+        if (!selectedCategory || !currentCategory[index]) {
+          showAlert({
             icon: "warning",
             text: "There is no word for this number.",
-            confirmButtonColor: "#ffcc00",
-            background: "#fffbe6",
-            allowEscapeKey: false,
-            allowOutsideClick: false,
           });
           return;
         }
 
-        document.getElementById("modalNumber").textContent = `#${index + 1}`;
-        document.getElementById("modalWord").textContent =
-          currentCategory[index];
+        if (closeModalTimer) {
+          clearTimeout(closeModalTimer);
+          closeModalTimer = null;
+        }
 
-        // Clear pronunciation hint - not needed
-        document.getElementById("modalPronunciation").textContent = "";
+        stopVoiceInput({ silent: true });
+        if (currentAudio) {
+          currentAudio.pause();
+          currentAudio.currentTime = 0;
+        }
 
-        currentAudio = new Audio(
-          `assets/audios/${selectedCategory}_${index + 1}.mp3`
-        );
+        lastFocusedElement = opener || document.activeElement;
+        currentPracticeIndex = index;
+        currentAudio = new Audio(`assets/audios/${selectedCategory}_${index + 1}.mp3`);
+        currentAudio.preload = "auto";
 
-        const modal = document.getElementById("wordModal");
+        const word = currentCategory[index];
+        $("#modalNumber").textContent = `#${index + 1}`;
+        $("#modalWord").textContent = word;
+        $("#practiceModalNumber").textContent = `#${index + 1}`;
+        $("#practiceWordLength").textContent = `${word.length} ${word.length === 1 ? "letter" : "letters"}`;
+
+        const view = $("#viewModeContent");
+        const practice = $("#practiceModeContent");
+
+        if (currentMode === PRACTICE_MODES.PRACTICE) {
+          view.hidden = true;
+          practice.hidden = false;
+          initializePracticeWord(index);
+        } else {
+          view.hidden = false;
+          practice.hidden = true;
+        }
+
+        const modal = $("#wordModal");
         const modalContent = modal.querySelector(".modal-content");
 
-        // Restablece y activa animación de entrada
-        modalContent.style.animation = "none";
-        void modalContent.offsetWidth; // trigger reflow
-        modalContent.style.animation = "fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards";
-
         modal.style.display = "flex";
-        modal.setAttribute('aria-hidden', 'false');
-        document.body.style.overflow = 'hidden';
+        modal.setAttribute("aria-hidden", "false");
+        document.body.classList.add("modal-open");
+
+        modalContent.style.animation = "none";
+        void modalContent.offsetWidth;
+        modalContent.style.animation = "modal-in 0.34s cubic-bezier(.2,.8,.2,1) both";
+
+        requestAnimationFrame(() => {
+          const focusTarget = currentMode === PRACTICE_MODES.PRACTICE
+            ? $("#practiceListenBtn")
+            : $("#viewModeContent .play-btn");
+
+          focusTarget?.focus();
+        });
       }
 
       function playAudio() {
-        if (currentAudio) {
-          currentAudio.play().catch(() => {
-            Swal.fire({
-              icon: "error",
-              text: "No audio was found for this word.",
-              confirmButtonColor: "#ffcc00",
-              background: "#fffbe6",
-              allowEscapeKey: false,
-              allowOutsideClick: false,
-            });
-          });
+        if (!currentAudio) return;
+
+        if (currentMode === PRACTICE_MODES.VIEW && currentPracticeIndex >= 0) {
+          const gridButton = $$("#grid-container button").find(
+            (button) => button.dataset.index === String(currentPracticeIndex)
+          );
+          gridButton?.classList.add("played");
         }
+
+        currentAudio.currentTime = 0;
+        currentAudio.play().catch(() => {
+          showAlert({
+            icon: "error",
+            text: "No audio was found for this word.",
+          });
+        });
       }
 
-      function closeModal() {
-        const modal = document.getElementById("wordModal");
-        const modalContent = modal.querySelector(".modal-content");
+      function initializePracticeWord(index) {
+        const word = currentCategory[index] || "";
 
-        // Animación de salida
-        modalContent.style.animation = "fadeOut 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards";
+        practiceAttempts = 0;
+        practiceInput = [];
+        practiceBoxStates = [];
+        speechInterimLetters = [];
 
-        setTimeout(() => {
-          modal.style.display = "none";
-          modalContent.style.animation = "fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards"; // restablece para próxima vez
-          modal.setAttribute('aria-hidden', 'true');
-          document.body.style.overflow = '';
-          if (currentAudio) {
-            currentAudio.pause();
-            currentAudio.currentTime = 0;
+        $("#practiceAttempts").textContent = "0";
+        $("#practiceResultMessage").textContent = "";
+        $("#practiceResultMessage").className = "practice-result-message";
+        $("#voiceStatus").textContent = "Say one English letter at a time.";
+        $("#voiceBtn").classList.remove("listening");
+        $("#voiceBtn").setAttribute("aria-pressed", "false");
+        $("#voiceBtn").textContent = "🎙️ Spell by voice";
+
+        buildPracticeKeyboard();
+        renderPracticeInput();
+        updatePracticeButtons({
+          canVerify: false,
+          canReveal: true,
+          canRetry: false,
+          lockKeyboard: false,
+        });
+      }
+
+      function buildPracticeKeyboard() {
+        const keyboard = $("#practiceKeyboard");
+        keyboard.innerHTML = "";
+
+        [...keyboardLetters, "BACKSPACE"].forEach((key) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = `practice-key${key === "BACKSPACE" ? " backspace" : ""}`;
+          button.dataset.key = key;
+          button.setAttribute("aria-label", key === "BACKSPACE" ? "Delete last letter" : `Letter ${key}`);
+
+          const label = document.createElement("span");
+          label.textContent = key === "BACKSPACE" ? "⌫" : key;
+          button.appendChild(label);
+          button.addEventListener("click", () => handlePracticeKey(key));
+          keyboard.appendChild(button);
+        });
+      }
+
+      function renderPracticeInput() {
+        const display = $("#practiceInputDisplay");
+        const word = currentCategory[currentPracticeIndex] || "";
+        display.innerHTML = "";
+
+        for (let i = 0; i < word.length; i++) {
+          const slot = document.createElement("span");
+          slot.className = "practice-slot";
+          slot.setAttribute("aria-hidden", "true");
+
+          if (practiceInput[i]) {
+            slot.textContent = practiceInput[i];
+            slot.classList.add("filled");
+          } else {
+            slot.textContent = "_";
           }
-        }, 300);
+
+          if (practiceBoxStates[i]) slot.classList.add(practiceBoxStates[i]);
+          display.appendChild(slot);
+        }
+
+        const previewStart = practiceInput.length;
+        speechInterimLetters.slice(0, Math.max(0, word.length - previewStart)).forEach((letter) => {
+          const slot = document.createElement("span");
+          slot.className = "practice-slot preview";
+          slot.textContent = letter;
+          slot.setAttribute("aria-hidden", "true");
+          display.appendChild(slot);
+        });
+
+        display.setAttribute(
+          "aria-label",
+          `${practiceInput.length} of ${word.length} letters entered${speechInterimLetters.length ? ", voice detected" : ""}`
+        );
+
+        $("#verifyBtn").disabled = practiceInput.length !== word.length;
       }
 
-        // Cerrar modal al hacer clic fuera
-        const modal = document.getElementById("wordModal");
-        modal.addEventListener('click', (e) => {
-          if (e.target === modal) {
-            closeModal();
+      function handlePracticeKey(key) {
+        if (currentMode !== PRACTICE_MODES.PRACTICE || currentPracticeIndex < 0) return;
+
+        const word = currentCategory[currentPracticeIndex] || "";
+        const button = $$("#practiceKeyboard .practice-key").find((item) => item.dataset.key === key);
+        if (button?.disabled) return;
+
+        speechInterimLetters = [];
+        clearPracticeMessage();
+
+        if (key === "BACKSPACE") {
+          if (practiceInput.length === 0) return;
+          practiceInput.pop();
+          practiceBoxStates = [];
+          renderPracticeInput();
+          return;
+        }
+
+        if (practiceInput.length >= word.length) return;
+
+        practiceInput.push(key);
+        practiceBoxStates = [];
+        renderPracticeInput();
+      }
+
+      function normalizeWord(word) {
+        return String(word || "")
+          .trim()
+          .toUpperCase()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "");
+      }
+
+      function getWordleStatuses(guess, target) {
+        const normalizedGuess = normalizeWord(guess);
+        const normalizedTarget = normalizeWord(target);
+        const statuses = new Array(normalizedGuess.length).fill("incorrect");
+        const remaining = {};
+
+        for (const letter of normalizedTarget) remaining[letter] = (remaining[letter] || 0) + 1;
+
+        for (let i = 0; i < normalizedGuess.length; i++) {
+          if (normalizedGuess[i] === normalizedTarget[i]) {
+            statuses[i] = "correct";
+            remaining[normalizedGuess[i]] -= 1;
+          }
+        }
+
+        for (let i = 0; i < normalizedGuess.length; i++) {
+          if (statuses[i] === "correct") continue;
+          const letter = normalizedGuess[i];
+          if ((remaining[letter] || 0) > 0) {
+            statuses[i] = "present";
+            remaining[letter] -= 1;
+          }
+        }
+
+        return statuses;
+      }
+
+      function updateKeyboardFeedback(guess, statuses) {
+        const bestStatus = {};
+
+        [...guess].forEach((letter, index) => {
+          const status = statuses[index];
+          if (!KEYBOARD_STATUS_PRIORITY[status]) return;
+
+          if (
+            !bestStatus[letter] ||
+            KEYBOARD_STATUS_PRIORITY[status] > KEYBOARD_STATUS_PRIORITY[bestStatus[letter]]
+          ) {
+            bestStatus[letter] = status;
           }
         });
 
-      function searchWord() {
-        const num = parseInt(document.getElementById("search-number").value);
-        const maxNum = selectedCategory === "B" ? 100 : 60;
-        if (isNaN(num) || num < 1 || num > maxNum) {
-          Swal.fire({
-            icon: "warning",
-            text: `Enter a number between 1 and ${maxNum}.`,
-            confirmButtonColor: "#ffcc00",
-            background: "#fffbe6",
-            allowEscapeKey: false,
-            allowOutsideClick: false,
-          });
-          return;
-        }
-        showWord(num - 1);
+        $$("#practiceKeyboard .practice-key").forEach((button) => {
+          button.classList.remove("correct", "present", "incorrect");
+          const status = bestStatus[button.dataset.key];
+          if (status) button.classList.add(status);
+        });
       }
 
-      // Cerrar con tecla Escape
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
+      function updatePracticeButtons({ canVerify, canReveal, canRetry, lockKeyboard }) {
+        $("#verifyBtn").disabled = !canVerify;
+        $("#revealBtn").disabled = !canReveal;
+        $("#retryBtn").hidden = !canRetry;
+
+        $$("#practiceKeyboard .practice-key").forEach((button) => {
+          button.disabled = lockKeyboard;
+        });
+
+        $("#voiceBtn").disabled = lockKeyboard;
+      }
+
+      function setPracticeResult(message, type = "") {
+        const element = $("#practiceResultMessage");
+        element.textContent = message;
+        element.className = `practice-result-message${type ? ` ${type}` : ""}`;
+      }
+
+      function clearPracticeMessage() {
+        setPracticeResult("");
+      }
+
+      function updateGridButtonStatus(index, status) {
+        const button = $$("#grid-container button").find(
+          (item) => item.dataset.index === String(index)
+        );
+        if (!button) return;
+        renderGridButton(button, status);
+      }
+
+      function verifyPracticeWord() {
+        if (currentMode !== PRACTICE_MODES.PRACTICE || currentPracticeIndex < 0) return;
+
+        const target = normalizeWord(currentCategory[currentPracticeIndex]);
+        const guess = normalizeWord(practiceInput.join(""));
+        if (guess.length !== target.length) return;
+
+        stopVoiceInput({ silent: true });
+        const statuses = getWordleStatuses(guess, target);
+        const isCorrect = guess === target;
+
+        practiceAttempts += 1;
+        practiceBoxStates = statuses;
+        $("#practiceAttempts").textContent = String(practiceAttempts);
+        speechInterimLetters = [];
+        renderPracticeInput();
+        updateKeyboardFeedback(guess, statuses);
+
+        if (isCorrect) {
+          setPracticeResult("Correct!", "success");
+          saveProgress(selectedCategory, currentPracticeIndex, PRACTICE_STATUS.CORRECT);
+          updateGridButtonStatus(currentPracticeIndex, PRACTICE_STATUS.CORRECT);
+          updatePracticeButtons({ canVerify: false, canReveal: false, canRetry: true, lockKeyboard: true });
+
+          if (typeof Swal !== "undefined") {
+            // Feedback visual breve; no bloquea el flujo.
+            Swal.fire({
+              toast: true,
+              position: "top-end",
+              icon: "success",
+              title: "Correct!",
+              showConfirmButton: false,
+              timer: 1100,
+              timerProgressBar: true,
+              background: "#14142e",
+              color: "#f0f0f5",
+            });
+          }
+          return;
+        }
+
+        setPracticeResult("Incorrect", "error");
+        saveProgress(selectedCategory, currentPracticeIndex, PRACTICE_STATUS.INCORRECT);
+        updateGridButtonStatus(currentPracticeIndex, PRACTICE_STATUS.INCORRECT);
+        updatePracticeButtons({ canVerify: false, canReveal: true, canRetry: true, lockKeyboard: true });
+      }
+
+      function revealPracticeWord() {
+        if (currentMode !== PRACTICE_MODES.PRACTICE || currentPracticeIndex < 0) return;
+
+        const target = normalizeWord(currentCategory[currentPracticeIndex]);
+
+        stopVoiceInput({ silent: true });
+        practiceInput = [...target];
+        practiceBoxStates = target.split("").map(() => "revealed");
+        speechInterimLetters = [];
+
+        renderPracticeInput();
+        setPracticeResult(`Word revealed: ${target}`, "revealed");
+        saveProgress(selectedCategory, currentPracticeIndex, PRACTICE_STATUS.REVEALED);
+        updateGridButtonStatus(currentPracticeIndex, PRACTICE_STATUS.REVEALED);
+        updatePracticeButtons({ canVerify: false, canReveal: false, canRetry: true, lockKeyboard: true });
+      }
+
+      function retryPracticeWord() {
+        if (currentPracticeIndex < 0) return;
+
+        stopVoiceInput({ silent: true });
+        practiceInput = [];
+        practiceBoxStates = [];
+        speechInterimLetters = [];
+        clearPracticeMessage();
+        buildPracticeKeyboard();
+        renderPracticeInput();
+        updatePracticeButtons({ canVerify: false, canReveal: true, canRetry: false, lockKeyboard: false });
+
+        $("#voiceStatus").textContent = "Say one English letter at a time.";
+        requestAnimationFrame(() => $("#practiceListenBtn")?.focus());
+      }
+
+      function clearPracticeSession() {
+        currentPracticeIndex = -1;
+        practiceInput = [];
+        practiceBoxStates = [];
+        practiceAttempts = 0;
+        speechInterimLetters = [];
+      }
+
+      function hideModalImmediately() {
+        const modal = $("#wordModal");
+        const modalContent = modal.querySelector(".modal-content");
+
+        if (closeModalTimer) {
+          clearTimeout(closeModalTimer);
+          closeModalTimer = null;
+        }
+
+        modal.style.display = "none";
+        modal.setAttribute("aria-hidden", "true");
+        modalContent.style.animation = "none";
+        document.body.classList.remove("modal-open");
+
+        if (currentAudio) {
+          currentAudio.pause();
+          currentAudio.currentTime = 0;
+          currentAudio = null;
+        }
+      }
+
+      function closeModal(options = {}) {
+        const modal = $("#wordModal");
+        const modalContent = modal.querySelector(".modal-content");
+
+        if (options.immediate) {
+          stopVoiceInput({ silent: true });
+          hideModalImmediately();
+          return;
+        }
+
+        if (modal.getAttribute("aria-hidden") === "true") return;
+
+        stopVoiceInput({ silent: true });
+        modalContent.style.animation = "modal-out 0.24s cubic-bezier(.2,.8,.2,1) both";
+
+        closeModalTimer = setTimeout(() => {
+          hideModalImmediately();
+          closeModalTimer = null;
+
+          if (lastFocusedElement && typeof lastFocusedElement.focus === "function") {
+            lastFocusedElement.focus();
+          }
+          lastFocusedElement = null;
+        }, 240);
+      }
+
+      /* VOICE SPELLING ENGINE
+         Uses the microphone directly and transcribes short English spelling phrases
+         with Whisper in the browser. No Web Speech API dependency.
+      */
+      const VOICE_MODEL = "onnx-community/whisper-base.en";
+      const TRANSFORMERS_URL = "https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1";
+      const VOICE_RMS_THRESHOLD = 0.006;
+      const VOICE_SILENCE_MS = 520;
+      const VOICE_MIN_SEGMENT_MS = 220;
+      const VOICE_MAX_SEGMENT_MS = 2400;
+      const VOICE_PRE_ROLL_MS = 130;
+
+      const SPOKEN_LETTER_ALIASES = Object.freeze({
+        a: "A", ay: "A", aye: "A", eh: "A", alpha: "A",
+        b: "B", be: "B", bee: "B", bravo: "B",
+        c: "C", see: "C", sea: "C", charlie: "C",
+        d: "D", dee: "D", de: "D", delta: "D",
+        e: "E", ee: "E", he: "E", echo: "E",
+        f: "F", ef: "F", eff: "F", foxtrot: "F",
+        g: "G", gee: "G", jeep: "G", golf: "G",
+        h: "H", aitch: "H", haitch: "H", hotel: "H",
+        i: "I", eye: "I", aye: "I", india: "I",
+        j: "J", jay: "J", jae: "J", juliet: "J", juliett: "J",
+        k: "K", kay: "K", okay: "K", kilo: "K",
+        l: "L", el: "L", elle: "L", lima: "L",
+        m: "M", em: "M", mike: "M", mic: "M",
+        n: "N", en: "N", inn: "N", november: "N",
+        o: "O", oh: "O", owe: "O", oscar: "O",
+        p: "P", pee: "P", pea: "P", papa: "P",
+        q: "Q", cue: "Q", queue: "Q", quebec: "Q",
+        r: "R", are: "R", our: "R", ar: "R", romeo: "R",
+        s: "S", ess: "S", es: "S", sierra: "S",
+        t: "T", tee: "T", tea: "T", tango: "T",
+        u: "U", you: "U", yew: "U", ewe: "U", uniform: "U",
+        v: "V", vee: "V", victor: "V",
+        w: "W", doubleyou: "W", doubleyoo: "W", whiskey: "W", whisky: "W",
+        x: "X", ex: "X", axe: "X", xray: "X",
+        y: "Y", why: "Y", wai: "Y", yankee: "Y",
+        z: "Z", zee: "Z", zed: "Z", zebra: "Z",
+        enye: "Ñ", enyeh: "Ñ"
+      });
+
+      const VOICE_LETTER_CANONICAL = Object.freeze({
+        A: ["a", "ay"], B: ["b", "be", "bee"], C: ["c", "see"], D: ["d", "dee"],
+        E: ["e", "ee"], F: ["f", "ef", "eff"], G: ["g", "gee"], H: ["h", "aitch"],
+        I: ["i", "eye"], J: ["j", "jay"], K: ["k", "kay"], L: ["l", "el"],
+        M: ["m", "em"], N: ["n", "en"], O: ["o", "oh"], P: ["p", "pee"],
+        Q: ["q", "cue"], R: ["r", "are"], S: ["s", "ess"], T: ["t", "tee"],
+        U: ["u", "you"], V: ["v", "vee"], W: ["w", "doubleyou"], X: ["x", "ex"],
+        Y: ["y", "why"], Z: ["z", "zee"], Ñ: ["enye"]
+      });
+
+      let voiceStream = null;
+      let voiceContext = null;
+      let voiceSource = null;
+      let voiceProcessor = null;
+      let voiceSilentGain = null;
+      let voiceSpeechStarted = false;
+      let voiceSilenceStartedAt = 0;
+      let voiceSegmentStartedAt = 0;
+      let voiceLastSpeechAt = 0;
+      let voicePreRoll = [];
+      let voiceSpeechChunks = [];
+      let voiceProcessing = false;
+      let voiceStopRequested = false;
+      let whisperTranscriber = null;
+      let whisperLoadingPromise = null;
+
+      function cleanSpeechText(transcript) {
+        return String(transcript || "")
+          .toLowerCase()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .replace(/double[\s-]*you/g, "doubleyou")
+          .replace(/double[\s-]*yoo/g, "doubleyoo")
+          .replace(/x[\s-]*ray/g, "xray")
+          .replace(/[^a-z0-9\s]/g, " ")
+          .replace(/\s+/g, " ")
+          .trim();
+      }
+
+      function levenshteinDistance(a, b) {
+        const left = String(a || "");
+        const right = String(b || "");
+        const row = Array.from({ length: left.length + 1 }, (_, i) => i);
+
+        for (let j = 1; j <= right.length; j++) {
+          let previous = row[0];
+          row[0] = j;
+          for (let i = 1; i <= left.length; i++) {
+            const current = row[i];
+            row[i] = Math.min(
+              previous + (left[i - 1] === right[j - 1] ? 0 : 1),
+              row[i - 1] + 1,
+              current + 1
+            );
+            previous = current;
+          }
+        }
+        return row[left.length];
+      }
+
+      function resolveSpokenLetter(token) {
+        const value = String(token || "").toLowerCase();
+        if (!value) return null;
+        if (SPOKEN_LETTER_ALIASES[value]) return SPOKEN_LETTER_ALIASES[value];
+        if (/^[a-z]$/.test(value)) return value.toUpperCase();
+
+        let bestLetter = null;
+        let bestDistance = Infinity;
+        for (const [alias, letter] of Object.entries(SPOKEN_LETTER_ALIASES)) {
+          const distance = levenshteinDistance(value, alias);
+          const allowed = alias.length <= 3 ? 1 : Math.min(2, Math.floor(alias.length / 2));
+          if (distance <= allowed && distance < bestDistance) {
+            bestDistance = distance;
+            bestLetter = letter;
+          }
+        }
+        return bestLetter;
+      }
+
+      function transcriptToLetters(transcript) {
+        const cleaned = cleanSpeechText(transcript);
+        if (!cleaned) return [];
+
+        const tokens = cleaned.split(/\s+/).filter(Boolean);
+        const letters = [];
+
+        for (let i = 0; i < tokens.length; i++) {
+          const token = tokens[i];
+          if (["letter", "the", "is", "and", "spell", "spelling", "my"].includes(token)) continue;
+
+          const direct = resolveSpokenLetter(token);
+          if (direct) {
+            letters.push(direct);
+            continue;
+          }
+
+          if (token === "double") {
+            const next = tokens[i + 1];
+            const nextLetter = resolveSpokenLetter(next);
+            if (nextLetter) {
+              letters.push(nextLetter, nextLetter);
+              i++;
+              continue;
+            }
+          }
+
+          if (/^[a-z]{2,6}$/.test(token)) {
+            const compact = [...token];
+            if (compact.length <= 4) letters.push(...compact.map((letter) => letter.toUpperCase()));
+          }
+        }
+
+        return letters;
+      }
+
+      function setVoiceStatus(message) {
+        const status = $("#voiceStatus");
+        if (status) status.textContent = message;
+      }
+
+      function resetVoiceButton() {
+        const button = $("#voiceBtn");
+        if (!button) return;
+        button.classList.remove("listening", "processing");
+        button.setAttribute("aria-pressed", "false");
+        button.disabled = false;
+        button.textContent = "🎙️ Spell by voice";
+      }
+
+      function appendVoiceLetters(letters) {
+        if (currentMode !== PRACTICE_MODES.PRACTICE || currentPracticeIndex < 0) return 0;
+        const target = normalizeWord(currentCategory[currentPracticeIndex] || "");
+        const remaining = Math.max(0, target.length - practiceInput.length);
+        if (!remaining) return 0;
+
+        const accepted = letters
+          .map(normalizeWord)
+          .filter((letter) => /^[A-ZÑ]$/.test(letter))
+          .slice(0, remaining);
+
+        if (!accepted.length) return 0;
+        practiceInput.push(...accepted);
+        practiceBoxStates = [];
+        clearPracticeMessage();
+        renderPracticeInput();
+
+        accepted.forEach((letter) => {
+          const key = $("#practiceKeyboard").querySelector(`[data-key="${letter}"]`);
+          key?.animate?.(
+            [
+              { transform: "translateY(0) scale(1)" },
+              { transform: "translateY(-3px) scale(1.05)" },
+              { transform: "translateY(0) scale(1)" },
+            ],
+            { duration: 250, easing: "cubic-bezier(.2,.8,.2,1)" }
+          );
+        });
+
+        return accepted.length;
+      }
+
+      function speechIsActuallyListening() {
+        return speechListening && currentMode === PRACTICE_MODES.PRACTICE && currentPracticeIndex >= 0;
+      }
+
+      function calculateFloatRms(data) {
+        let sum = 0;
+        for (let i = 0; i < data.length; i++) sum += data[i] * data[i];
+        return Math.sqrt(sum / Math.max(1, data.length));
+      }
+
+      function mergeFloat32Chunks(chunks) {
+        const total = chunks.reduce((sum, chunk) => sum + chunk.length, 0);
+        const output = new Float32Array(total);
+        let offset = 0;
+        for (const chunk of chunks) {
+          output.set(chunk, offset);
+          offset += chunk.length;
+        }
+        return output;
+      }
+
+      function trimSilence(samples, sampleRate) {
+        if (!samples?.length) return samples;
+        const window = Math.max(64, Math.floor(sampleRate * 0.025));
+        const threshold = 0.008;
+        let start = 0;
+        let end = samples.length;
+
+        for (let i = 0; i + window <= samples.length; i += window) {
+          if (calculateFloatRms(samples.subarray(i, i + window)) >= threshold) {
+            start = Math.max(0, i - Math.floor(sampleRate * 0.06));
+            break;
+          }
+        }
+
+        for (let i = samples.length - window; i >= 0; i -= window) {
+          if (calculateFloatRms(samples.subarray(i, i + window)) >= threshold) {
+            end = Math.min(samples.length, i + window + Math.floor(sampleRate * 0.09));
+            break;
+          }
+        }
+
+        return samples.slice(start, end);
+      }
+
+      function resampleTo16k(input, sourceRate) {
+        if (sourceRate === 16000) return input;
+        const ratio = sourceRate / 16000;
+        const targetLength = Math.max(1, Math.round(input.length / ratio));
+        const output = new Float32Array(targetLength);
+
+        for (let i = 0; i < targetLength; i++) {
+          const position = i * ratio;
+          const left = Math.floor(position);
+          const right = Math.min(left + 1, input.length - 1);
+          const amount = position - left;
+          output[i] = input[left] * (1 - amount) + input[right] * amount;
+        }
+        return output;
+      }
+
+      async function loadWhisperTranscriber() {
+        if (whisperTranscriber) return whisperTranscriber;
+        if (whisperLoadingPromise) return whisperLoadingPromise;
+
+        whisperLoadingPromise = (async () => {
+          setVoiceStatus("Loading voice model… the first time may take a little while.");
+          const { pipeline } = await import(TRANSFORMERS_URL);
+
+          const progress_callback = (info) => {
+            if (info?.status === "progress" && Number.isFinite(info.progress)) {
+              setVoiceStatus(`Loading voice model… ${Math.round(info.progress)}%`);
+            } else if (info?.status === "progress_total" && Number.isFinite(info.progress)) {
+              setVoiceStatus(`Loading voice model… ${Math.round(info.progress)}%`);
+            }
+          };
+
+          if (navigator.gpu) {
+            try {
+              whisperTranscriber = await pipeline(
+                "automatic-speech-recognition",
+                VOICE_MODEL,
+                { device: "webgpu", dtype: "fp16", progress_callback }
+              );
+            } catch (error) {
+              console.warn("WebGPU Whisper failed; falling back to WASM/CPU.", error);
+            }
+          }
+
+          if (!whisperTranscriber) {
+            whisperTranscriber = await pipeline(
+              "automatic-speech-recognition",
+              VOICE_MODEL,
+              { device: "wasm", dtype: "q8", progress_callback }
+            );
+          }
+
+          return whisperTranscriber;
+        })().catch((error) => {
+          whisperLoadingPromise = null;
+          throw error;
+        });
+
+        return whisperLoadingPromise;
+      }
+
+      async function transcribeVoiceSamples(samples, sampleRate) {
+        const prepared = resampleTo16k(trimSilence(samples, sampleRate), sampleRate);
+        const transcriber = await loadWhisperTranscriber();
+
+        const baseOptions = {
+          task: "transcribe",
+          temperature: 0,
+          no_speech_threshold: 0.12,
+          logprob_threshold: -3.0,
+          return_timestamps: false,
+        };
+
+        const first = await transcriber(prepared, baseOptions);
+        const firstText = String(first?.text || "").trim();
+
+        if (transcriptToLetters(firstText).length) return firstText;
+
+        // A second pass strongly biases Whisper toward letter names. This helps
+        // with short isolated sounds such as “B”, “R”, “I”, etc.
+        const prompted = await transcriber(prepared, {
+          ...baseOptions,
+          initial_prompt: "English spelling practice. The speaker is naming one letter of the alphabet. Possible names include: A ay, B bee, C see, D dee, E ee, F ef, G gee, H aitch, I eye, J jay, K kay, L el, M em, N en, O oh, P pee, Q cue, R are, S ess, T tee, U you, V vee, W double you, X ex, Y why, Z zee.",
+        });
+        const promptedText = String(prompted?.text || "").trim();
+
+        return promptedText || firstText;
+      }
+
+      function resetVoiceBuffers() {
+        voicePreRoll = [];
+        voiceSpeechChunks = [];
+        voiceSpeechStarted = false;
+        voiceSilenceStartedAt = 0;
+        voiceSegmentStartedAt = 0;
+        voiceLastSpeechAt = 0;
+      }
+
+      function setupVoiceProcessor() {
+        const processor = voiceContext.createScriptProcessor(4096, 1, 1);
+        const silentGain = voiceContext.createGain();
+        silentGain.gain.value = 0;
+
+        voiceProcessor = processor;
+        voiceSilentGain = silentGain;
+
+        voiceSource.connect(voiceProcessor);
+        voiceProcessor.connect(voiceSilentGain);
+        voiceSilentGain.connect(voiceContext.destination);
+
+        voiceProcessor.onaudioprocess = (event) => {
+          if (!speechIsActuallyListening() || voiceStopRequested || voiceProcessing) return;
+
+          const input = event.inputBuffer.getChannelData(0);
+          const copy = new Float32Array(input.length);
+          copy.set(input);
+
+          voicePreRoll.push(copy);
+          const maxPreRollSamples = Math.floor((voiceContext.sampleRate * VOICE_PRE_ROLL_MS) / 1000);
+          let preRollSamples = 0;
+          for (let i = voicePreRoll.length - 1; i >= 0; i--) {
+            preRollSamples += voicePreRoll[i].length;
+            if (preRollSamples >= maxPreRollSamples) {
+              voicePreRoll = voicePreRoll.slice(i);
+              break;
+            }
+          }
+
+          const rms = calculateFloatRms(input);
+          const now = performance.now();
+          const speaking = rms >= VOICE_RMS_THRESHOLD;
+
+          if (speaking) {
+            if (!voiceSpeechStarted) {
+              voiceSpeechStarted = true;
+              voiceSegmentStartedAt = now;
+              voiceSpeechChunks = [...voicePreRoll];
+            }
+            voiceSilenceStartedAt = 0;
+            voiceLastSpeechAt = now;
+            voiceSpeechChunks.push(copy);
+            return;
+          }
+
+          if (!voiceSpeechStarted) return;
+          voiceSpeechChunks.push(copy);
+
+          if (!voiceSilenceStartedAt) voiceSilenceStartedAt = now;
+          const silentFor = now - voiceSilenceStartedAt;
+          const segmentFor = now - voiceSegmentStartedAt;
+
+          if (silentFor >= VOICE_SILENCE_MS && segmentFor >= VOICE_MIN_SEGMENT_MS) {
+            finalizeVoiceSegment();
+          } else if (segmentFor >= VOICE_MAX_SEGMENT_MS) {
+            finalizeVoiceSegment();
+          }
+        };
+      }
+
+      async function finalizeVoiceSegment() {
+        if (!speechIsActuallyListening() || voiceProcessing || !voiceSpeechChunks.length) return;
+
+        voiceProcessing = true;
+        const samples = mergeFloat32Chunks(voiceSpeechChunks);
+        resetVoiceBuffers();
+
+        const button = $("#voiceBtn");
+        button.classList.add("processing");
+        button.disabled = true;
+        setVoiceStatus("Listening finished. Identifying the letter…");
+
+        try {
+          const transcript = await transcribeVoiceSamples(samples, voiceContext?.sampleRate || 48000);
+          const letters = transcriptToLetters(transcript);
+
+          if (!speechIsActuallyListening()) return;
+
+          if (!letters.length) {
+            setVoiceStatus(
+              transcript
+                ? `I heard “${transcript}”, but I could not map it to a letter. Try saying “bee”, “are”, or “eye”.`
+                : "No clear letter was detected. Try saying the letter name a little closer to the microphone."
+            );
+          } else {
+            const word = normalizeWord(currentCategory[currentPracticeIndex] || "");
+            const accepted = letters.slice(0, Math.max(0, word.length - practiceInput.length));
+            const added = appendVoiceLetters(accepted);
+            const remaining = Math.max(0, word.length - practiceInput.length);
+
+            setVoiceStatus(
+              added
+                ? `${accepted.slice(0, added).join(" ")} detected. ${remaining} letter${remaining === 1 ? "" : "s"} remaining.`
+                : "That letter was already outside the word length. Try again."
+            );
+
+            if (practiceInput.length >= word.length) {
+              setVoiceStatus("The spelling is complete. Press Check.");
+              stopVoiceInput({ silent: true, keepStatus: true });
+              setVoiceStatus("The spelling is complete. Press Check.");
+              return;
+            }
+          }
+        } catch (error) {
+          console.error("Voice recognition error:", error);
+          setVoiceStatus("Voice recognition could not identify that letter. Try again or use the keyboard.");
+        } finally {
+          button.classList.remove("processing");
+          voiceProcessing = false;
+        }
+      }
+
+      async function startVoiceInput() {
+        if (!navigator.mediaDevices?.getUserMedia) {
+          setVoiceStatus("Microphone capture is not available in this browser.");
+          showAlert({ icon: "warning", title: "Microphone unavailable", text: "This browser cannot provide microphone access to the page." });
+          return;
+        }
+
+        if (!(window.isSecureContext || ["localhost", "127.0.0.1"].includes(location.hostname))) {
+          setVoiceStatus("Voice input requires HTTPS or localhost.");
+          showAlert({ icon: "warning", title: "Secure connection required", text: "Open the site over HTTPS, such as GitHub Pages, or use localhost." });
+          return;
+        }
+
+        voiceStopRequested = false;
+        speechListening = true;
+        voiceProcessing = false;
+        resetVoiceBuffers();
+
+        const button = $("#voiceBtn");
+        button.classList.add("listening");
+        button.setAttribute("aria-pressed", "true");
+        button.textContent = "⏹️ Stop microphone";
+
+        try {
+          setVoiceStatus("Requesting microphone access…");
+          voiceStream = await navigator.mediaDevices.getUserMedia({
+            audio: {
+              channelCount: 1,
+              sampleRate: 48000,
+              echoCancellation: true,
+              noiseSuppression: true,
+              autoGainControl: true,
+            },
+          });
+
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (!AudioContextClass) throw new Error("AudioContext unavailable");
+
+          voiceContext = new AudioContextClass({ latencyHint: "interactive" });
+          if (voiceContext.state === "suspended") await voiceContext.resume();
+
+          voiceSource = voiceContext.createMediaStreamSource(voiceStream);
+          setupVoiceProcessor();
+
+          setVoiceStatus("Microphone ready. Loading the spelling engine…");
+          await loadWhisperTranscriber();
+          setVoiceStatus("Listening. Say one English letter clearly, then pause.");
+        } catch (error) {
+          console.error("Voice input start error:", error);
+          stopVoiceInput({ silent: true });
+
+          if (error?.name === "NotAllowedError" || error?.name === "SecurityError") {
+            setVoiceStatus("Microphone permission was denied. Check Brave site permissions and try again.");
+            showAlert({ icon: "warning", title: "Microphone permission", text: "Allow microphone access for this site, then press Spell by Voice again." });
+          } else {
+            setVoiceStatus("The voice engine could not start. You can still use the keyboard.");
+          }
+        }
+      }
+
+      function stopVoiceInput({ silent = false, keepStatus = false } = {}) {
+        voiceStopRequested = true;
+        speechListening = false;
+        voiceProcessing = false;
+        resetVoiceBuffers();
+
+        if (voiceProcessor) {
+          voiceProcessor.onaudioprocess = null;
+          try { voiceProcessor.disconnect(); } catch {}
+          voiceProcessor = null;
+        }
+        if (voiceSilentGain) {
+          try { voiceSilentGain.disconnect(); } catch {}
+          voiceSilentGain = null;
+        }
+        if (voiceSource) {
+          try { voiceSource.disconnect(); } catch {}
+          voiceSource = null;
+        }
+        if (voiceStream) {
+          voiceStream.getTracks().forEach((track) => track.stop());
+          voiceStream = null;
+        }
+        if (voiceContext) {
+          try { voiceContext.close(); } catch {}
+          voiceContext = null;
+        }
+
+        resetVoiceButton();
+        if (!silent && !keepStatus) setVoiceStatus("Microphone stopped.");
+      }
+
+      async function toggleVoiceInput() {
+        if (speechListening) {
+          stopVoiceInput();
+          return;
+        }
+        await startVoiceInput();
+      }
+
+      $("#search-container").addEventListener("submit", (event) => {
+        event.preventDefault();
+        searchWord();
+      });
+
+      $("#wordModal").addEventListener("click", (event) => {
+        if (event.target === $("#wordModal")) closeModal();
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
           closeModal();
+          return;
+        }
+
+        const modalOpen = $("#wordModal").getAttribute("aria-hidden") === "false";
+        if (!modalOpen || currentMode !== PRACTICE_MODES.PRACTICE) return;
+
+        if (event.key === "Backspace" || event.key === "Delete") {
+          event.preventDefault();
+          handlePracticeKey("BACKSPACE");
+          return;
+        }
+
+        if (event.key === "Enter") {
+          if (!$("#verifyBtn").disabled) {
+            event.preventDefault();
+            verifyPracticeWord();
+          }
+          return;
+        }
+
+        if (/^[a-zA-ZñÑ]$/.test(event.key)) {
+          event.preventDefault();
+          handlePracticeKey(event.key.toUpperCase());
         }
       });
 
-      // Año actual
-      const years = document.getElementsByClassName("year");
-      for (let i = 0; i < years.length; i++) {
-        years[i].textContent = new Date().getFullYear();
+      $("#mode-view").addEventListener("keydown", (event) => {
+        if (event.key === "ArrowRight") {
+          event.preventDefault();
+          $("#mode-practice").focus();
+          setMode("practice");
+        }
+      });
+
+      $("#mode-practice").addEventListener("keydown", (event) => {
+        if (event.key === "ArrowLeft") {
+          event.preventDefault();
+          $("#mode-view").focus();
+          setMode("view");
+        }
+      });
+
+      function searchWord() {
+        if (!selectedCategory) {
+          showAlert({
+            icon: "warning",
+            text: "First select Category A or Category B.",
+          });
+          return;
+        }
+
+        const value = $("#search-number").value.trim();
+        const number = Number(value);
+        const max = selectedCategory === "B" ? 100 : 60;
+
+        if (!Number.isInteger(number) || number < 1 || number > max) {
+          showAlert({
+            icon: "warning",
+            text: `Enter a whole number between 1 and ${max}.`,
+          });
+          return;
+        }
+
+        const opener = $$("#grid-container button").find((button) => button.dataset.index === String(number - 1));
+        showWord(number - 1, opener);
       }
 
-      // Reloj en tiempo real
+      // Current year.
+      $$(".year").forEach((element) => {
+        element.textContent = new Date().getFullYear();
+      });
+
+      // Real-time clock for Bogota.
       function updateTime() {
-        const options = {
+        const formatter = new Intl.DateTimeFormat("es-CO", {
           timeZone: "America/Bogota",
           hour: "2-digit",
           minute: "2-digit",
           second: "2-digit",
-        };
-        const formatter = new Intl.DateTimeFormat("es-CO", options);
-        document.getElementById("time").textContent = formatter.format(
-          new Date()
-        );
+        });
+        $("#time").textContent = formatter.format(new Date());
       }
+
+      // Restore the last saved mode.
+      const storedMode = safeStorageGet("spellingBeeMode", PRACTICE_MODES.VIEW);
+      setMode(storedMode, false);
 
       setInterval(updateTime, 1000);
       updateTime();
