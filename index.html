@@ -2167,6 +2167,57 @@
       .voice-status { transition: color 0.2s ease, opacity 0.2s ease; }
       .practice-result-message.success { text-shadow: 0 0 14px rgba(34, 197, 94, 0.16); }
       body.galaxy-theme .guide-card:hover { border-color: rgba(0, 212, 255, 0.36); box-shadow: 0 10px 26px rgba(0, 212, 255, 0.06); }
+      /* 🏅 Secret achievements: galaxy-orange, accessible, and celebratory. */
+      .achievements-btn {
+        position: relative;
+        isolation: isolate;
+        overflow: hidden;
+        color: #fff7ed !important;
+        border: 1px solid rgba(251, 146, 60, 0.78) !important;
+        background: linear-gradient(115deg, #9a3412 0%, #ea580c 38%, #f97316 64%, #7c2d12 100%) !important;
+        box-shadow: 0 0 0 1px rgba(251, 146, 60, 0.18), 0 0 20px rgba(249, 115, 22, 0.24), inset 0 1px rgba(255,255,255,0.2);
+        font-weight: 900 !important;
+        animation: achievement-button-pulse 3.2s ease-in-out infinite;
+      }
+      .achievements-btn::before {
+        content: ""; position: absolute; z-index: -1; inset: 0; left: -130%; width: 75%;
+        transform: skewX(-18deg); background: linear-gradient(90deg, transparent, rgba(255,255,255,0.24), transparent);
+        animation: achievement-button-shine 5s ease-in-out infinite;
+      }
+      .achievements-btn:hover { transform: translateY(-2px) scale(1.015); box-shadow: 0 0 26px rgba(249,115,22,0.42); }
+      .achievement-count { display: inline-grid; place-items: center; min-width: 1.55rem; height: 1.45rem; padding: 0 0.3rem; border-radius: 999px; background: rgba(255,247,237,0.2); border: 1px solid rgba(255,247,237,0.42); font-size: 0.75rem; font-variant-numeric: tabular-nums; }
+      @keyframes achievement-button-pulse { 0%, 100% { filter: saturate(0.98); } 50% { filter: saturate(1.22) brightness(1.07); } }
+      @keyframes achievement-button-shine { 0%, 72%, 100% { left: -130%; } 86% { left: 155%; } }
+      .achievement-unlock-toast {
+        position: fixed; z-index: 10050; top: max(1rem, env(safe-area-inset-top)); left: 50%;
+        width: min(92vw, 410px); display: grid; grid-template-columns: 56px 1fr; align-items: center; gap: 0.8rem;
+        padding: 1rem 1.1rem; border: 1px solid rgba(251,146,60,0.74); border-radius: 18px;
+        color: #fff7ed; background: radial-gradient(circle at 15% 0%, rgba(249,115,22,0.28), transparent 48%), linear-gradient(145deg, #1c1026, #24112d 58%, #3b170f);
+        box-shadow: 0 18px 55px rgba(0,0,0,0.48), 0 0 34px rgba(249,115,22,0.24); opacity: 0; pointer-events: none;
+        transform: translate(-50%, -140%) scale(0.92); transition: opacity 0.32s ease, transform 0.46s cubic-bezier(.2,.9,.25,1.25);
+      }
+      .achievement-unlock-toast.visible { opacity: 1; transform: translate(-50%, 0) scale(1); }
+      .achievement-toast-icon { display: grid; place-items: center; width: 56px; height: 56px; font-size: 1.9rem; border-radius: 15px; background: linear-gradient(145deg, rgba(249,115,22,0.3), rgba(124,45,18,0.38)); border: 1px solid rgba(251,146,60,0.45); animation: achievement-icon-pop 0.62s cubic-bezier(.2,.9,.25,1.3) both; }
+      .achievement-toast-kicker { display: block; margin-bottom: 0.16rem; color: #fdba74; font-size: 0.68rem; font-weight: 900; letter-spacing: 0.14em; text-transform: uppercase; }
+      .achievement-toast-title { display: block; color: #fff7ed; font-size: 1.02rem; line-height: 1.25; font-weight: 900; }
+      .achievement-toast-description { display: block; margin-top: 0.24rem; color: #fed7aa; font-size: 0.78rem; line-height: 1.35; }
+      @keyframes achievement-icon-pop { from { transform: rotate(-18deg) scale(0.45); } to { transform: rotate(0) scale(1); } }
+      .achievement-gallery { max-height: min(62vh, 580px); overflow: auto; padding: 0.2rem 0.1rem 0.6rem; text-align: left; }
+      .achievement-gallery-summary { margin: 0 0 0.85rem; padding: 0.85rem 1rem; border-radius: 14px; border: 1px solid rgba(251,146,60,0.35); background: linear-gradient(120deg, rgba(249,115,22,0.13), rgba(124,58,237,0.11)); }
+      .achievement-gallery-summary strong { color: #fdba74; font-size: 1.05rem; }
+      .achievement-gallery-track { height: 7px; margin-top: 0.65rem; overflow: hidden; border-radius: 999px; background: rgba(255,255,255,0.09); }
+      .achievement-gallery-fill { height: 100%; border-radius: inherit; background: linear-gradient(90deg, #f97316, #fb923c, #facc15); box-shadow: 0 0 16px rgba(249,115,22,0.35); }
+      .achievement-card { display: grid; grid-template-columns: 43px 1fr; gap: 0.7rem; margin: 0.55rem 0; padding: 0.78rem; border: 1px solid rgba(251,146,60,0.27); border-radius: 13px; background: linear-gradient(125deg, rgba(249,115,22,0.09), rgba(124,58,237,0.08)); animation: achievement-card-reveal 0.4s ease both; }
+      .achievement-card-icon { display: grid; place-items: center; width: 43px; height: 43px; border-radius: 12px; background: rgba(249,115,22,0.14); font-size: 1.45rem; }
+      .achievement-card h3 { margin: 0 0 0.22rem; font-size: 0.91rem; line-height: 1.25; color: #fdba74; }
+      .achievement-card p { margin: 0; font-size: 0.79rem; line-height: 1.45; color: #e5e7eb; }
+      .achievement-secret-note { margin: 0.9rem 0 0; color: #b9b6c9; font-size: 0.8rem; text-align: center; }
+      @keyframes achievement-card-reveal { from { opacity: 0; transform: translateY(8px) scale(0.985); } to { opacity: 1; transform: translateY(0) scale(1); } }
+      .bee-easter-egg { cursor: pointer; transform-origin: 50% 70%; }
+      .bee-easter-egg:focus-visible { outline: 3px solid #fb923c; outline-offset: 5px; border-radius: 50%; }
+      .bee-easter-egg.bee-buzz { animation: bee-secret-buzz 0.85s cubic-bezier(.2,.7,.3,1) both; }
+      body.queen-bee-easter-egg .bee-easter-egg { filter: drop-shadow(0 0 9px rgba(251,146,60,0.95)) drop-shadow(0 0 20px rgba(249,115,22,0.7)); }
+      @keyframes bee-secret-buzz { 0% { transform: rotate(0) scale(1); } 15% { transform: rotate(-16deg) translateX(-4px) scale(1.1); } 30% { transform: rotate(15deg) translateX(4px) scale(1.13); } 45% { transform: rotate(-12deg) translateX(-3px); } 60% { transform: rotate(9deg) translateX(3px); } 75% { transform: rotate(-4deg) scale(1.08); } 100% { transform: rotate(0) scale(1); } }
       @media (prefers-reduced-motion: reduce) {
         *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: 0.01ms !important; }
       }
@@ -2190,7 +2241,7 @@
 
   <body>
     <header>
-      <img src="assets/img/bee.png" alt="Bee" class="logo" />
+      <img src="assets/img/bee.png" alt="Bee — click for a secret" class="logo bee-easter-egg" id="beeLogo" role="button" tabindex="0" aria-label="Click the bee for a secret" title="Psst… try clicking the bee" />
       <h1>
         &bull; Spelling Bee <span class="year"></span> &bull; <br />
         Misael Pastrana Borrero School
@@ -2260,6 +2311,9 @@
       <button type="button" class="utility-btn stats-btn" id="myStatsBtn" onclick="openMyStats()" title="View your practice statistics">
         📊 My Stats
       </button>
+      <button type="button" class="utility-btn achievements-btn" id="achievementsBtn" onclick="openAchievements()" title="Discover permanent secret achievements" aria-haspopup="dialog">
+        🏅 Achievements <span class="achievement-count" id="achievementCount">0</span>
+      </button>
       <button type="button" class="utility-btn sfx-btn" id="toggleSfxBtn" onclick="toggleSfx()" title="Toggle sound effects (Web Audio)">
         🔔 SFX: On
       </button>
@@ -2274,7 +2328,7 @@
         <span class="guide-summary-icon" aria-hidden="true">📘</span>
         <span class="guide-summary-copy">
           <strong>Page guide</strong>
-          <small>Learn the modes, filters, voice spelling, progress and extra tools</small>
+          <small>Learn the modes, filters, BETA voice spelling, progress and extra tools</small>
         </span>
       </summary>
       <div class="guide-content">
@@ -2318,10 +2372,10 @@
             </ul>
           </article>
           <article class="guide-card">
-            <h3>4. Shortcuts and voice input</h3>
+            <h3>4. Shortcuts and voice spelling (BETA)</h3>
             <p><kbd>Letters</kbd> enter a spelling, <kbd>Backspace</kbd> deletes a letter, <kbd>Enter</kbd> checks the answer, <kbd>Space</kbd> plays the word, and the <kbd>←</kbd>/<kbd>→</kbd> keys move between words.</p>
-            <p>For voice spelling, press <strong>Spell by voice</strong>, then say English letter names one at a time: <strong>A</strong> (“ay”), <strong>B</strong> (“bee”), <strong>C</strong> (“see”). Leave a short pause between letters and watch the status text to see what was captured. You can say <strong>delete</strong>, <strong>clear</strong>, <strong>listen</strong>, <strong>reveal</strong> or <strong>check</strong>. If the browser combines the spelling into the exact target word, the page can fill the remaining letters. Repeated final results are ignored within a session, and the microphone is reconnected after a pause when the browser allows it.</p>
-            <p class="guide-note">Voice recognition is supplied by the browser and depends on its speech service, microphone permissions, network and pronunciation; no website can guarantee the same result on every device. Use HTTPS or localhost, permit microphone access, and compare with current Chrome or Edge if it does not hear you. Brave may have its speech service disabled. The keyboard is always available.</p>
+            <p>The microphone spelling feature is <strong>in BETA and may not work reliably</strong>. Press <strong>Voice spelling · BETA</strong>, then say English letter names one at a time: <strong>A</strong> (“ay”), <strong>B</strong> (“bee”), <strong>C</strong> (“see”). Leave a short pause between letters and watch the status text to see what was captured. You can say <strong>delete</strong>, <strong>clear</strong>, <strong>listen</strong>, <strong>reveal</strong> or <strong>check</strong>. If the browser combines the spelling into the exact target word, the page can fill the remaining letters. Repeated final results are ignored within a session, and the microphone is reconnected after a pause when the browser allows it.</p>
+            <p class="guide-note"><strong>MICROPHONE SPELLING IS IN BETA and may not work well:</strong> it can miss, merge or mishear spoken letters. It depends on the browser's speech service, microphone permissions, network and pronunciation; identical results cannot be guaranteed across devices. Use HTTPS or localhost and allow microphone access. Current Chrome or Edge may work better; Brave may have its speech service disabled. The on-screen and physical keyboards are the reliable alternatives.</p>
           </article>
         </div>
         <p class="guide-footnote">Your practice progress and starred words are saved in this browser separately for each category. Session statistics reset when the tab session ends.</p>
@@ -2453,14 +2507,15 @@
               class="voice-btn"
               onclick="toggleVoiceInput()"
               aria-pressed="false"
+              title="BETA: microphone spelling may mishear letters; keyboard recommended"
             >
-              🎙️ Spell by voice
+              🎙️ Voice spelling · BETA
             </button>
             <div id="voiceStatus" class="voice-status" aria-live="polite">
-              Click “🎙️ Spell by voice” to spell letters one by one using your microphone.
+              BETA voice spelling can mishear letters and is not reliable on every device. Click “🎙️ Voice spelling · BETA” to try it; the keyboard is recommended.
             </div>
             <div class="voice-note">
-              Say English letter names one at a time (A = “ay”, B = “bee”, C = “see”) with a short pause between letters. Watch the status above to see what was captured. If the mic pauses, the app tries to reconnect automatically. Commands: “delete”, “clear”, “listen”, “reveal”, and “check”. Requires HTTPS or localhost, microphone permission, and a working browser speech service; the keyboard is always available.
+              <strong>⚠️ BETA — this feature does not work reliably on every device and can mishear or miss letters.</strong> Say English letter names one at a time (A = “ay”, B = “bee”, C = “see”) with a short pause between letters. Watch the status above to see what was captured. If the mic pauses, the app tries to reconnect automatically. Commands: “delete”, “clear”, “listen”, “reveal”, and “check”. Requires HTTPS or localhost, microphone permission, internet access, and a working browser speech service. <strong>The on-screen or physical keyboard is recommended.</strong>
             </div>
           </div>
 
@@ -3114,13 +3169,49 @@ const categoryA = [
       // Keep the guide intentionally minimal: only clickable letters are displayed.
       const ALPHABET_DATA = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
+      // Speak a phonetic English letter name (not an uppercase character, which
+      // some speech engines announce as “capital A”). Prefer a clear male voice
+      // installed in the user's system; browser voice inventories vary by device.
+      const ALPHABET_PRONUNCIATIONS = Object.freeze({
+        A: "ay", B: "bee", C: "see", D: "dee", E: "ee", F: "ef", G: "jee",
+        H: "aitch", I: "eye", J: "jay", K: "kay", L: "el", M: "em", N: "en",
+        O: "oh", P: "pee", Q: "cue", R: "ar", S: "ess", T: "tee", U: "you",
+        V: "vee", W: "double u", X: "ex", Y: "why", Z: "zee",
+      });
+
+      function chooseAlphabetVoice() {
+        if (!window.speechSynthesis) return null;
+        const voices = window.speechSynthesis.getVoices?.() || [];
+        const englishVoices = voices.filter((voice) => /^en([_-]|$)/i.test(voice.lang || ""));
+        const maleVoicePattern = /\b(david|mark|guy|christopher|daniel|alex|aaron|fred|thomas|henry|liam|oliver|arthur|ralph|bruce|evan|lee|nathan|matthew|james|george|ryan|andrew|tom|rishi|davis|tony|jordan|male)\b/i;
+        return englishVoices.find((voice) => maleVoicePattern.test(voice.name || ""))
+          || englishVoices.find((voice) => /en[-_]US/i.test(voice.lang || ""))
+          || englishVoices[0]
+          || null;
+      }
+
       function speakLetterPronunciation(letter) {
-        if (!window.speechSynthesis) return;
+        const normalizedLetter = String(letter || "").toUpperCase();
+        if (!/^[A-Z]$/.test(normalizedLetter)) return;
+        if (!window.speechSynthesis || typeof SpeechSynthesisUtterance === "undefined") {
+          showAlert({ icon: "info", title: "Speech is unavailable", text: "This device does not expose speech synthesis. Try another browser or device." });
+          return;
+        }
+
         window.speechSynthesis.cancel();
-        const utter = new SpeechSynthesisUtterance(letter);
-        utter.lang = "en-US";
-        utter.rate = 0.85;
+        const utter = new SpeechSynthesisUtterance(ALPHABET_PRONUNCIATIONS[normalizedLetter]);
+        const voice = chooseAlphabetVoice();
+        if (voice) {
+          utter.voice = voice;
+          utter.lang = voice.lang || "en-US";
+        } else {
+          utter.lang = "en-US";
+        }
+        utter.rate = 0.78;
+        utter.pitch = 0.88;
+        utter.volume = 1;
         window.speechSynthesis.speak(utter);
+        recordAlphabetLetterHeard(normalizedLetter);
       }
 
       function openAlphabetGuide() {
@@ -3656,10 +3747,10 @@ const categoryA = [
         $("#practiceAttempts").textContent = "0";
         $("#practiceResultMessage").textContent = "";
         $("#practiceResultMessage").className = "practice-result-message";
-        $("#voiceStatus").textContent = "Click “🎙️ Spell by voice” to spell letters one by one using your microphone.";
+        $("#voiceStatus").textContent = "BETA voice spelling can mishear letters and is not reliable on every device. Click “🎙️ Voice spelling · BETA” to try it; the keyboard is recommended.";
         $("#voiceBtn").classList.remove("listening");
         $("#voiceBtn").setAttribute("aria-pressed", "false");
-        $("#voiceBtn").textContent = "🎙️ Spell by voice";
+        $("#voiceBtn").textContent = "🎙️ Voice spelling · BETA";
 
         buildPracticeKeyboard();
         renderPracticeInput();
@@ -3956,7 +4047,7 @@ const categoryA = [
         $("#practiceNextWordBtn").hidden = true;
         startPracticeTimer();
 
-        $("#voiceStatus").textContent = "Click “🎙️ Spell by voice” to spell letters one by one using your microphone.";
+        $("#voiceStatus").textContent = "BETA voice spelling can mishear letters and is not reliable on every device. Click “🎙️ Voice spelling · BETA” to try it; the keyboard is recommended.";
         requestAnimationFrame(() => $("#practiceListenBtn")?.focus());
       }
 
@@ -4028,6 +4119,7 @@ const categoryA = [
       let speechRecognitionActive = false;
       let speechRestartAttempts = 0;
       let speechFinalResultCache = new Map();
+      let speechStartWatchdog = null;
       let isWordAudioPlaying = false;
 
       // These are words that speech engines commonly return when a student says
@@ -4230,7 +4322,7 @@ const categoryA = [
         button.classList.remove("listening", "processing");
         button.setAttribute("aria-pressed", "false");
         button.disabled = false;
-        button.textContent = "🎙️ Spell by voice";
+        button.textContent = "🎙️ Voice spelling · BETA";
       }
 
       function appendVoiceLetters(letters) {
@@ -4274,11 +4366,11 @@ const categoryA = [
       }
 
       function showFileProtocolAlert() {
-        setVoiceStatus("Voice needs HTTPS or a local server (localhost).");
+        setVoiceStatus("BETA voice spelling requires HTTPS or a local server (localhost), and may still be unreliable.");
         if (typeof Swal !== "undefined") {
           Swal.fire({
             icon: "warning",
-            title: "Secure connection required for voice",
+            title: "Secure connection required for BETA voice spelling",
             html: `
               <p style="margin-bottom:0.75rem; font-size:0.95rem;">Browsers restrict microphone speech recognition on files opened directly with <code>file://</code>.</p>
               <div style="background:rgba(0,212,255,0.08); border:1px solid rgba(0,212,255,0.25); border-radius:10px; padding:0.85rem; text-align:left; font-size:0.9rem; margin-bottom:1rem; color:#e0f7fa;">
@@ -4303,15 +4395,22 @@ const categoryA = [
 
       function getBestSpeechParse(result, targetWord) {
         if (!result || !result.length) return { command: null, letters: [], transcript: "" };
+
         let best = { command: null, letters: [], transcript: result[0]?.transcript || "" };
-        // Prefer the first (highest-confidence) result whenever it is useful.
-        // Alternatives are used to recover words the ASR could not parse at all.
+        let bestScore = -1;
         for (let i = 0; i < result.length; i++) {
-          const transcript = result[i]?.transcript || "";
+          const candidate = result[i];
+          const transcript = candidate?.transcript || "";
           const parsed = parseVoiceTranscript(transcript, targetWord, practiceInput.length);
           if (parsed.command) return { ...parsed, transcript };
-          if (parsed.letters.length > best.letters.length) best = { ...parsed, transcript };
-          if (i === 0 && parsed.letters.length) return { ...parsed, transcript };
+          const confidence = Number.isFinite(candidate?.confidence) ? candidate.confidence : 0;
+          // Prefer a usable interpretation, then the candidate with more letters,
+          // then the browser's own confidence estimate.
+          const score = parsed.letters.length * 10 + confidence;
+          if (score > bestScore) {
+            best = { ...parsed, transcript };
+            bestScore = score;
+          }
         }
         return best;
       }
@@ -4320,103 +4419,137 @@ const categoryA = [
         if (!speechIsActuallyListening() || isWordAudioPlaying) return;
 
         const word = normalizeWord(currentCategory[currentPracticeIndex] || "");
-        let interimLetters = [];
+        const interimLetters = [];
         const startIndex = Math.max(0, Number(event.resultIndex) || 0);
 
         for (let i = startIndex; i < event.results.length; i++) {
-          const res = event.results[i];
-          const rawTranscript = res[0]?.transcript || "";
+          const result = event.results[i];
+          const rawTranscript = result?.[0]?.transcript || "";
           if (!String(rawTranscript).trim()) continue;
 
-          if (res.isFinal) {
-            // Some speech engines resend already-final results when an event
-            // updates a later result. Dedupe by result index + transcript, not
-            // by transcript alone, so repeated letters such as "P P" still work.
-            const finalSignature = cleanSpeechText(rawTranscript);
-            if (speechFinalResultCache.get(i) === finalSignature) continue;
-            speechFinalResultCache.set(i, finalSignature);
+          if (!result.isFinal) {
+            const interimParse = getBestSpeechParse(result, word);
+            if (interimParse.letters.length) interimLetters.push(...interimParse.letters);
+            continue;
+          }
 
-            const parsed = getBestSpeechParse(res, word);
-            if (parsed.command) {
-              speechInterimLetters = [];
-              renderPracticeInput();
+          // Each recognition session is short and gets a fresh instance on restart.
+          // De-dupe only inside this session, so genuinely repeated letters remain valid.
+          const signature = cleanSpeechText(rawTranscript);
+          if (speechFinalResultCache.get(i) === signature) continue;
+          speechFinalResultCache.set(i, signature);
 
-              if (parsed.command === "BACKSPACE") {
+          const parsed = getBestSpeechParse(result, word);
+          speechInterimLetters = [];
+
+          if (parsed.command) {
+            renderPracticeInput();
+            switch (parsed.command) {
+              case "BACKSPACE":
                 handlePracticeKey("BACKSPACE");
-                setVoiceStatus("Deleted the last letter.");
-              } else if (parsed.command === "CHECK") {
+                setVoiceStatus("Deleted the last letter. Voice spelling is still in BETA.");
+                break;
+              case "CHECK":
                 if (practiceInput.length === word.length) {
                   setVoiceStatus("Checking word…");
                   verifyPracticeWord();
                 } else {
-                  setVoiceStatus(`Not ready to check: ${practiceInput.length} of ${word.length} letters entered.`);
+                  setVoiceStatus(`BETA voice spelling: ${practiceInput.length} of ${word.length} letters entered; say the remaining letters before checking.`);
                 }
-              } else if (parsed.command === "CLEAR") {
+                break;
+              case "CLEAR":
                 practiceInput = [];
                 practiceBoxStates = [];
                 renderPracticeInput();
-                setVoiceStatus("Letters cleared. Ready to spell.");
-              } else if (parsed.command === "LISTEN") {
+                setVoiceStatus("Letters cleared. Say the first letter when ready. Voice spelling is in BETA.");
+                break;
+              case "LISTEN":
                 stopVoiceInput({ silent: true });
                 playAudio();
-                setVoiceStatus("Playing the word pronunciation. Start voice input again when ready.");
-              } else if (parsed.command === "REVEAL") {
+                setVoiceStatus("Voice spelling paused for audio. Restart it when ready; voice spelling is in BETA.");
+                break;
+              case "REVEAL":
                 revealPracticeWord();
-              }
-              continue;
+                break;
             }
+            continue;
+          }
 
-            if (parsed.letters.length) {
-              speechInterimLetters = [];
-              const remainingBefore = Math.max(0, word.length - practiceInput.length);
-              const added = appendVoiceLetters(parsed.letters);
-              const remainingAfter = Math.max(0, word.length - practiceInput.length);
-
-              if (added > 0) {
-                const spelled = parsed.letters.slice(0, added).join(" ");
-                if (remainingAfter === 0) {
-                  setVoiceStatus(`Spelling captured (${practiceInput.join(" ")}). Press Check or say “check”.`);
-                } else {
-                  setVoiceStatus(`Captured ${spelled}. ${remainingAfter} letter${remainingAfter === 1 ? "" : "s"} remaining.`);
-                }
-              } else if (remainingBefore === 0) {
-                setVoiceStatus(`All ${word.length} letters are entered. Press Check or say “check”.`);
+          if (parsed.letters.length) {
+            const remainingBefore = Math.max(0, word.length - practiceInput.length);
+            const acceptedCount = appendVoiceLetters(parsed.letters);
+            const remainingAfter = Math.max(0, word.length - practiceInput.length);
+            if (acceptedCount > 0) {
+              const addedLetters = parsed.letters.slice(0, acceptedCount).join(" ");
+              if (remainingAfter === 0) {
+                setVoiceStatus(`Captured ${addedLetters}. All letters are entered; press Check or say “check”. Voice spelling is in BETA.`);
+              } else {
+                setVoiceStatus(`Captured ${addedLetters}. ${remainingAfter} letter${remainingAfter === 1 ? "" : "s"} remaining. Voice spelling is in BETA.`);
               }
-            } else {
-              speechInterimLetters = [];
-              renderPracticeInput();
-              setVoiceStatus(`Heard “${String(parsed.transcript || rawTranscript).trim()}”, but could not safely map it to a letter. Try saying one letter at a time, or use the keyboard.`);
+            } else if (remainingBefore === 0) {
+              setVoiceStatus(`All ${word.length} letters are already entered. Press Check or say “check”.`);
             }
           } else {
-            const parsedInterim = parseVoiceTranscript(rawTranscript, word, practiceInput.length);
-            if (parsedInterim.letters.length) interimLetters.push(...parsedInterim.letters);
+            renderPracticeInput();
+            const heard = String(parsed.transcript || rawTranscript).trim();
+            setVoiceStatus(`I heard “${heard}”, but could not identify a letter safely. Try saying the English letter name alone, or use the keyboard. Voice spelling is in BETA.`);
           }
         }
 
-        if (interimLetters.length > 0) {
+        if (interimLetters.length) {
           speechInterimLetters = interimLetters;
           renderPracticeInput();
-          setVoiceStatus(`Hearing ${interimLetters.join(" ")}…`);
+          setVoiceStatus(`Listening… possible letters: ${interimLetters.join(" ")}. Wait for the final capture; voice spelling is in BETA.`);
         }
       }
 
-      function scheduleSpeechRestart(delay = 280) {
+      function clearSpeechTimers() {
+        clearTimeout(speechRestartTimer);
+        clearTimeout(speechStartWatchdog);
+        speechRestartTimer = null;
+        speechStartWatchdog = null;
+      }
+
+      function armSpeechStartWatchdog() {
+        clearTimeout(speechStartWatchdog);
+        speechStartWatchdog = setTimeout(() => {
+          if (!speechListening || speechRecognitionActive) return;
+          stopVoiceInput({ silent: true });
+          setVoiceStatus("The browser did not start voice recognition. Check microphone permission, reload the page, or use Chrome/Edge on HTTPS. Voice spelling is in BETA; the keyboard is reliable.");
+        }, 12000);
+      }
+
+      function scheduleSpeechRestart(delay = 260) {
         clearTimeout(speechRestartTimer);
         speechRestartTimer = setTimeout(() => {
-          if (!speechIsActuallyListening() || speechIsManualStop || !speechRecognitionInstance) return;
+          speechRestartTimer = null;
+          if (!speechIsActuallyListening() || speechIsManualStop) return;
+
+          // Recreate instead of reusing a recognizer that may remain in an ended/
+          // aborted state on some browsers. One utterance per session is much more
+          // consistent on mobile engines than relying on continuous=true.
+          resetSpeechRecognitionInstance();
+          const SpeechClass = getSpeechRecognitionClass();
+          if (!SpeechClass) {
+            stopVoiceInput({ silent: true });
+            setVoiceStatus("This browser no longer exposes speech recognition. Use the on-screen or physical keyboard.");
+            return;
+          }
+
           try {
-            speechRecognitionInstance.start();
-            speechRestartAttempts = 0;
+            speechRecognitionActive = false;
+            speechFinalResultCache.clear();
+            const recognition = ensureSpeechRecognitionInstance(SpeechClass);
+            armSpeechStartWatchdog();
+            recognition.start();
           } catch (error) {
-            // Some engines briefly remain in a stopping state. Retry with backoff.
+            console.warn("Could not restart voice recognition:", error);
             speechRestartAttempts += 1;
-            if (speechRestartAttempts <= 7) {
-              scheduleSpeechRestart(Math.min(1400, 180 * (2 ** Math.min(speechRestartAttempts, 3))));
+            if (speechRestartAttempts <= 4) {
+              scheduleSpeechRestart(Math.min(1600, 250 * (2 ** speechRestartAttempts)));
             } else {
-              speechListening = false;
-              speechIsManualStop = true;
-              resetVoiceButton();
-              setVoiceStatus("Voice service would not restart. Click Spell by voice to try again, or use the keyboard.");
+              stopVoiceInput({ silent: true });
+              setVoiceStatus("The browser speech service would not restart. Reload the page or use the keyboard. Voice spelling remains in BETA.");
             }
           }
         }, delay);
@@ -4424,14 +4557,13 @@ const categoryA = [
 
       function handleSpeechEnd() {
         speechRecognitionActive = false;
-        // A new continuous-recognition session may restart result indexes at 0.
-        // Clear the per-session cache so the same letter spoken again is accepted.
+        clearTimeout(speechStartWatchdog);
+        speechStartWatchdog = null;
         speechFinalResultCache.clear();
+
         if (speechIsActuallyListening() && !speechIsManualStop) {
-          // Chrome/Brave/Edge may end a continuous recognition session after a
-          // pause. Restart it carefully instead of calling start() in a tight loop.
-          setVoiceStatus("Brief pause detected — reconnecting the microphone automatically…");
-          scheduleSpeechRestart(320);
+          setVoiceStatus("Microphone session finished; reconnecting automatically for the next letter… Voice spelling is in BETA.");
+          scheduleSpeechRestart(220);
         } else {
           resetVoiceButton();
         }
@@ -4443,98 +4575,110 @@ const categoryA = [
         speechRecognitionActive = false;
         speechFinalResultCache.clear();
         if (!oldInstance) return;
-        // Remove callbacks before aborting so a delayed event from a failed
-        // service cannot restart a recognizer that has already been replaced.
+        // Detach callbacks before aborting, preventing stale sessions from reviving.
         oldInstance.onresult = null;
         oldInstance.onstart = null;
         oldInstance.onaudiostart = null;
         oldInstance.onspeechstart = null;
+        oldInstance.onspeechend = null;
         oldInstance.onend = null;
         oldInstance.onerror = null;
-        try { oldInstance.abort(); } catch (error) { /* already closed */ }
+        oldInstance.onnomatch = null;
+        try { oldInstance.abort(); } catch (error) { /* already ended */ }
       }
 
       function handleSpeechError(event) {
-        console.warn("Speech recognition event error:", event.error);
+        const errorName = event?.error || "unknown";
+        console.warn("Speech recognition event error:", errorName);
 
-        if (event.error === "aborted" && (speechIsManualStop || !speechListening)) return;
-        if (event.error === "no-speech") {
+        if (errorName === "aborted" && (speechIsManualStop || !speechListening)) return;
+        if (errorName === "no-speech" || errorName === "nomatch") {
           if (speechListening) {
-            setVoiceStatus("I did not hear a letter. Keep the microphone open and try again, with a short pause between letters.");
-            // Some implementations do not reliably pair no-speech with onend.
-            // This timer is replaced if onend also schedules a restart.
-            scheduleSpeechRestart(420);
+            setVoiceStatus("No letter was captured. Keep speaking close to the microphone, say one English letter name at a time, and pause briefly. Voice spelling is in BETA.");
+            // onend will usually restart it; this timeout is a fallback for engines
+            // that dispatch no-speech but fail to dispatch end.
+            scheduleSpeechRestart(650);
           }
           return;
         }
 
-        if (event.error === "not-allowed" || event.error === "permission-denied") {
+        const errorMessages = {
+          "not-allowed": "Microphone permission was denied. Allow microphone access for this site and try again.",
+          "permission-denied": "Microphone permission was denied. Allow microphone access for this site and try again.",
+          "service-not-allowed": "The browser blocked its speech-recognition service. Try current Chrome or Edge, and check browser speech/privacy settings.",
+          "audio-capture": "No usable microphone was found. Connect or enable a microphone and check operating-system privacy settings.",
+          "network": "The browser could not reach its speech-recognition service. Check the internet connection and browser settings.",
+          "language-not-supported": "This browser speech service does not support English (United States). Try current Chrome or Edge.",
+          "bad-grammar": "The browser rejected the recognition configuration. Reload the page and try again."
+        };
+        const message = errorMessages[errorName];
+        if (message) {
           stopVoiceInput({ silent: true });
-          resetSpeechRecognitionInstance();
-          setVoiceStatus("Microphone permission was blocked. Allow it in the address bar/site settings, then try again.");
-          showAlert({
-            icon: "warning",
-            title: "Microphone permission required",
-            text: "Allow microphone access for this site. If it is already allowed, check your operating-system microphone privacy settings.",
-          });
+          setVoiceStatus(`${message} Voice spelling is in BETA; use the keyboard if it persists.`);
+          if (errorName === "not-allowed" || errorName === "permission-denied") {
+            showAlert({
+              icon: "warning",
+              title: "Microphone permission required",
+              text: "Allow microphone access in the site settings and in your device's privacy settings, then reload the page. Voice spelling is a browser-provided BETA feature."
+            });
+          } else if (errorName === "service-not-allowed") {
+            showAlert({
+              icon: "info",
+              title: "Browser speech service unavailable",
+              text: "This feature uses the browser's speech-recognition service. Check browser settings, connection and permissions. If the service is unavailable, the app cannot force it to work; use the keyboard or try a supported browser."
+            });
+          }
           return;
         }
 
-        if (event.error === "service-not-allowed") {
-          stopVoiceInput({ silent: true });
-          resetSpeechRecognitionInstance();
-          setVoiceStatus("The browser speech service is blocked. Check your browser's speech/privacy settings or use Chrome/Edge.");
-          showAlert({
-            icon: "info",
-            title: "Speech service blocked",
-            text: "Speech recognition requires a browser speech service. In Brave, check its Google speech recognition service setting, or try current Chrome or Microsoft Edge.",
-          });
-          return;
-        }
-
-        if (event.error === "audio-capture") {
-          stopVoiceInput({ silent: true });
-          resetSpeechRecognitionInstance();
-          setVoiceStatus("No microphone was found. Connect or enable a microphone, then try again.");
-          return;
-        }
-
-        if (event.error === "network") {
-          stopVoiceInput({ silent: true });
-          resetSpeechRecognitionInstance();
-          setVoiceStatus("The speech service could not connect. Check your internet connection or browser speech-service settings.");
-          return;
-        }
-
-        if (event.error === "aborted") return;
+        if (errorName === "aborted") return;
         stopVoiceInput({ silent: true });
-        resetSpeechRecognitionInstance();
-        setVoiceStatus(`Voice recognition stopped (${event.error || "unknown error"}). You can keep spelling with the keyboard.`);
+        setVoiceStatus(`Voice recognition stopped (${errorName}). Reload the page or continue with the keyboard. Voice spelling is in BETA.`);
       }
 
       function ensureSpeechRecognitionInstance(SpeechClass) {
         if (speechRecognitionInstance) return speechRecognitionInstance;
         const recognition = new SpeechClass();
-        recognition.continuous = true;
+        // One utterance at a time is deliberate: mobile implementations often
+        // ignore continuous=true, and some reuse result indexes incorrectly.
+        recognition.continuous = false;
         recognition.interimResults = true;
         recognition.lang = "en-US";
-        recognition.maxAlternatives = 4;
+        recognition.maxAlternatives = 5;
         recognition.onstart = () => {
+          clearTimeout(speechStartWatchdog);
+          speechStartWatchdog = null;
           speechRecognitionActive = true;
           speechRestartAttempts = 0;
+          speechFinalResultCache.clear();
           if (speechIsActuallyListening()) {
-            setVoiceStatus("Microphone is listening. Say English letter names one at a time and pause briefly between them.");
+            const target = normalizeWord(currentCategory[currentPracticeIndex] || "");
+            const progress = practiceInput.length
+              ? `Progress: ${practiceInput.length}/${target.length} — ${practiceInput.join(" ")}. `
+              : "";
+            setVoiceStatus(`${progress}Listening for the next English letter. Say it clearly, then pause briefly. Voice spelling is in BETA.`);
           }
         };
         recognition.onaudiostart = () => {
-          if (speechIsActuallyListening()) setVoiceStatus("Microphone ready — spell the word one letter at a time.");
+          // Some browser builds omit onstart but still emit audio start; treat
+          // audio capture as proof that the recognition session is alive.
+          speechRecognitionActive = true;
+          clearTimeout(speechStartWatchdog);
+          speechStartWatchdog = null;
+          if (speechIsActuallyListening()) setVoiceStatus("Microphone audio detected. Say English letter names clearly; voice spelling is in BETA.");
         };
         recognition.onspeechstart = () => {
-          if (speechIsActuallyListening()) setVoiceStatus("I hear you… keep spelling one letter at a time.");
+          if (speechIsActuallyListening()) setVoiceStatus("Speech detected — identifying the letter… Voice spelling is in BETA.");
+        };
+        recognition.onspeechend = () => {
+          // The final result normally arrives before onend. Do not stop here.
         };
         recognition.onresult = handleSpeechResult;
         recognition.onend = handleSpeechEnd;
         recognition.onerror = handleSpeechError;
+        recognition.onnomatch = () => {
+          if (speechIsActuallyListening()) setVoiceStatus("No matching letter recognized. Try a clearer pronunciation; voice spelling is in BETA.");
+        };
         speechRecognitionInstance = recognition;
         return recognition;
       }
@@ -4543,15 +4687,15 @@ const categoryA = [
         const SpeechClass = getSpeechRecognitionClass();
 
         if (currentMode !== PRACTICE_MODES.PRACTICE || currentPracticeIndex < 0) {
-          setVoiceStatus("Open a word in Practice mode before starting voice input.");
+          setVoiceStatus("Open a word in Practice mode before trying BETA voice spelling. The keyboard is the recommended option.");
           return;
         }
         if (!SpeechClass) {
-          setVoiceStatus("This browser does not support speech recognition. Use current Chrome or Edge, or spell with the keyboard.");
+          setVoiceStatus("This browser does not support voice recognition. Try a current version of Chrome, Edge or Safari, or use the keyboard. Voice spelling is in BETA.");
           showAlert({
             icon: "info",
-            title: "Speech recognition unsupported",
-            text: "This browser does not expose the Web Speech recognition API. Try current Google Chrome or Microsoft Edge.",
+            title: "Voice recognition is not supported here",
+            text: "Browsers do not all expose a speech-recognition engine. The webpage cannot add one universally without a separate speech-recognition service. Try a current supported browser on HTTPS, or use the keyboard."
           });
           return;
         }
@@ -4559,8 +4703,13 @@ const categoryA = [
           showFileProtocolAlert();
           return;
         }
-        if (speechListening) return;
+        if (speechListening) {
+          stopVoiceInput();
+          return;
+        }
 
+        clearSpeechTimers();
+        resetSpeechRecognitionInstance();
         speechIsManualStop = false;
         speechListening = true;
         speechRestartAttempts = 0;
@@ -4571,25 +4720,22 @@ const categoryA = [
         if (button) {
           button.classList.add("listening");
           button.setAttribute("aria-pressed", "true");
-          button.textContent = "⏹️ Stop microphone";
+          button.textContent = "⏹️ Stop microphone · BETA";
         }
-        setVoiceStatus("Requesting microphone… allow access if your browser asks.");
+        setVoiceStatus("Starting microphone and browser speech service… This feature is in BETA.");
 
         try {
           const recognition = ensureSpeechRecognitionInstance(SpeechClass);
-          clearTimeout(speechRestartTimer);
+          armSpeechStartWatchdog();
           recognition.start();
         } catch (error) {
-          console.warn("Speech recognition start issue:", error);
-          // An instance can still be transitioning after a very fast stop/start.
-          if (error?.name === "InvalidStateError") {
-            scheduleSpeechRestart(350);
+          console.warn("Speech recognition start error:", error);
+          speechRestartAttempts += 1;
+          if (speechRestartAttempts <= 2) {
+            scheduleSpeechRestart(300 * speechRestartAttempts);
           } else {
-            speechListening = false;
-            speechIsManualStop = true;
-            resetSpeechRecognitionInstance();
-            resetVoiceButton();
-            setVoiceStatus("Could not start voice recognition. Check microphone permissions and try again.");
+            stopVoiceInput({ silent: true });
+            setVoiceStatus("Could not start recognition. Check microphone permission, connection and browser speech settings; use the keyboard if it persists. Voice spelling is in BETA.");
           }
         }
       }
@@ -4599,15 +4745,12 @@ const categoryA = [
         speechListening = false;
         speechRecognitionActive = false;
         speechRestartAttempts = 0;
-        clearTimeout(speechRestartTimer);
+        clearSpeechTimers();
         speechInterimLetters = [];
-
-        if (speechRecognitionInstance) {
-          try { speechRecognitionInstance.abort(); } catch (error) { /* already stopped */ }
-        }
+        resetSpeechRecognitionInstance();
         resetVoiceButton();
         renderPracticeInput();
-        if (!silent && !keepStatus) setVoiceStatus("Microphone stopped. You can resume whenever you are ready.");
+        if (!silent && !keepStatus) setVoiceStatus("Voice spelling stopped. You can resume whenever you are ready; the keyboard is recommended while this BETA feature is being improved.");
       }
 
       function toggleVoiceInput() {
@@ -5040,6 +5183,415 @@ const categoryA = [
         _origShowWord(index, opener);
         syncBookmarkModalState(index);
       };
+
+      // =========================================================================
+      // 🏅 PERMANENT SECRET ACHIEVEMENTS — deliberately separate from resettable
+      // category practice progress. No in-app action clears this history.
+      // =========================================================================
+      const ACHIEVEMENTS_STORAGE_KEY = "spellingBeeAchievementsV1";
+      const ACHIEVEMENT_DEFINITIONS = Object.freeze([
+        { id: "first-flight", icon: "🐝", title: "First Flight", description: "Open your first word in Practice mode." },
+        { id: "sweet-success", icon: "🍯", title: "Sweet Success", description: "Spell your first word correctly." },
+        { id: "one-take-wonder", icon: "🎯", title: "One-Take Wonder", description: "Get a word right on your very first attempt." },
+        { id: "three-drops", icon: "💧", title: "Three Drops of Honey", description: "Build a streak of 3 correct words." },
+        { id: "hive-mind", icon: "🐝", title: "Hive Mind", description: "Build a streak of 5 correct words." },
+        { id: "royal-streak", icon: "👑", title: "Royal Nectar", description: "Build a streak of 10 correct words." },
+        { id: "a-specialist", icon: "🅰️", title: "The A-Hive Specialist", description: "Master every Category A word in Practice." },
+        { id: "b-specialist", icon: "🅱️", title: "The B-Hive Specialist", description: "Master every Category B word in Practice." },
+        { id: "master-both-hives", icon: "🏆", title: "Master of Both Hives", description: "Master every word in both categories in Practice." },
+        { id: "first-blind-win", icon: "🌑", title: "Eyes Closed, Stinger Ready", description: "Spell a word correctly with Blind mode enabled." },
+        { id: "blind-a", icon: "🌘", title: "Shadow Keeper: A", description: "Correctly complete every Category A word in Blind mode." },
+        { id: "blind-b", icon: "🌒", title: "Shadow Keeper: B", description: "Correctly complete every Category B word in Blind mode." },
+        { id: "blind-all", icon: "🌌", title: "Into the Spelling Void", description: "Correctly complete every word in both categories in Blind mode." },
+        { id: "view-listen-ten", icon: "🎧", title: "Sound Check", description: "Listen to 10 word audios in View mode." },
+        { id: "view-a-all", icon: "🔊", title: "A-Sound Explorer", description: "Listen to every Category A word in View mode." },
+        { id: "view-b-all", icon: "🎶", title: "B-Sound Explorer", description: "Listen to every Category B word in View mode." },
+        { id: "view-all", icon: "🎼", title: "The Whole Hive in Stereo", description: "Listen to every word in both categories in View mode." },
+        { id: "alphabet-oracle", icon: "🔤", title: "The Phonetic Oracle", description: "Listen to all 26 letters in the English Alphabet Guide." },
+        { id: "random-five", icon: "🎲", title: "Fortune Favors the Bee", description: "Open 5 words with Random Word." },
+        { id: "hint-seeker", icon: "💡", title: "A Little Glow Helps", description: "Use a hint for the first time." },
+        { id: "truth-seeker", icon: "🪞", title: "Truth Seeker", description: "Reveal a word's answer." },
+        { id: "eleven-attempts", icon: "🧘", title: "The Persistence Paradox", description: "Make more than 10 full Check attempts on one word." },
+        { id: "five-stars", icon: "⭐", title: "Constellation Collector", description: "Bookmark 5 different words across your categories." },
+        { id: "beat-the-clock", icon: "⏱️", title: "Beat the Clock", description: "Correctly spell a word while a practice timer is enabled." },
+        { id: "long-word", icon: "🐍", title: "Long-Word Tamer", description: "Correctly spell a word with at least 10 letters." },
+        { id: "comeback-kid", icon: "🔥", title: "The Comeback Bee", description: "Get a word wrong, then return and spell it correctly." },
+        { id: "marathon-25", icon: "🏃", title: "The Honey Marathon", description: "Spell 25 different words correctly in Practice." },
+        { id: "searcher", icon: "🔎", title: "Needle in the Haystack", description: "Use the word search." },
+        { id: "both-modes", icon: "🌓", title: "Two Sides of the Hive", description: "Explore both View and Practice modes." },
+        { id: "category-tourist", icon: "🧭", title: "Hive Hopper", description: "Open a word from both Category A and Category B." },
+        { id: "bee-click", icon: "🐝", title: "Buzz Button", description: "Click the little bee in the header." },
+        { id: "queen-bee", icon: "✨", title: "Queen Bee's Secret Dance", description: "Click the header bee 7 times. Something extra may happen." },
+        { id: "stats-reader", icon: "📊", title: "Numbers Don't Lie", description: "Open My Stats." },
+        { id: "first-try-five", icon: "🎖️", title: "Clean Sweep", description: "Get 5 different words correct on your first full attempt." },
+        { id: "retry-comeback", icon: "🛟", title: "Not Done Yet", description: "Recover and correctly solve a word after an incorrect attempt." },
+        { id: "fifty-listens", icon: "📀", title: "Repeat After Me", description: "Play word audio 50 times in View mode." },
+        { id: "all-achievements", icon: "💎", title: "The Mythical Golden Hive", description: "Unlock every other achievement. You found every secret!" },
+      ]);
+
+      function makeFreshAchievementState() {
+        return {
+          unlocked: {},
+          heardWords: { A: [], B: [] },
+          heardLetters: [],
+          practiceSolved: { A: [], B: [] },
+          blindSolved: { A: [], B: [] },
+          attempts: { A: {}, B: {} },
+          wrongByWord: { A: {}, B: {} },
+          retryByWord: { A: {}, B: {} },
+          firstTrySolved: [],
+          stats: {
+            viewListenCount: 0, randomWordCount: 0, hintCount: 0, revealCount: 0,
+            correctAnswerCount: 0, beeClicks: 0, modes: { view: false, practice: false },
+            categoryVisited: { A: false, B: false }, timerEnabled: false, sessionBestStreak: 0,
+          },
+        };
+      }
+
+      function loadAchievementState() {
+        const fresh = makeFreshAchievementState();
+        try {
+          const parsed = JSON.parse(safeStorageGet(ACHIEVEMENTS_STORAGE_KEY, "null"));
+          if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return fresh;
+          const result = { ...fresh, ...parsed };
+          result.unlocked = parsed.unlocked && typeof parsed.unlocked === "object" && !Array.isArray(parsed.unlocked) ? parsed.unlocked : {};
+          for (const field of ["heardWords", "practiceSolved", "blindSolved"]) {
+            const value = parsed[field] && typeof parsed[field] === "object" ? parsed[field] : {};
+            result[field] = {
+              A: Array.isArray(value.A) ? [...new Set(value.A.map(Number).filter(Number.isInteger))] : [],
+              B: Array.isArray(value.B) ? [...new Set(value.B.map(Number).filter(Number.isInteger))] : [],
+            };
+          }
+          result.heardLetters = Array.isArray(parsed.heardLetters) ? [...new Set(parsed.heardLetters.filter((letter) => /^[A-Z]$/.test(letter)))] : [];
+          for (const field of ["attempts", "wrongByWord", "retryByWord"]) {
+            result[field] = { A: parsed[field]?.A && typeof parsed[field].A === "object" ? parsed[field].A : {}, B: parsed[field]?.B && typeof parsed[field].B === "object" ? parsed[field].B : {} };
+          }
+          result.firstTrySolved = Array.isArray(parsed.firstTrySolved) ? [...new Set(parsed.firstTrySolved.filter((key) => /^[AB]:\d+$/.test(key)))] : [];
+          result.stats = { ...fresh.stats, ...(parsed.stats && typeof parsed.stats === "object" ? parsed.stats : {}) };
+          result.stats.modes = { ...fresh.stats.modes, ...(parsed.stats?.modes || {}) };
+          result.stats.categoryVisited = { ...fresh.stats.categoryVisited, ...(parsed.stats?.categoryVisited || {}) };
+          return result;
+        } catch {
+          return fresh;
+        }
+      }
+
+      const achievementState = loadAchievementState();
+      let achievementToastQueue = [];
+      let achievementToastInProgress = false;
+
+      function saveAchievementState() {
+        // Deliberately uses its own key, never touched by Category A/B reset.
+        safeStorageSet(ACHIEVEMENTS_STORAGE_KEY, JSON.stringify(achievementState));
+        updateAchievementButton();
+      }
+
+      function updateAchievementButton() {
+        const unlockedCount = ACHIEVEMENT_DEFINITIONS.reduce((count, item) => count + (achievementState.unlocked[item.id] ? 1 : 0), 0);
+        const badge = document.getElementById("achievementCount");
+        if (badge) badge.textContent = String(unlockedCount);
+        const button = document.getElementById("achievementsBtn");
+        if (button) button.setAttribute("aria-label", `Achievements: ${unlockedCount} unlocked`);
+      }
+
+      function showNextAchievementToast() {
+        if (achievementToastInProgress || achievementToastQueue.length === 0) return;
+        const item = ACHIEVEMENT_DEFINITIONS.find((achievement) => achievement.id === achievementToastQueue.shift());
+        if (!item) { showNextAchievementToast(); return; }
+        achievementToastInProgress = true;
+        const toast = document.createElement("div");
+        toast.className = "achievement-unlock-toast";
+        toast.setAttribute("role", "status");
+        toast.setAttribute("aria-live", "polite");
+        toast.innerHTML = `<span class="achievement-toast-icon" aria-hidden="true">${item.icon}</span><span><span class="achievement-toast-kicker">Achievement unlocked!</span><span class="achievement-toast-title">${item.title}</span><span class="achievement-toast-description">${item.description}</span></span>`;
+        document.body.appendChild(toast);
+        requestAnimationFrame(() => toast.classList.add("visible"));
+        window.launchConfetti?.(65);
+        try { SfxEngine.playCorrect(); } catch { /* Animation should not depend on sound support. */ }
+        setTimeout(() => {
+          toast.classList.remove("visible");
+          setTimeout(() => {
+            toast.remove();
+            achievementToastInProgress = false;
+            showNextAchievementToast();
+          }, 380);
+        }, 3900);
+      }
+
+      function unlockAchievement(id) {
+        if (!ACHIEVEMENT_DEFINITIONS.some((item) => item.id === id) || achievementState.unlocked[id]) return false;
+        achievementState.unlocked[id] = new Date().toISOString();
+        saveAchievementState();
+        achievementToastQueue.push(id);
+        showNextAchievementToast();
+
+        if (id !== "all-achievements" && ACHIEVEMENT_DEFINITIONS
+          .filter((item) => item.id !== "all-achievements")
+          .every((item) => Boolean(achievementState.unlocked[item.id]))) {
+          unlockAchievement("all-achievements");
+        }
+        return true;
+      }
+
+      function addUniqueAchievementIndex(collection, category, index) {
+        if (!collection[category].includes(index)) collection[category].push(index);
+      }
+
+      function allIndicesRecorded(collection, category, total) {
+        const indices = new Set(collection[category].map(Number));
+        for (let i = 0; i < total; i++) if (!indices.has(i)) return false;
+        return true;
+      }
+
+      function recordAlphabetLetterHeard(letter) {
+        if (!/^[A-Z]$/.test(letter)) return;
+        if (!achievementState.heardLetters.includes(letter)) achievementState.heardLetters.push(letter);
+        saveAchievementState();
+        if (achievementState.heardLetters.length === 26) unlockAchievement("alphabet-oracle");
+      }
+
+      function recordViewWordHeard(category, index) {
+        if (!category || !Number.isInteger(index) || index < 0) return;
+        addUniqueAchievementIndex(achievementState.heardWords, category, index);
+        achievementState.stats.viewListenCount += 1;
+        saveAchievementState();
+        if (achievementState.stats.viewListenCount >= 10) unlockAchievement("view-listen-ten");
+        if (achievementState.stats.viewListenCount >= 50) unlockAchievement("fifty-listens");
+        if (allIndicesRecorded(achievementState.heardWords, "A", categoryA.length)) unlockAchievement("view-a-all");
+        if (allIndicesRecorded(achievementState.heardWords, "B", categoryB.length)) unlockAchievement("view-b-all");
+        if (allIndicesRecorded(achievementState.heardWords, "A", categoryA.length) && allIndicesRecorded(achievementState.heardWords, "B", categoryB.length)) unlockAchievement("view-all");
+      }
+
+      function recordAchievementSolve(category, index, wasBlind, firstTry, wasCorrect, wordLength, timerActive) {
+        const key = `${category}:${index}`;
+        if (!wasCorrect) {
+          achievementState.wrongByWord[category][String(index)] = (Number(achievementState.wrongByWord[category][String(index)]) || 0) + 1;
+          saveAchievementState();
+          return;
+        }
+
+        addUniqueAchievementIndex(achievementState.practiceSolved, category, index);
+        achievementState.stats.correctAnswerCount += 1;
+        if (wasBlind) addUniqueAchievementIndex(achievementState.blindSolved, category, index);
+        if (firstTry && !achievementState.firstTrySolved.includes(key)) achievementState.firstTrySolved.push(key);
+        achievementState.stats.sessionBestStreak = Math.max(Number(achievementState.stats.sessionBestStreak) || 0, currentStreak || 0);
+        saveAchievementState();
+
+        unlockAchievement("sweet-success");
+        if (firstTry) unlockAchievement("one-take-wonder");
+        if (achievementState.firstTrySolved.length >= 5) unlockAchievement("first-try-five");
+        if (wasBlind) unlockAchievement("first-blind-win");
+        if (wordLength >= 10) unlockAchievement("long-word");
+        if (timerActive) unlockAchievement("beat-the-clock");
+        if ((Number(achievementState.wrongByWord[category][String(index)]) || 0) > 0) unlockAchievement("comeback-kid");
+        if (achievementState.retryByWord[category][String(index)]) unlockAchievement("retry-comeback");
+        const distinctSolvedCount = achievementState.practiceSolved.A.length + achievementState.practiceSolved.B.length;
+        if (distinctSolvedCount >= 25) unlockAchievement("marathon-25");
+        if (currentStreak >= 3) unlockAchievement("three-drops");
+        if (currentStreak >= 5) unlockAchievement("hive-mind");
+        if (currentStreak >= 10) unlockAchievement("royal-streak");
+        if (allIndicesRecorded(achievementState.practiceSolved, "A", categoryA.length)) unlockAchievement("a-specialist");
+        if (allIndicesRecorded(achievementState.practiceSolved, "B", categoryB.length)) unlockAchievement("b-specialist");
+        if (allIndicesRecorded(achievementState.practiceSolved, "A", categoryA.length) && allIndicesRecorded(achievementState.practiceSolved, "B", categoryB.length)) unlockAchievement("master-both-hives");
+        if (allIndicesRecorded(achievementState.blindSolved, "A", categoryA.length)) unlockAchievement("blind-a");
+        if (allIndicesRecorded(achievementState.blindSolved, "B", categoryB.length)) unlockAchievement("blind-b");
+        if (allIndicesRecorded(achievementState.blindSolved, "A", categoryA.length) && allIndicesRecorded(achievementState.blindSolved, "B", categoryB.length)) unlockAchievement("blind-all");
+      }
+
+      function openAchievements() {
+        const unlockedItems = ACHIEVEMENT_DEFINITIONS.filter((item) => achievementState.unlocked[item.id]);
+        const count = unlockedItems.length;
+        const total = ACHIEVEMENT_DEFINITIONS.length;
+        const percent = Math.round((count / total) * 100);
+        const cards = unlockedItems.map((item, index) => `
+          <article class="achievement-card" style="animation-delay:${Math.min(index * 35, 350)}ms">
+            <div class="achievement-card-icon" aria-hidden="true">${item.icon}</div>
+            <div><h3>${item.title}</h3><p>${item.description}</p></div>
+          </article>`).join("");
+        Swal.fire({
+          title: "🏅 Secret Achievements",
+          html: `<div class="achievement-gallery">
+            <div class="achievement-gallery-summary"><strong>${count} / ${total} secrets discovered</strong><div class="achievement-gallery-track"><div class="achievement-gallery-fill" style="width:${percent}%"></div></div><p style="font-size:.8rem;color:#fed7aa;margin:.55rem 0 0">Every secret stays hidden until you earn it. Achievements are saved separately; there is no in-app reset button, and practice resets do not erase them.</p></div>
+            ${cards || `<p style="padding:1.2rem .4rem;text-align:center;color:#d1d5db;line-height:1.6">The hive is still full of mysteries…<br><strong>Try the modes, explore the words, and keep your eyes open.</strong></p>`}
+            <p class="achievement-secret-note">${count === total ? "The entire Golden Hive is yours. Incredible!" : "The undiscovered achievements remain secret. No spoilers."}</p>
+          </div>`,
+          confirmButtonText: "Back to the hive",
+          confirmButtonColor: "#f97316",
+          background: "#171222",
+          color: "#fff7ed",
+          width: "min(94vw, 620px)",
+        });
+      }
+
+      // Observe meaningful actions without creating any microphone-specific achievements.
+      const _achievementOriginalShowWord = showWord;
+      showWord = function (index, opener) {
+        _achievementOriginalShowWord(index, opener);
+        if (!selectedCategory || currentPracticeIndex !== index) return;
+        achievementState.stats.categoryVisited[selectedCategory] = true;
+        saveAchievementState();
+        if (achievementState.stats.categoryVisited.A && achievementState.stats.categoryVisited.B) unlockAchievement("category-tourist");
+        if (currentMode === PRACTICE_MODES.PRACTICE) unlockAchievement("first-flight");
+      };
+
+      const _achievementOriginalSetMode = setMode;
+      setMode = function (mode, persist = true) {
+        _achievementOriginalSetMode(mode, persist);
+        const key = currentMode === PRACTICE_MODES.PRACTICE ? "practice" : "view";
+        achievementState.stats.modes[key] = true;
+        saveAchievementState();
+        if (achievementState.stats.modes.view && achievementState.stats.modes.practice) unlockAchievement("both-modes");
+      };
+
+      const _achievementOriginalPlayAudio = playAudio;
+      playAudio = function () {
+        const wasView = currentMode === PRACTICE_MODES.VIEW;
+        const listenedCategory = selectedCategory;
+        const listenedIndex = currentPracticeIndex;
+        _achievementOriginalPlayAudio();
+        if (wasView && currentAudio && listenedCategory && listenedIndex >= 0) {
+          const previousEnded = currentAudio.onended;
+          currentAudio.onended = function (event) {
+            if (typeof previousEnded === "function") previousEnded.call(this, event);
+            recordViewWordHeard(listenedCategory, listenedIndex);
+          };
+        }
+      };
+
+      const _achievementOriginalVerify = verifyPracticeWord;
+      verifyPracticeWord = function () {
+        const category = selectedCategory;
+        const index = currentPracticeIndex;
+        const word = normalizeWord(currentCategory[index] || "");
+        const guess = normalizeWord(practiceInput.join(""));
+        if (currentMode !== PRACTICE_MODES.PRACTICE || !category || index < 0 || !word || guess.length !== word.length) {
+          return _achievementOriginalVerify();
+        }
+
+        const wasBlind = Boolean(blindModeActive);
+        const timerActive = Number(practiceTimerSetting) > 0;
+        const attemptKey = String(index);
+        const attemptsBefore = Number(achievementState.attempts[category][attemptKey]) || 0;
+        const attemptsAfter = attemptsBefore + 1;
+        achievementState.attempts[category][attemptKey] = attemptsAfter;
+        if (guess !== word) {
+          achievementState.wrongByWord[category][attemptKey] = (Number(achievementState.wrongByWord[category][attemptKey]) || 0) + 1;
+        }
+        saveAchievementState();
+        if (attemptsAfter > 10) unlockAchievement("eleven-attempts");
+
+        _achievementOriginalVerify();
+
+        if (guess === word) {
+          // The existing Blind wrapper may also mark this as BLIND_CORRECT.
+          recordAchievementSolve(category, index, wasBlind, attemptsAfter === 1, true, word.length, timerActive);
+        }
+      };
+
+      const _achievementOriginalRetry = retryPracticeWord;
+      retryPracticeWord = function () {
+        const category = selectedCategory;
+        const index = currentPracticeIndex;
+        _achievementOriginalRetry();
+        if (category && index >= 0 && currentMode === PRACTICE_MODES.PRACTICE) {
+          achievementState.retryByWord[category][String(index)] = true;
+          saveAchievementState();
+        }
+      };
+
+      const _achievementOriginalReveal = revealPracticeWord;
+      revealPracticeWord = function () {
+        const valid = currentMode === PRACTICE_MODES.PRACTICE && currentPracticeIndex >= 0 && Boolean(currentCategory[currentPracticeIndex]);
+        _achievementOriginalReveal();
+        if (valid) {
+          achievementState.stats.revealCount += 1;
+          saveAchievementState();
+          unlockAchievement("truth-seeker");
+        }
+      };
+
+      const _achievementOriginalHint = requestPracticeHint;
+      requestPracticeHint = function () {
+        const valid = currentMode === PRACTICE_MODES.PRACTICE && currentPracticeIndex >= 0 && Boolean(currentCategory[currentPracticeIndex]);
+        _achievementOriginalHint();
+        if (valid) {
+          achievementState.stats.hintCount += 1;
+          saveAchievementState();
+          unlockAchievement("hint-seeker");
+        }
+      };
+
+      const _achievementOriginalRandom = openRandomWord;
+      openRandomWord = function () {
+        const valid = Boolean(selectedCategory && currentCategory.length);
+        _achievementOriginalRandom();
+        if (valid) {
+          achievementState.stats.randomWordCount += 1;
+          saveAchievementState();
+          if (achievementState.stats.randomWordCount >= 5) unlockAchievement("random-five");
+        }
+      };
+
+      const _achievementOriginalSearch = searchWord;
+      searchWord = function () {
+        const hasQuery = Boolean(selectedCategory && document.getElementById("search-number")?.value.trim());
+        _achievementOriginalSearch();
+        if (hasQuery) unlockAchievement("searcher");
+      };
+
+      const _achievementOriginalStats = openMyStats;
+      openMyStats = function () {
+        _achievementOriginalStats();
+        unlockAchievement("stats-reader");
+      };
+
+      const _achievementOriginalBookmark = toggleBookmark;
+      toggleBookmark = function (index) {
+        _achievementOriginalBookmark(index);
+        const totalBookmarks = getBookmarks("A").size + getBookmarks("B").size;
+        if (totalBookmarks >= 5) unlockAchievement("five-stars");
+      };
+
+      function handleBeeEasterEgg() {
+        const bee = document.getElementById("beeLogo");
+        if (bee) {
+          bee.classList.remove("bee-buzz");
+          void bee.offsetWidth;
+          bee.classList.add("bee-buzz");
+        }
+        achievementState.stats.beeClicks = (Number(achievementState.stats.beeClicks) || 0) + 1;
+        saveAchievementState();
+        unlockAchievement("bee-click");
+        if (achievementState.stats.beeClicks >= 7) {
+          unlockAchievement("queen-bee");
+          window.launchConfetti?.(90);
+          // Small hidden easter egg: seven clicks make the bee “buzz” like a tiny queen.
+          document.body.classList.add("queen-bee-easter-egg");
+          setTimeout(() => document.body.classList.remove("queen-bee-easter-egg"), 900);
+        }
+      }
+
+      const beeLogo = document.getElementById("beeLogo");
+      if (beeLogo) {
+        beeLogo.addEventListener("click", handleBeeEasterEgg);
+        beeLogo.addEventListener("keydown", (event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            handleBeeEasterEgg();
+          }
+        });
+      }
+
+      const _achievementOriginalTimerSetting = changeTimerSetting;
+      changeTimerSetting = function (value) {
+        _achievementOriginalTimerSetting(value);
+        if (Number(value) > 0) {
+          achievementState.stats.timerEnabled = true;
+          saveAchievementState();
+        }
+      };
+
+      updateAchievementButton();
 
       // Init session stats display on page load
       renderSessionStats();
