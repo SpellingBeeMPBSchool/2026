@@ -398,6 +398,7 @@
       }
 
       .grid button.practice-correct .grid-number,
+      .grid button.practice-blind-correct .grid-number,
       .grid button.practice-incorrect .grid-number,
       .grid button.practice-revealed .grid-number {
         opacity: 0.86;
@@ -405,6 +406,7 @@
       }
 
       .grid button.practice-correct .grid-word,
+      .grid button.practice-blind-correct .grid-word,
       .grid button.practice-incorrect .grid-word,
       .grid button.practice-revealed .grid-word {
         font-size: clamp(0.58rem, 0.78vw, 0.77rem);
@@ -414,6 +416,7 @@
       }
 
       body.practice-mode #grid-container button[data-progress="correct"] .grid-word,
+      body.practice-mode #grid-container button[data-progress="blind-correct"] .grid-word,
       body.practice-mode #grid-container button[data-progress="incorrect"] .grid-word,
       body.practice-mode #grid-container button[data-progress="revealed"] .grid-word {
         color: #fff !important;
@@ -664,7 +667,29 @@
         animation: state-in 0.38s cubic-bezier(.16,1,.3,1) both;
       }
 
+      /* A correct answer solved with Blind enabled gets a persistent galaxy-purple state. */
+      body.practice-mode #grid-container button[data-progress="blind-correct"],
+      body.practice-mode #grid-container button.practice-blind-correct {
+        background: linear-gradient(135deg, #7c3aed, #9333ea 58%, #6d28d9) !important;
+        border-color: #c084fc !important;
+        color: #fff !important;
+        box-shadow: 0 0 0 1px rgba(192, 132, 252, 0.18), 0 0 18px rgba(124, 58, 237, 0.24) !important;
+        animation: blind-mastered-in 0.48s cubic-bezier(.16,1,.3,1) both, blind-mastered-glow 2.8s ease-in-out infinite 0.48s;
+      }
+
+      @keyframes blind-mastered-in {
+        0% { opacity: 0.55; transform: scale(0.92) rotate(-1deg); }
+        65% { transform: scale(1.035); }
+        100% { opacity: 1; transform: scale(1) rotate(0); }
+      }
+
+      @keyframes blind-mastered-glow {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(168, 85, 247, 0.22), 0 0 12px rgba(124, 58, 237, 0.18); }
+        50% { box-shadow: 0 0 0 6px rgba(168, 85, 247, 0), 0 0 22px rgba(124, 58, 237, 0.38); }
+      }
+
       body.practice-mode #grid-container button.practice-correct:hover,
+      body.practice-mode #grid-container button.practice-blind-correct:hover,
       body.practice-mode #grid-container button.practice-incorrect:hover,
       body.practice-mode #grid-container button.practice-revealed:hover {
         transform: translateY(-2px) scale(1.01);
@@ -872,7 +897,7 @@
         overflow: hidden;
       }
 
-      .practice-slot {
+      .practice-slot { position: relative;
         min-width: 1.2rem;
         min-height: 1.9rem;
         display: inline-flex;
@@ -916,6 +941,19 @@
       .practice-slot.revealed {
         border-bottom-color: var(--practice-revealed);
         color: #60a5fa;
+      }
+
+      .practice-slot.blind-correct {
+        border-bottom-color: #c084fc;
+        color: #c084fc;
+        text-shadow: 0 0 12px rgba(168, 85, 247, 0.36);
+        animation: blind-slot-success 0.42s cubic-bezier(.16,1,.3,1) both;
+      }
+
+      @keyframes blind-slot-success {
+        0% { opacity: 0.55; transform: translateY(5px) scale(0.9); }
+        70% { transform: translateY(-2px) scale(1.08); }
+        100% { opacity: 1; transform: translateY(0) scale(1); }
       }
 
       @keyframes letter-rise {
@@ -1437,6 +1475,716 @@
           transition-duration: 0s !important;
         }
       }
+
+      /* === NEW AUTONOMOUS FEATURES: SFX, TIMERS, DASHBOARD, FILTERS, NAVIGATION === */
+
+      /* Modal Header Navigation */
+      .modal-header-nav {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        margin: 0 auto 0.45rem;
+      }
+
+      .modal-nav-btn {
+        width: 34px;
+        height: 31px;
+        border: 1px solid var(--border);
+        border-radius: 9px;
+        background: rgba(255, 253, 248, 0.88);
+        color: var(--text-dark);
+        font-size: 0.85rem;
+        font-weight: 800;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+      }
+
+      .modal-nav-btn:hover:not(:disabled) {
+        transform: translateY(-2px);
+        background: var(--surface-soft);
+        border-color: var(--primary-strong);
+      }
+
+      .modal-nav-btn:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      body.galaxy-theme .modal-nav-btn {
+        background: rgba(20, 20, 46, 0.75);
+        border-color: var(--galaxy-border);
+        color: var(--galaxy-primary);
+      }
+
+      body.galaxy-theme .modal-nav-btn:hover:not(:disabled) {
+        background: var(--galaxy-surface-soft);
+        border-color: var(--galaxy-primary);
+        box-shadow: 0 0 10px rgba(0, 212, 255, 0.22);
+      }
+
+      /* Audio Speed Toggle Button */
+      .speed-btn {
+        background: rgba(246, 197, 21, 0.16);
+        border: 1px solid rgba(246, 197, 21, 0.45);
+        color: var(--text-dark);
+        font-size: 0.84rem;
+        font-weight: 800;
+        cursor: pointer;
+      }
+
+      .speed-btn:hover:not(:disabled) {
+        background: rgba(246, 197, 21, 0.28);
+      }
+
+      body.galaxy-theme .speed-btn {
+        background: rgba(0, 212, 255, 0.1);
+        border-color: rgba(0, 212, 255, 0.35);
+        color: var(--galaxy-primary);
+      }
+
+      body.galaxy-theme .speed-btn:hover:not(:disabled) {
+        background: rgba(0, 212, 255, 0.2);
+        box-shadow: 0 0 12px rgba(0, 212, 255, 0.2);
+      }
+
+      /* Practice Timer Challenge */
+      .timer-stat select {
+        background: transparent;
+        border: none;
+        color: inherit;
+        font-family: inherit;
+        font-size: 0.85rem;
+        font-weight: 800;
+        cursor: pointer;
+        outline: none;
+      }
+
+      .timer-stat select option {
+        background: #14142e;
+        color: #f0f0f5;
+      }
+
+      .timer-bar-wrap {
+        width: 100%;
+        max-width: 560px;
+        margin: -0.2rem auto 0.45rem;
+        position: relative;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 999px;
+        height: 8px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+      }
+
+      body.galaxy-theme .timer-bar-wrap {
+        border-color: var(--galaxy-border);
+      }
+
+      .timer-bar {
+        height: 100%;
+        width: 100%;
+        background: linear-gradient(90deg, #00d4ff, #22c55e);
+        border-radius: 999px;
+        transition: width 0.15s linear, background 0.3s ease;
+      }
+
+      .timer-bar.warning {
+        background: linear-gradient(90deg, #f59e0b, #eab308);
+      }
+
+      .timer-bar.critical {
+        background: linear-gradient(90deg, #ef4444, #dc2626);
+        animation: pulse-timer-bar 0.4s ease-in-out infinite alternate;
+      }
+
+      @keyframes pulse-timer-bar {
+        from { opacity: 0.7; }
+        to { opacity: 1; }
+      }
+
+      /* Next Word Button */
+      .practice-next-btn {
+        background: linear-gradient(135deg, #10b981, #059669) !important;
+        color: #fff !important;
+        animation: pulse-next-btn 1.6s ease infinite;
+      }
+
+      @keyframes pulse-next-btn {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+        50% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+      }
+
+      /* Practice Stats Dashboard */
+      .practice-dashboard {
+        width: min(92%, 520px);
+        margin: -0.3rem auto 0.95rem;
+        padding: 0.65rem 1rem;
+        border-radius: 14px;
+        background: rgba(20, 20, 46, 0.65);
+        border: 1px solid var(--galaxy-border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.8rem;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.18);
+        animation: fade-in-dash 0.3s ease;
+      }
+
+      .practice-dashboard[hidden] {
+        display: none !important;
+      }
+
+      @keyframes fade-in-dash {
+        from { opacity: 0; transform: translateY(-6px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      .dash-stat {
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+        font-size: 0.82rem;
+        white-space: nowrap;
+      }
+
+      .dash-label {
+        color: var(--galaxy-text-light);
+      }
+
+      .dash-stat strong {
+        color: var(--galaxy-text-dark);
+      }
+
+      .dash-streak {
+        color: #f59e0b !important;
+        font-weight: 800;
+      }
+
+      .dash-progress-wrap {
+        flex: 1;
+        height: 7px;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 999px;
+        overflow: hidden;
+      }
+
+      .dash-progress-bar {
+        height: 100%;
+        background: linear-gradient(90deg, #00d4ff, #7c3aed);
+        border-radius: 999px;
+        transition: width 0.35s ease;
+      }
+
+      /* Grid Filter Chips */
+      .grid-filter-container {
+        width: min(94%, 620px);
+        margin: 0 auto 1.15rem;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        gap: 0.45rem;
+      }
+
+      .grid-filter-container[hidden] {
+        display: none !important;
+      }
+
+      .filter-chip {
+        padding: 0.36rem 0.72rem;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        background: rgba(255, 253, 248, 0.85);
+        color: var(--text-medium);
+        font-size: 0.78rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .filter-chip:hover {
+        border-color: var(--primary-strong);
+        color: var(--text-dark);
+        transform: translateY(-1px);
+      }
+
+      .filter-chip.active {
+        background: var(--primary);
+        border-color: var(--primary-strong);
+        color: #29230f;
+        box-shadow: 0 2px 8px rgba(246, 197, 21, 0.25);
+      }
+
+      body.galaxy-theme .filter-chip {
+        background: rgba(20, 20, 46, 0.6);
+        border-color: var(--galaxy-border);
+        color: var(--galaxy-text-medium);
+      }
+
+      body.galaxy-theme .filter-chip:hover {
+        border-color: rgba(0, 212, 255, 0.4);
+        color: var(--galaxy-text-dark);
+      }
+
+      body.galaxy-theme .filter-chip.active {
+        background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(124, 58, 237, 0.3));
+        border-color: var(--galaxy-primary);
+        color: #fff;
+        box-shadow: 0 0 12px rgba(0, 212, 255, 0.28);
+      }
+
+      .utility-actions {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+      }
+
+
+      /* === FEATURE PACK 2: CONTEST, ALPHABET GUIDE, HINT, HIGHLIGHT === */
+
+      /* Search Match Glow */
+      .search-match {
+        animation: search-glow 0.8s ease-in-out infinite alternate !important;
+        transform: scale(1.06) !important;
+        z-index: 2;
+      }
+
+      @keyframes search-glow {
+        from {
+          box-shadow: 0 0 4px var(--primary);
+          border-color: var(--primary);
+        }
+        to {
+          box-shadow: 0 0 16px var(--primary-strong), 0 0 24px rgba(246, 197, 21, 0.5);
+          border-color: #ffd83d;
+        }
+      }
+
+      body.galaxy-theme .search-match {
+        border-color: var(--galaxy-primary) !important;
+        animation: search-galaxy-glow 0.8s ease-in-out infinite alternate !important;
+      }
+
+      @keyframes search-galaxy-glow {
+        from {
+          box-shadow: 0 0 6px var(--galaxy-primary);
+        }
+        to {
+          box-shadow: 0 0 20px var(--galaxy-primary), 0 0 30px rgba(0, 212, 255, 0.6);
+        }
+      }
+
+      /* Hint Button */
+      .hint-btn {
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+        color: #1a1202;
+        font-weight: 800;
+      }
+
+      .hint-btn:hover:not(:disabled) {
+        box-shadow: 0 8px 18px rgba(245, 158, 11, 0.28);
+      }
+
+      /* Contest Round Banner */
+      .contest-round-banner {
+        width: 100%;
+        max-width: 560px;
+        margin: -0.25rem auto 0.4rem;
+        padding: 0.4rem 0.8rem;
+        border-radius: 9px;
+        background: linear-gradient(90deg, rgba(124, 58, 237, 0.28), rgba(0, 212, 255, 0.28));
+        border: 1px solid rgba(0, 212, 255, 0.35);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 0.82rem;
+        font-weight: 800;
+        color: #00d4ff;
+        animation: fade-in-dash 0.3s ease;
+      }
+
+      .contest-round-banner[hidden] {
+        display: none !important;
+      }
+
+      /* Alphabet Guide Grid */
+      .alphabet-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+        gap: 0.45rem;
+        max-height: 56vh;
+        overflow-y: auto;
+        padding: 0.4rem 0.2rem;
+      }
+
+      .alphabet-card-btn {
+        background: rgba(20, 20, 46, 0.7);
+        border: 1px solid var(--galaxy-border);
+        border-radius: 10px;
+        padding: 0.45rem 0.2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.15rem;
+        cursor: pointer;
+        transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+      }
+
+      .alphabet-card-btn:hover {
+        transform: translateY(-2px);
+        border-color: var(--galaxy-primary);
+        background: rgba(0, 212, 255, 0.12);
+        box-shadow: 0 4px 12px rgba(0, 212, 255, 0.2);
+      }
+
+      .abc-letter {
+        font-size: 1.15rem;
+        font-weight: 900;
+        color: var(--galaxy-primary);
+      }
+
+      .utility-actions {
+        width: min(94%, 640px) !important;
+        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)) !important;
+      }
+
+
+      /* === FEATURE PACK 3: BOOKMARKS, SESSION STATS, BLIND MODE, CONFETTI === */
+
+      /* ⭐ Star bookmark overlay on grid buttons */
+      #grid-container button { position: relative; }
+
+      .grid-star {
+        position: absolute;
+        top: 2px;
+        right: 4px;
+        font-size: 0.72rem;
+        line-height: 1;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s;
+      }
+
+      #grid-container button.bookmarked .grid-star { opacity: 1; }
+      #grid-container button:hover .grid-star { opacity: 0.55; }
+
+      /* Starred filter chip highlight colour */
+      .filter-chip[data-filter="starred"].active {
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+        color: #1a1202;
+        border-color: #f59e0b;
+      }
+
+      /* Bookmark toggle button inside modal */
+      .bookmark-btn {
+        background: linear-gradient(135deg, rgba(245,158,11,0.18), rgba(217,119,6,0.22));
+        border: 1.5px solid rgba(245,158,11,0.45);
+        color: #f59e0b;
+        font-weight: 800;
+      }
+
+      .bookmark-btn.bookmarked {
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+        color: #1a1202;
+        border-color: #f59e0b;
+      }
+
+      .bookmark-btn:hover:not(:disabled) {
+        box-shadow: 0 6px 14px rgba(245,158,11,0.28);
+        transform: translateY(-1px);
+      }
+
+      /* 📊 Session stats mini-bar */
+      .session-stats-bar {
+        display: none;
+        align-items: center;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        font-size: 0.8rem;
+        color: var(--galaxy-text-medium);
+        background: rgba(20,20,46,0.6);
+        border: 1px solid var(--galaxy-border);
+        border-radius: 10px;
+        padding: 0.4rem 1rem;
+        margin: 0.3rem auto 0;
+        width: min(96%, 640px);
+        animation: fade-in-dash 0.35s ease;
+      }
+
+      body.galaxy-theme .session-stats-bar { display: flex; }
+
+      .session-stat-item strong { color: var(--galaxy-primary); }
+
+      /* 🎯 Blind mode toggle */
+      .blind-btn {
+        background: linear-gradient(135deg, rgba(124,58,237,0.22), rgba(236,72,153,0.18));
+        border: 1.5px solid rgba(124,58,237,0.4);
+        color: #c084fc;
+        font-weight: 800;
+      }
+
+      .blind-btn.active {
+        background: linear-gradient(135deg, #7c3aed, #ec4899);
+        color: #fff;
+        border-color: #7c3aed;
+      }
+
+      .blind-btn:hover:not(:disabled) {
+        box-shadow: 0 6px 14px rgba(124,58,237,0.28);
+        transform: translateY(-1px);
+      }
+
+      /* Blind-mode slot style */
+      .practice-slot.blind {
+        background: rgba(124,58,237,0.18) !important;
+        color: rgba(124,58,237,0.0) !important;
+        border-color: rgba(124,58,237,0.6) !important;
+        text-shadow: none !important;
+      }
+
+      .practice-slot.blind::after {
+        content: "•";
+        color: rgba(124,58,237,0.7);
+        font-size: 1.1rem;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      /* 🎉 Confetti canvas */
+      #confettiCanvas {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 9999;
+        display: none;
+      }
+
+      /* Page guide — compact when closed, detailed and responsive when opened. */
+      .page-guide {
+        width: min(94%, 900px);
+        margin: 0 auto 1.35rem;
+        overflow: hidden;
+        border: 1px solid rgba(218, 169, 0, 0.24);
+        border-radius: 16px;
+        background: rgba(255, 253, 248, 0.82);
+        box-shadow: 0 8px 24px rgba(62, 48, 12, 0.055);
+        transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+      }
+
+      .page-guide[open] {
+        box-shadow: var(--shadow);
+      }
+
+      .page-guide summary {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        padding: 0.9rem 1rem;
+        cursor: pointer;
+        list-style: none;
+        user-select: none;
+      }
+
+      .page-guide summary::-webkit-details-marker { display: none; }
+      .page-guide summary:focus-visible { outline: 3px solid rgba(0, 212, 255, 0.42); outline-offset: -3px; }
+
+      .page-guide summary::after {
+        content: "+";
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        flex: 0 0 30px;
+        margin-left: auto;
+        border: 1px solid rgba(218, 169, 0, 0.25);
+        border-radius: 9px;
+        color: var(--accent);
+        font-size: 1.2rem;
+        font-weight: 700;
+        transition: transform 0.22s ease, background 0.22s ease;
+      }
+
+      .page-guide[open] summary::after {
+        content: "−";
+        background: rgba(246, 197, 21, 0.12);
+      }
+
+      .guide-summary-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 42px;
+        height: 42px;
+        flex: 0 0 42px;
+        border-radius: 12px;
+        background: rgba(246, 197, 21, 0.18);
+        font-size: 1.25rem;
+      }
+
+      .guide-summary-copy { min-width: 0; display: block; }
+      .guide-summary-copy strong { display: block; color: var(--text-dark); font-size: 0.94rem; }
+      .guide-summary-copy small { display: block; margin-top: 0.12rem; color: var(--text-medium); font-size: 0.77rem; line-height: 1.4; }
+
+      .guide-content { padding: 0.2rem 1rem 1rem; }
+      .guide-intro { margin: 0.35rem 0 0.95rem; color: var(--text-medium); font-size: 0.88rem; }
+      .guide-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 245px), 1fr)); gap: 0.7rem; }
+
+      .guide-card {
+        min-width: 0;
+        padding: 0.9rem;
+        border: 1px solid rgba(234, 223, 189, 0.9);
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.55);
+        color: var(--text-medium);
+        font-size: 0.8rem;
+        line-height: 1.6;
+      }
+
+      .guide-card h3 { margin-bottom: 0.4rem; color: var(--text-dark); font-family: "Inter", sans-serif; font-size: 0.87rem; font-weight: 800; }
+      .guide-card p + p, .guide-card p + ul, .guide-card p + ol { margin-top: 0.45rem; }
+      .guide-card ol, .guide-card ul { padding-left: 1.15rem; }
+      .guide-card li + li { margin-top: 0.22rem; }
+      .guide-card kbd { display: inline-block; padding: 0.05rem 0.28rem; border: 1px solid var(--border); border-radius: 5px; background: var(--surface); color: var(--text-dark); font: inherit; font-size: 0.72rem; font-weight: 800; white-space: nowrap; }
+      .guide-status-list { display: grid; gap: 0.28rem; padding-left: 0 !important; list-style: none; }
+      .guide-status-list li { display: flex; align-items: center; gap: 0.45rem; }
+      .guide-dot { width: 9px; height: 9px; flex: 0 0 9px; border-radius: 50%; }
+      .guide-dot-correct { background: #22c55e; }
+      .guide-dot-blind { background: #a855f7; box-shadow: 0 0 8px rgba(168, 85, 247, 0.55); }
+      .guide-dot-incorrect { background: #ef4444; }
+      .guide-dot-revealed { background: #3b82f6; }
+      .guide-dot-pending { background: #52526b; }
+      .guide-card-view { border-top: 3px solid #e2b411; }
+      .guide-card-practice { border-top: 3px solid var(--galaxy-primary); }
+      .guide-note { color: var(--text-light); font-size: 0.75rem; }
+      .guide-footnote { margin: 0.85rem 0 0; color: var(--text-light); font-size: 0.73rem; line-height: 1.5; }
+
+      /* Visually separate session metrics from the filters below them. */
+      .session-stats-bar {
+        gap: 0.55rem;
+        width: min(94%, 760px);
+        margin: 1.05rem auto 1.7rem;
+        padding: 0.7rem;
+        border-radius: 14px;
+        box-shadow: 0 8px 22px rgba(0, 0, 0, 0.14);
+      }
+
+      body.galaxy-theme .session-stats-bar {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(125px, 1fr));
+      }
+
+      .session-stat-item {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.38rem;
+        min-width: 0;
+        padding: 0.45rem 0.55rem;
+        border: 1px solid rgba(0, 212, 255, 0.1);
+        border-radius: 9px;
+        background: rgba(0, 212, 255, 0.045);
+        text-align: center;
+      }
+
+      .session-stat-item strong { min-width: 1.1em; text-align: center; font-variant-numeric: tabular-nums; }
+
+      .grid-filter-container {
+        width: min(94%, 760px);
+        margin: 0 auto 1.65rem;
+        padding: 0.85rem 0.2rem 0;
+        gap: 0.62rem;
+        border-top: 1px solid rgba(218, 169, 0, 0.16);
+      }
+
+      body.galaxy-theme .grid-filter-container { border-top-color: rgba(0, 212, 255, 0.16); }
+
+      .filter-section-heading {
+        display: flex;
+        flex: 0 0 100%;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.75rem;
+        padding: 0 0.25rem 0.1rem;
+        color: var(--text-medium);
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .filter-section-heading span {
+        color: var(--text-light);
+        font-size: 0.72rem;
+        font-weight: 500;
+        letter-spacing: 0;
+        text-align: right;
+        text-transform: none;
+      }
+
+      .filter-chip { min-height: 36px; padding: 0.46rem 0.82rem; }
+      .filter-chip:focus-visible { outline: 3px solid rgba(0, 212, 255, 0.38); outline-offset: 3px; }
+
+      body.galaxy-theme .page-guide {
+        background: rgba(20, 20, 46, 0.62);
+        border-color: rgba(0, 212, 255, 0.18);
+        box-shadow: 0 8px 26px rgba(0, 0, 0, 0.2);
+      }
+
+      body.galaxy-theme .page-guide summary::after { color: var(--galaxy-primary); border-color: rgba(0, 212, 255, 0.22); }
+      body.galaxy-theme .page-guide[open] summary::after { background: rgba(0, 212, 255, 0.1); }
+      body.galaxy-theme .guide-summary-icon { background: rgba(0, 212, 255, 0.1); }
+      body.galaxy-theme .guide-summary-copy strong, body.galaxy-theme .guide-card h3 { color: var(--galaxy-text-dark); }
+      body.galaxy-theme .guide-summary-copy small, body.galaxy-theme .guide-intro, body.galaxy-theme .guide-card { color: var(--galaxy-text-medium); }
+      body.galaxy-theme .guide-card { background: rgba(10, 10, 26, 0.44); border-color: var(--galaxy-border); }
+      body.galaxy-theme .guide-card kbd { background: rgba(20, 20, 46, 0.9); border-color: var(--galaxy-border); color: var(--galaxy-text-dark); }
+      body.galaxy-theme .guide-note, body.galaxy-theme .guide-footnote { color: var(--galaxy-text-light); }
+      body.galaxy-theme .filter-section-heading { color: var(--galaxy-text-dark); }
+      body.galaxy-theme .filter-section-heading span { color: var(--galaxy-text-light); }
+
+
+      /* Small, consistent interactions across the upgraded interface. */
+      .guide-card { transition: transform 0.24s ease, border-color 0.24s ease, box-shadow 0.24s ease; }
+      .page-guide[open] .guide-card { animation: guide-card-enter 0.42s cubic-bezier(.2,.8,.2,1) both; }
+      .page-guide[open] .guide-card:nth-child(2) { animation-delay: 45ms; }
+      .page-guide[open] .guide-card:nth-child(3) { animation-delay: 90ms; }
+      .page-guide[open] .guide-card:nth-child(4) { animation-delay: 135ms; }
+      .page-guide[open] .guide-card:nth-child(5) { animation-delay: 180ms; }
+      .page-guide[open] .guide-card:nth-child(6) { animation-delay: 225ms; }
+      @keyframes guide-card-enter { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: translateY(0); } }
+      .session-stat-item { transition: color 0.2s ease, transform 0.22s ease, background-color 0.22s ease, border-color 0.22s ease; }
+      .session-stat-item:hover { transform: translateY(-2px); color: var(--galaxy-text-dark); border-color: rgba(0, 212, 255, 0.24); background: rgba(0, 212, 255, 0.08); }
+      .guide-card:hover { transform: translateY(-2px); border-color: rgba(0, 212, 255, 0.26); box-shadow: 0 9px 22px rgba(0, 0, 0, 0.07); }
+      .voice-btn { position: relative; overflow: hidden; }
+      .voice-btn::after { content: ""; position: absolute; inset: 0; transform: translateX(-120%); background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.12), transparent 70%); pointer-events: none; }
+      .voice-btn:hover::after { transform: translateX(120%); transition: transform 0.65s ease; }
+      .voice-btn.listening { box-shadow: 0 0 0 1px rgba(0, 212, 255, 0.2), 0 0 20px rgba(0, 212, 255, 0.1); }
+      .voice-status { transition: color 0.2s ease, opacity 0.2s ease; }
+      .practice-result-message.success { text-shadow: 0 0 14px rgba(34, 197, 94, 0.16); }
+      body.galaxy-theme .guide-card:hover { border-color: rgba(0, 212, 255, 0.36); box-shadow: 0 10px 26px rgba(0, 212, 255, 0.06); }
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: 0.01ms !important; }
+      }
+
+      @media (max-width: 600px) {
+        .page-guide { width: min(94%, 430px); margin-bottom: 1.1rem; }
+        .page-guide summary { gap: 0.6rem; padding: 0.8rem 0.7rem; }
+        .guide-summary-icon { width: 36px; height: 36px; flex-basis: 36px; }
+        .guide-summary-copy small { font-size: 0.7rem; }
+        .guide-content { padding: 0.15rem 0.7rem 0.8rem; }
+        .guide-grid { grid-template-columns: 1fr; }
+        .session-stats-bar { width: min(94%, 430px); gap: 0.4rem; margin-bottom: 1.45rem; }
+        .session-stat-item { justify-content: flex-start; font-size: 0.75rem; }
+        .grid-filter-container { width: min(94%, 430px); gap: 0.48rem; }
+        .filter-section-heading { align-items: flex-start; flex-direction: column; gap: 0.1rem; }
+        .filter-section-heading span { text-align: left; }
+      }
+
     </style>
   </head>
 
@@ -1490,23 +2238,145 @@
 
     <form id="search-container" class="search-container">
       <input
-        type="number"
+        type="text"
         id="search-number"
-        placeholder="Number"
-        min="1"
-        max="100"
-        inputmode="numeric"
-        aria-label="Word number"
+        placeholder="Search #number (e.g. 5) or word (e.g. bee)..."
+        aria-label="Search word by number or text"
+        autocomplete="off"
       />
-      <button type="submit" aria-label="Search word number">Search</button>
+      <button type="submit" aria-label="Search word">Search</button>
     </form>
 
     <div class="utility-actions" aria-label="Word tools">
       <button type="button" class="utility-btn random-btn" id="randomWordBtn" onclick="openRandomWord()">
         🎲 Random word
       </button>
+      <button type="button" class="utility-btn contest-btn" id="contestBtn" onclick="startContestRound()" title="Start an official competition simulation round">
+        🏆 Contest round
+      </button>
+      <button type="button" class="utility-btn alphabet-btn" id="alphabetBtn" onclick="openAlphabetGuide()" title="English alphabet pronunciation guide">
+        🔤 Alphabet guide
+      </button>
+      <button type="button" class="utility-btn stats-btn" id="myStatsBtn" onclick="openMyStats()" title="View your practice statistics">
+        📊 My Stats
+      </button>
+      <button type="button" class="utility-btn sfx-btn" id="toggleSfxBtn" onclick="toggleSfx()" title="Toggle sound effects (Web Audio)">
+        🔔 SFX: On
+      </button>
       <button type="button" class="utility-btn reset-btn" id="resetProgressBtn" onclick="resetCurrentCategoryProgress()">
         ↻ Reset progress
+      </button>
+    </div>
+
+    <!-- Page guide: an accessible, expandable overview of the main features. -->
+    <details class="page-guide" id="pageGuide">
+      <summary>
+        <span class="guide-summary-icon" aria-hidden="true">📘</span>
+        <span class="guide-summary-copy">
+          <strong>Page guide</strong>
+          <small>Learn the modes, filters, voice spelling, progress and extra tools</small>
+        </span>
+      </summary>
+      <div class="guide-content">
+        <p class="guide-intro">Use this quick guide to get the most out of your Spelling Bee training.</p>
+        <div class="guide-grid">
+          <article class="guide-card">
+            <h3>1. Start here</h3>
+            <ol>
+              <li>Choose <strong>Category A</strong> or <strong>Category B</strong>.</li>
+              <li>Select a numbered tile to open that word.</li>
+              <li>Use the search box to find a word by number or by text.</li>
+            </ol>
+          </article>
+          <article class="guide-card guide-card-view">
+            <h3>🟡 View mode</h3>
+            <p>Use this mode to review the word list. Open a tile to see the word, listen to its pronunciation, move to the previous or next word, change audio speed, or save a word with <strong>Star</strong>.</p>
+          </article>
+          <article class="guide-card guide-card-practice">
+            <h3>🌌 Practice mode</h3>
+            <p>Listen and spell the word with the on-screen or physical keyboard, then press <strong>Check</strong>. Use <strong>Hint</strong> for help, <strong>Blind</strong> for a greater challenge, <strong>Reveal</strong> to show the answer, or <strong>Retry</strong> to try again.</p>
+          </article>
+          <article class="guide-card">
+            <h3>2. Progress colours and filters</h3>
+            <ul class="guide-status-list">
+              <li><span class="guide-dot guide-dot-correct"></span><span><strong>Green:</strong> answered correctly in regular Practice.</span></li>
+              <li><span class="guide-dot guide-dot-blind"></span><span><strong>Galaxy purple:</strong> answered correctly with Blind enabled.</span></li>
+              <li><span class="guide-dot guide-dot-incorrect"></span><span><strong>Red:</strong> needs another review.</span></li>
+              <li><span class="guide-dot guide-dot-revealed"></span><span><strong>Blue:</strong> the answer was revealed.</span></li>
+              <li><span class="guide-dot guide-dot-pending"></span><span><strong>Dark:</strong> not completed yet.</span></li>
+            </ul>
+            <p>Use the filter chips in Practice mode to show all, pending, review, mastered, short, long or starred words.</p>
+          </article>
+          <article class="guide-card">
+            <h3>3. Extra tools</h3>
+            <ul>
+              <li><strong>Random word:</strong> opens a word for a quick session.</li>
+              <li><strong>Contest round:</strong> simulates a round of 5 or 10 words.</li>
+              <li><strong>Alphabet guide:</strong> select a letter to hear its English name.</li>
+              <li><strong>My Stats:</strong> review your session results and category progress.</li>
+              <li><strong>SFX:</strong> turn sound effects on or off.</li>
+            </ul>
+          </article>
+          <article class="guide-card">
+            <h3>4. Shortcuts and voice input</h3>
+            <p><kbd>Letters</kbd> enter a spelling, <kbd>Backspace</kbd> deletes a letter, <kbd>Enter</kbd> checks the answer, <kbd>Space</kbd> plays the word, and the <kbd>←</kbd>/<kbd>→</kbd> keys move between words.</p>
+            <p>For voice spelling, press <strong>Spell by voice</strong>, then say English letter names one at a time: <strong>A</strong> (“ay”), <strong>B</strong> (“bee”), <strong>C</strong> (“see”). Leave a short pause between letters and watch the status text to see what was captured. You can say <strong>delete</strong>, <strong>clear</strong>, <strong>listen</strong>, <strong>reveal</strong> or <strong>check</strong>. If the browser combines the spelling into the exact target word, the page can fill the remaining letters. Repeated final results are ignored within a session, and the microphone is reconnected after a pause when the browser allows it.</p>
+            <p class="guide-note">Voice recognition is supplied by the browser and depends on its speech service, microphone permissions, network and pronunciation; no website can guarantee the same result on every device. Use HTTPS or localhost, permit microphone access, and compare with current Chrome or Edge if it does not hear you. Brave may have its speech service disabled. The keyboard is always available.</p>
+          </article>
+        </div>
+        <p class="guide-footnote">Your practice progress and starred words are saved in this browser separately for each category. Session statistics reset when the tab session ends.</p>
+      </div>
+    </details>
+
+    <!-- Live Practice Stats Dashboard -->
+    <div id="practice-dashboard" class="practice-dashboard" aria-label="Practice progress" hidden>
+      <div class="dash-stat">
+        <span class="dash-label">Completed:</span>
+        <strong id="dashCompleted">0/0 (0%)</strong>
+      </div>
+      <div class="dash-progress-wrap">
+        <div id="dashProgressBar" class="dash-progress-bar" style="width: 0%"></div>
+      </div>
+      <div class="dash-stat">
+        <span class="dash-label">Streak:</span>
+        <strong id="dashStreak" class="dash-streak">🔥 0</strong>
+      </div>
+    </div>
+
+    <!-- Session Stats Bar (Feature Pack 3) -->
+    <div id="sessionStatsBar" class="session-stats-bar" aria-label="Session statistics">
+      <div class="session-stat-item">📚 Tried: <strong id="sessAttempted">0</strong></div>
+      <div class="session-stat-item">✅ Correct: <strong id="sessCorrect">0</strong></div>
+      <div class="session-stat-item">❌ Wrong: <strong id="sessWrong">0</strong></div>
+      <div class="session-stat-item">🏆 Best streak: <strong id="sessBestStreak">0</strong></div>
+    </div>
+
+    <!-- Quick Grid Filters -->
+    <div id="grid-filter-container" class="grid-filter-container" aria-label="Filter words" hidden>
+      <div class="filter-section-heading">
+        <strong>Filter words</strong>
+        <span>Choose a group to focus your review</span>
+      </div>
+      <button type="button" class="filter-chip active" data-filter="all" onclick="setGridFilter('all')">
+        All (<span id="count-all">0</span>)
+      </button>
+      <button type="button" class="filter-chip" data-filter="pending" onclick="setGridFilter('pending')">
+        ⏳ Pending (<span id="count-pending">0</span>)
+      </button>
+      <button type="button" class="filter-chip" data-filter="incorrect" onclick="setGridFilter('incorrect')">
+        ❌ Review (<span id="count-incorrect">0</span>)
+      </button>
+      <button type="button" class="filter-chip" data-filter="correct" onclick="setGridFilter('correct')">
+        ✅ Mastered (<span id="count-correct">0</span>)
+      </button>
+      <button type="button" class="filter-chip" data-filter="short" onclick="setGridFilter('short')">
+        ⚡ Short (≤5) (<span id="count-short">0</span>)
+      </button>
+      <button type="button" class="filter-chip" data-filter="long" onclick="setGridFilter('long')">
+        🔥 Long (≥8) (<span id="count-long">0</span>)
+      </button>
+      <button type="button" class="filter-chip" data-filter="starred" onclick="setGridFilter('starred')">
+        ⭐ Starred (<span id="count-starred">0</span>)
       </button>
     </div>
 
@@ -1515,16 +2385,31 @@
     <div id="wordModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Selected word">
       <div class="modal-content" role="document">
         <section id="viewModeContent" aria-label="View mode">
-          <div id="modalNumber" class="word-number"></div>
+          <div class="modal-header-nav">
+            <button type="button" class="modal-nav-btn prev-btn" id="viewPrevBtn" onclick="navigateWord(-1)" title="Previous word (Left arrow)">◀</button>
+            <div id="modalNumber" class="word-number"></div>
+            <button type="button" class="modal-nav-btn next-btn" id="viewNextBtn" onclick="navigateWord(1)" title="Next word (Right arrow)">▶</button>
+          </div>
           <h2 id="modalWord"></h2>
           <div class="modal-actions">
             <button type="button" class="base-modal-btn play-btn" onclick="playAudio()">🔊 Listen</button>
+            <button type="button" class="base-modal-btn speed-btn" id="viewSpeedBtn" onclick="toggleAudioSpeed()" title="Toggle playback speed">⚡ 1.0x</button>
+            <button type="button" class="base-modal-btn bookmark-btn" id="viewBookmarkBtn" onclick="toggleBookmark(currentPracticeIndex)" title="Bookmark this word">☆ Star</button>
             <button type="button" class="base-modal-btn close-btn" onclick="closeModal()">Close</button>
           </div>
         </section>
 
         <section id="practiceModeContent" class="practice-shell" aria-label="Practice mode" hidden>
-          <div id="practiceModalNumber" class="word-number"></div>
+          <div id="contestRoundBanner" class="contest-round-banner" hidden>
+            <span id="contestRoundTitle">🏆 Contest: Word 1 of 5</span>
+            <span id="contestRoundScore">Score: 0 / 0</span>
+          </div>
+
+          <div class="modal-header-nav">
+            <button type="button" class="modal-nav-btn prev-btn" id="practicePrevBtn" onclick="navigateWord(-1)" title="Previous word (Left arrow)">◀</button>
+            <div id="practiceModalNumber" class="word-number"></div>
+            <button type="button" class="modal-nav-btn next-btn" id="practiceNextBtn" onclick="navigateWord(1)" title="Next word (Right arrow)">▶</button>
+          </div>
 
           <div class="practice-topbar" aria-label="Practice statistics">
             <div class="practice-stat">
@@ -1535,6 +2420,19 @@
               <span>Word:</span>
               <strong id="practiceWordLength">0 letters</strong>
             </div>
+            <div class="practice-stat timer-stat" title="Countdown challenge mode">
+              <span>⏱️ Timer:</span>
+              <select id="practiceTimerSelect" onchange="changeTimerSetting(this.value)">
+                <option value="0">Off</option>
+                <option value="30">30s</option>
+                <option value="45">45s</option>
+                <option value="60">60s</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="timerBarWrap" class="timer-bar-wrap" hidden>
+            <div id="timerBar" class="timer-bar"></div>
           </div>
 
           <div
@@ -1559,16 +2457,28 @@
               🎙️ Spell by voice
             </button>
             <div id="voiceStatus" class="voice-status" aria-live="polite">
-              Say one English letter clearly, then pause briefly. You may also say several letters in one phrase.
+              Click “🎙️ Spell by voice” to spell letters one by one using your microphone.
             </div>
             <div class="voice-note">
-              Voice recognition can occasionally mishear a letter. For the most reliable result, you can use the keyboard instead.
+              Say English letter names one at a time (A = “ay”, B = “bee”, C = “see”) with a short pause between letters. Watch the status above to see what was captured. If the mic pauses, the app tries to reconnect automatically. Commands: “delete”, “clear”, “listen”, “reveal”, and “check”. Requires HTTPS or localhost, microphone permission, and a working browser speech service; the keyboard is always available.
             </div>
           </div>
 
           <div class="practice-actions">
             <button type="button" class="practice-btn practice-listen-btn" id="practiceListenBtn" onclick="playAudio()">
-              🔊 Listen to word
+              🔊 Listen
+            </button>
+            <button type="button" class="practice-btn speed-btn" id="practiceSpeedBtn" onclick="toggleAudioSpeed()" title="Toggle speed">
+              ⚡ 1.0x
+            </button>
+            <button type="button" class="practice-btn hint-btn" id="practiceHintBtn" onclick="requestPracticeHint()" title="Reveal a letter or clue">
+              💡 Hint
+            </button>
+            <button type="button" class="practice-btn blind-btn" id="blindModeBtn" onclick="toggleBlindMode()" title="Hide letter slots (Blind spelling mode)">
+              👁️ Blind
+            </button>
+            <button type="button" class="practice-btn bookmark-btn" id="practiceBookmarkBtn" onclick="toggleBookmark(currentPracticeIndex)" title="Bookmark this word for focused review">
+              ☆ Star
             </button>
             <button type="button" class="practice-btn verify-btn" id="verifyBtn" onclick="verifyPracticeWord()" disabled>
               Check
@@ -1578,6 +2488,9 @@
             </button>
             <button type="button" class="practice-btn retry-btn" id="retryBtn" onclick="retryPracticeWord()" hidden>
               Retry
+            </button>
+            <button type="button" class="practice-btn practice-next-btn" id="practiceNextWordBtn" onclick="navigateWord(1)" hidden>
+              Next ➔
             </button>
             <button type="button" class="practice-btn close-btn" onclick="closeModal()">
               Close
@@ -1590,6 +2503,10 @@
         </section>
       </div>
     </div>
+
+
+    <!-- Confetti Canvas (Feature Pack 3) -->
+    <canvas id="confettiCanvas" aria-hidden="true"></canvas>
 
     <footer>
       &copy; Misael Pastrana Borrero School<br />
@@ -1770,6 +2687,7 @@ const categoryA = [
         CORRECT: "correct",
         INCORRECT: "incorrect",
         REVEALED: "revealed",
+        BLIND_CORRECT: "blind-correct",
       });
 
       const KEYBOARD_STATUS_PRIORITY = Object.freeze({
@@ -1800,6 +2718,506 @@ const categoryA = [
 
       const $ = (selector) => document.querySelector(selector);
       const $$ = (selector) => [...document.querySelectorAll(selector)];
+
+
+      // =========================================================================
+      // AUTONOMOUS INNOVATION MODULES: SPEED, SFX, TIMERS, DASHBOARD, FILTERS
+      // =========================================================================
+
+      // --- AUDIO PLAYBACK SPEED ---
+      let audioPlaybackRate = 1.0;
+
+      function toggleAudioSpeed() {
+        audioPlaybackRate = audioPlaybackRate === 1.0 ? 0.8 : 1.0;
+        const label = audioPlaybackRate === 0.8 ? "🐢 0.8x" : "⚡ 1.0x";
+        const viewBtn = $("#viewSpeedBtn");
+        const practiceBtn = $("#practiceSpeedBtn");
+        if (viewBtn) viewBtn.textContent = label;
+        if (practiceBtn) practiceBtn.textContent = label;
+        if (currentAudio) currentAudio.playbackRate = audioPlaybackRate;
+      }
+
+      // --- SYNTHESIZED WEB AUDIO SFX ENGINE ---
+      const SfxEngine = {
+        audioCtx: null,
+        isMuted: safeStorageGet("spellingBeeSfxMuted", "false") === "true",
+
+        init() {
+          if (!this.audioCtx) {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (AudioCtx) this.audioCtx = new AudioCtx();
+          }
+          if (this.audioCtx && this.audioCtx.state === "suspended") {
+            this.audioCtx.resume();
+          }
+        },
+
+        playTone(freq, duration, type = "sine", gainVal = 0.12, delay = 0) {
+          if (this.isMuted) return;
+          try {
+            this.init();
+            if (!this.audioCtx) return;
+            const now = this.audioCtx.currentTime + delay;
+            const osc = this.audioCtx.createOscillator();
+            const gain = this.audioCtx.createGain();
+
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, now);
+
+            gain.gain.setValueAtTime(0.001, now);
+            gain.gain.exponentialRampToValueAtTime(gainVal, now + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+            osc.connect(gain);
+            gain.connect(this.audioCtx.destination);
+
+            osc.start(now);
+            osc.stop(now + duration);
+          } catch (e) {}
+        },
+
+        playCorrect() {
+          this.playTone(523.25, 0.16, "sine", 0.14, 0);
+          this.playTone(659.25, 0.16, "sine", 0.14, 0.08);
+          this.playTone(783.99, 0.3, "triangle", 0.16, 0.16);
+        },
+
+        playIncorrect() {
+          this.playTone(155.56, 0.18, "sawtooth", 0.08, 0);
+          this.playTone(116.54, 0.24, "sawtooth", 0.08, 0.12);
+        },
+
+        playTimeout() {
+          this.playTone(440, 0.14, "sine", 0.12, 0);
+          this.playTone(370, 0.14, "sine", 0.12, 0.12);
+          this.playTone(293.66, 0.28, "triangle", 0.12, 0.24);
+        },
+
+        playHint() {
+          this.playTone(440, 0.12, "sine", 0.1, 0);
+          this.playTone(554.37, 0.14, "sine", 0.12, 0.08);
+          this.playTone(659.25, 0.22, "triangle", 0.12, 0.16);
+        },
+
+        playFanfare() {
+          this.playTone(523.25, 0.14, "triangle", 0.15, 0);
+          this.playTone(392.00, 0.14, "triangle", 0.15, 0.12);
+          this.playTone(523.25, 0.16, "triangle", 0.15, 0.24);
+          this.playTone(659.25, 0.2, "triangle", 0.18, 0.38);
+          this.playTone(783.99, 0.45, "triangle", 0.2, 0.55);
+        },
+
+        playKey() {
+          this.playTone(850, 0.03, "sine", 0.015, 0);
+        },
+
+        toggle() {
+          this.isMuted = !this.isMuted;
+          safeStorageSet("spellingBeeSfxMuted", String(this.isMuted));
+          const btn = $("#toggleSfxBtn");
+          if (btn) btn.textContent = this.isMuted ? "🔇 SFX: Off" : "🔔 SFX: On";
+          return !this.isMuted;
+        }
+      };
+
+      function toggleSfx() {
+        SfxEngine.toggle();
+      }
+
+      // --- TIMER CHALLENGE MODE ---
+      let practiceTimerSetting = Number(safeStorageGet("spellingBeeTimer", "0"));
+      let practiceTimerInterval = null;
+      let practiceTimerRemaining = 0;
+
+      function changeTimerSetting(val) {
+        practiceTimerSetting = Number(val) || 0;
+        safeStorageSet("spellingBeeTimer", String(practiceTimerSetting));
+        if (currentMode === PRACTICE_MODES.PRACTICE && currentPracticeIndex >= 0) {
+          startPracticeTimer();
+        }
+      }
+
+      function stopPracticeTimer() {
+        if (practiceTimerInterval) {
+          clearInterval(practiceTimerInterval);
+          practiceTimerInterval = null;
+        }
+        const wrap = $("#timerBarWrap");
+        if (wrap) wrap.hidden = true;
+      }
+
+      function startPracticeTimer() {
+        stopPracticeTimer();
+        if (practiceTimerSetting <= 0) return;
+
+        const wrap = $("#timerBarWrap");
+        const bar = $("#timerBar");
+        if (!wrap || !bar) return;
+
+        wrap.hidden = false;
+        bar.className = "timer-bar";
+        bar.style.width = "100%";
+
+        practiceTimerRemaining = practiceTimerSetting;
+        const totalMs = practiceTimerSetting * 1000;
+        const startTime = Date.now();
+
+        practiceTimerInterval = setInterval(() => {
+          const elapsed = Date.now() - startTime;
+          const leftMs = Math.max(0, totalMs - elapsed);
+          const pct = (leftMs / totalMs) * 100;
+          bar.style.width = `${pct}%`;
+
+          if (pct < 30) {
+            bar.className = "timer-bar critical";
+          } else if (pct < 60) {
+            bar.className = "timer-bar warning";
+          } else {
+            bar.className = "timer-bar";
+          }
+
+          if (leftMs <= 0) {
+            stopPracticeTimer();
+            bar.style.width = "0%";
+            SfxEngine.playTimeout();
+            setPracticeResult("Time's up! ⌛ Press Retry or Reveal.", "error");
+            updatePracticeButtons({ canVerify: false, canReveal: true, canRetry: true, lockKeyboard: true });
+            $("#practiceNextWordBtn").hidden = false;
+          }
+        }, 80);
+      }
+
+      // --- PRACTICE DASHBOARD & STREAK ---
+      let currentStreak = Number(safeStorageGet("spellingBeeStreak", "0"));
+
+      function updateDashboardStats() {
+        if (!selectedCategory) return;
+        const progress = getStoredProgress(selectedCategory);
+        const total = currentCategory.length || (selectedCategory === "B" ? 100 : 60);
+
+        let correctCount = 0;
+        let incorrectCount = 0;
+        let revealedCount = 0;
+        let shortCount = 0;
+        let longCount = 0;
+
+        for (let i = 0; i < total; i++) {
+          const s = progress[String(i)] || PRACTICE_STATUS.PENDING;
+          const w = currentCategory[i] || "";
+          if (s === PRACTICE_STATUS.CORRECT || s === PRACTICE_STATUS.BLIND_CORRECT) correctCount++;
+          else if (s === PRACTICE_STATUS.INCORRECT) incorrectCount++;
+          else if (s === PRACTICE_STATUS.REVEALED) revealedCount++;
+          if (w.length <= 5) shortCount++;
+          if (w.length >= 8) longCount++;
+        }
+
+        const pendingCount = Math.max(0, total - (correctCount + incorrectCount + revealedCount));
+        const pct = total > 0 ? Math.round((correctCount / total) * 100) : 0;
+
+        const completedEl = $("#dashCompleted");
+        const barEl = $("#dashProgressBar");
+        const streakEl = $("#dashStreak");
+
+        if (completedEl) completedEl.textContent = `${correctCount}/${total} (${pct}%)`;
+        if (barEl) barEl.style.width = `${pct}%`;
+        if (streakEl) streakEl.textContent = `🔥 ${currentStreak}`;
+
+        // Update counts in filter chips
+        const cAll = $("#count-all");
+        const cPending = $("#count-pending");
+        const cIncorrect = $("#count-incorrect");
+        const cCorrect = $("#count-correct");
+
+        const cShort = $("#count-short");
+        const cLong = $("#count-long");
+
+        if (cAll) cAll.textContent = String(total);
+        if (cPending) cPending.textContent = String(pendingCount);
+        if (cIncorrect) cIncorrect.textContent = String(incorrectCount);
+        if (cCorrect) cCorrect.textContent = String(correctCount);
+        if (cShort) cShort.textContent = String(shortCount);
+        if (cLong) cLong.textContent = String(longCount);
+      }
+
+
+      // =========================================================================
+      // HINT SYSTEM, CONTEST SIMULATOR & ALPHABET GUIDE MODULES
+      // =========================================================================
+
+      // --- SMART PROGRESSIVE HINT SYSTEM ---
+      let practiceHintsUsed = 0;
+
+      function requestPracticeHint() {
+        if (currentMode !== PRACTICE_MODES.PRACTICE || currentPracticeIndex < 0) return;
+        const target = normalizeWord(currentCategory[currentPracticeIndex] || "");
+        if (!target) return;
+
+        // Tier 1: Reveal next unsolved slot
+        const nextIdx = practiceInput.length;
+        if (nextIdx < target.length && practiceHintsUsed === 0) {
+          const nextLetter = target[nextIdx];
+          practiceInput.push(nextLetter);
+          practiceBoxStates = [];
+          practiceHintsUsed += 1;
+          SfxEngine.playHint();
+          renderPracticeInput();
+
+          const key = $("#practiceKeyboard")?.querySelector(`[data-key="${nextLetter}"]`);
+          key?.animate?.(
+            [
+              { transform: "scale(1)", filter: "brightness(1)" },
+              { transform: "scale(1.2)", filter: "brightness(1.5)" },
+              { transform: "scale(1)", filter: "brightness(1)" },
+            ],
+            { duration: 280 }
+          );
+
+          setPracticeResult(`💡 Hint: Letter "${nextLetter}" revealed!`, "revealed");
+          return;
+        }
+
+        // Tier 2: Structural clue
+        const first = target[0];
+        const last = target[target.length - 1];
+        SfxEngine.playHint();
+        setPracticeResult(`💡 Clue: Starts with "${first}" and ends with "${last}" (${target.length} letters).`, "revealed");
+      }
+
+      // --- CONTEST ROUND SIMULATOR ---
+      let contestRoundActive = false;
+      let contestRoundWords = [];
+      let contestRoundIndex = 0;
+      let contestRoundScore = 0;
+      let contestRoundTotal = 0;
+      let contestMissedWords = [];
+
+      async function startContestRound() {
+        if (!selectedCategory || !currentCategory.length) {
+          showAlert({
+            icon: "warning",
+            text: "First select Category A or Category B.",
+          });
+          return;
+        }
+
+        const result = await Swal.fire({
+          title: "🏆 Official Contest Simulator",
+          html: `<p style="margin-bottom:0.75rem; font-size:0.95rem;">Simula una ronda de competencia con palabras aleatorias para la <strong>Categoría ${selectedCategory}</strong>.</p>
+                 <p style="font-size:0.85rem; color:#a8a8bd;">Entrena bajo condiciones de concurso y obtén tu tarjeta oficial de resultados.</p>`,
+          icon: "question",
+          showCancelButton: true,
+          confirmButtonText: "⚡ Ronda de 5 Palabras",
+          showDenyButton: true,
+          denyButtonText: "🔥 Ronda de 10 Palabras",
+          cancelButtonText: "Cancelar",
+          confirmButtonColor: "#00d4ff",
+          denyButtonColor: "#7c3aed",
+          cancelButtonColor: "#555",
+          background: "#14142e",
+          color: "#f0f0f5",
+        });
+
+        if (!result.isConfirmed && !result.isDenied) return;
+        const total = result.isConfirmed ? 5 : 10;
+
+        const indices = currentCategory.map((_, i) => i);
+        for (let i = indices.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [indices[i], indices[j]] = [indices[j], indices[i]];
+        }
+
+        contestRoundActive = true;
+        contestRoundTotal = Math.min(total, currentCategory.length);
+        contestRoundWords = indices.slice(0, contestRoundTotal);
+        contestRoundIndex = 0;
+        contestRoundScore = 0;
+        contestMissedWords = [];
+
+        if (currentMode !== PRACTICE_MODES.PRACTICE) {
+          setMode(PRACTICE_MODES.PRACTICE, false);
+        }
+
+        openNextContestWord();
+      }
+
+      function openNextContestWord() {
+        if (contestRoundIndex >= contestRoundTotal) {
+          finishContestRound();
+          return;
+        }
+
+        const wordIdx = contestRoundWords[contestRoundIndex];
+        const opener = $$("#grid-container button").find((btn) => btn.dataset.index === String(wordIdx));
+        showWord(wordIdx, opener);
+        updateContestBanner();
+      }
+
+      function updateContestBanner() {
+        const banner = $("#contestRoundBanner");
+        if (!banner) return;
+        if (!contestRoundActive) {
+          banner.hidden = true;
+          return;
+        }
+        banner.hidden = false;
+        $("#contestRoundTitle").textContent = `🏆 Contest Round: Word ${contestRoundIndex + 1} of ${contestRoundTotal}`;
+        $("#contestRoundScore").textContent = `Score: ${contestRoundScore} / ${contestRoundIndex}`;
+      }
+
+      function finishContestRound() {
+        contestRoundActive = false;
+        closeModal({ immediate: true });
+
+        const pct = Math.round((contestRoundScore / contestRoundTotal) * 100);
+        let badge = "🥇 Spelling Bee Champion!";
+        let icon = "success";
+        if (pct >= 80) {
+          badge = "🥇 Outstanding Speller!";
+          SfxEngine.playFanfare();
+        } else if (pct >= 60) {
+          badge = "🥈 Great Effort! Keep Training!";
+          SfxEngine.playCorrect();
+        } else {
+          badge = "🥉 Good Practice! Never Give Up!";
+          icon = "info";
+          SfxEngine.playIncorrect();
+        }
+
+        const missedHtml = contestMissedWords.length
+          ? `<div style="margin-top:0.85rem; text-align:left; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.28); border-radius:8px; padding:0.6rem 0.8rem;">
+               <strong style="color:#ef4444; font-size:0.85rem;">Palabras para repasar:</strong>
+               <div style="margin-top:0.3rem; font-size:0.85rem; color:#fca5a5;">${contestMissedWords.join(", ")}</div>
+             </div>`
+          : `<div style="margin-top:0.8rem; color:#22c55e; font-weight:800;">¡Puntaje perfecto! 🌟 No fallaste ninguna palabra.</div>`;
+
+        Swal.fire({
+          title: "🏆 Scorecard Oficial de Concurso",
+          html: `
+            <div style="font-size:1.15rem; font-weight:800; color:#00d4ff; margin-bottom:0.4rem;">${badge}</div>
+            <div style="font-size:2rem; font-weight:900; margin:0.4rem 0;">${contestRoundScore} / ${contestRoundTotal} <span style="font-size:1.1rem; color:#a8a8bd;">(${pct}%)</span></div>
+            <p style="font-size:0.85rem; color:#a8a8bd;">Categoría ${selectedCategory} • Colegio Misael Pastrana Borrero</p>
+            ${missedHtml}
+          `,
+          icon: icon,
+          confirmButtonText: "Nueva Ronda 🎲",
+          showCancelButton: true,
+          cancelButtonText: "Cerrar",
+          confirmButtonColor: "#00d4ff",
+          background: "#14142e",
+          color: "#f0f0f5",
+        }).then((res) => {
+          if (res.isConfirmed) startContestRound();
+        });
+      }
+
+      // --- ALPHABET PRONUNCIATION GUIDE ---
+      // Keep the guide intentionally minimal: only clickable letters are displayed.
+      const ALPHABET_DATA = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+
+      function speakLetterPronunciation(letter) {
+        if (!window.speechSynthesis) return;
+        window.speechSynthesis.cancel();
+        const utter = new SpeechSynthesisUtterance(letter);
+        utter.lang = "en-US";
+        utter.rate = 0.85;
+        window.speechSynthesis.speak(utter);
+      }
+
+      function openAlphabetGuide() {
+        const gridHtml = ALPHABET_DATA.map((letter) => `
+          <button type="button" class="alphabet-card-btn" onclick="speakLetterPronunciation('${letter}')" title="Click to hear '${letter}'" aria-label="Hear the English name of letter ${letter}">
+            <span class="abc-letter">${letter}</span>
+          </button>
+        `).join("");
+
+        Swal.fire({
+          title: "🔤 English Alphabet Guide",
+          html: `
+            <p style="font-size:0.85rem; color:#a8a8bd; margin-bottom:0.8rem;">
+              Select any letter to hear its English name.
+            </p>
+            <div class="alphabet-grid">${gridHtml}</div>
+          `,
+          showConfirmButton: true,
+          confirmButtonText: "Done",
+          confirmButtonColor: "#00d4ff",
+          background: "#14142e",
+          color: "#f0f0f5",
+          width: "min(92vw, 680px)",
+        });
+      }
+
+      // --- SEARCH HIGHLIGHT HELPER ---
+      function highlightGridMatches(matches) {
+        const matchSet = new Set(matches.map(String));
+        $$("#grid-container button").forEach((btn) => {
+          if (matchSet.has(btn.dataset.index)) {
+            btn.classList.add("search-match");
+            btn.scrollIntoView({ behavior: "smooth", block: "nearest" });
+          } else {
+            btn.classList.remove("search-match");
+          }
+        });
+
+        setTimeout(() => {
+          $$("#grid-container button.search-match").forEach((btn) => {
+            btn.classList.remove("search-match");
+          });
+        }, 3400);
+      }
+
+      // --- GRID FILTERS ---
+      let currentGridFilter = "all";
+
+      function setGridFilter(filter) {
+        currentGridFilter = filter;
+        $$(".filter-chip").forEach((chip) => {
+          chip.classList.toggle("active", chip.dataset.filter === filter);
+        });
+        applyGridFilter();
+      }
+
+      function applyGridFilter() {
+        if (!selectedCategory) return;
+        const progress = currentMode === PRACTICE_MODES.PRACTICE ? getStoredProgress(selectedCategory) : {};
+
+        $$("#grid-container button").forEach((button) => {
+          const idx = button.dataset.index;
+          const status = progress[idx] || PRACTICE_STATUS.PENDING;
+
+          let visible = true;
+          const word = currentCategory[Number(idx)] || "";
+          if (currentMode === PRACTICE_MODES.PRACTICE) {
+            if (currentGridFilter === "pending") visible = status === PRACTICE_STATUS.PENDING;
+            else if (currentGridFilter === "incorrect") visible = status === PRACTICE_STATUS.INCORRECT;
+            else if (currentGridFilter === "correct") visible = status === PRACTICE_STATUS.CORRECT || status === PRACTICE_STATUS.BLIND_CORRECT;
+            else if (currentGridFilter === "short") visible = word.length <= 5;
+            else if (currentGridFilter === "long") visible = word.length >= 8;
+          }
+
+          button.style.display = visible ? "" : "none";
+        });
+      }
+
+      // --- MODAL WORD NAVIGATION ---
+      function navigateWord(direction) {
+        if (!selectedCategory || !currentCategory.length) return;
+        stopVoiceInput({ silent: true });
+        stopPracticeTimer();
+
+        if (contestRoundActive && direction > 0) {
+          contestRoundIndex += 1;
+          openNextContestWord();
+          return;
+        }
+
+        let next = currentPracticeIndex + direction;
+        if (next < 0) next = currentCategory.length - 1;
+        if (next >= currentCategory.length) next = 0;
+
+        const opener = $$("#grid-container button").find((btn) => btn.dataset.index === String(next));
+        showWord(next, opener);
+      }
 
       function safeStorageGet(key, fallback = null) {
         try {
@@ -1871,6 +3289,7 @@ const categoryA = [
         let label = `Word number ${number}`;
 
         if (status === PRACTICE_STATUS.CORRECT) label += ", correct";
+        else if (status === PRACTICE_STATUS.BLIND_CORRECT) label += ", correct in Blind mode, galaxy purple";
         else if (status === PRACTICE_STATUS.INCORRECT) label += ", last attempt incorrect";
         else if (status === PRACTICE_STATUS.REVEALED) label += ", word revealed";
         else if (status === PRACTICE_STATUS.PENDING) label += ", pending";
@@ -1888,6 +3307,7 @@ const categoryA = [
           "word-state",
           "practice-pending",
           "practice-correct",
+          "practice-blind-correct",
           "practice-incorrect",
           "practice-revealed"
         );
@@ -1901,6 +3321,7 @@ const categoryA = [
           updateGridAccessibility(button, finalStatus);
 
           if (finalStatus === PRACTICE_STATUS.CORRECT ||
+              finalStatus === PRACTICE_STATUS.BLIND_CORRECT ||
               finalStatus === PRACTICE_STATUS.INCORRECT ||
               finalStatus === PRACTICE_STATUS.REVEALED) {
             button.classList.add("word-state");
@@ -1948,6 +3369,9 @@ const categoryA = [
             button.replaceChildren(document.createTextNode(String(Number(button.dataset.index) + 1)));
           }
         });
+
+        updateDashboardStats();
+        applyGridFilter();
       }
 
       function openRandomWord() {
@@ -1959,11 +3383,27 @@ const categoryA = [
           return;
         }
 
-        let nextIndex = Math.floor(Math.random() * currentCategory.length);
-        if (currentCategory.length > 1 && nextIndex === currentPracticeIndex) {
-          nextIndex = (nextIndex + 1) % currentCategory.length;
+        let candidateIndices = [];
+        if (currentMode === PRACTICE_MODES.PRACTICE) {
+          const progress = getStoredProgress(selectedCategory);
+          for (let i = 0; i < currentCategory.length; i++) {
+            if (progress[String(i)] !== PRACTICE_STATUS.CORRECT &&
+                progress[String(i)] !== PRACTICE_STATUS.BLIND_CORRECT) {
+              candidateIndices.push(i);
+            }
+          }
         }
 
+        if (!candidateIndices.length) {
+          candidateIndices = currentCategory.map((_, i) => i);
+        }
+
+        if (candidateIndices.length > 1 && currentPracticeIndex >= 0) {
+          const filtered = candidateIndices.filter((idx) => idx !== currentPracticeIndex);
+          if (filtered.length) candidateIndices = filtered;
+        }
+
+        const nextIndex = candidateIndices[Math.floor(Math.random() * candidateIndices.length)];
         const opener = $$("#grid-container button").find(
           (button) => button.dataset.index === String(nextIndex)
         );
@@ -1999,6 +3439,8 @@ const categoryA = [
         safeStorageSet(getProgressKey(selectedCategory), "{}");
         stopVoiceInput({ silent: true });
         hideModalImmediately();
+        currentStreak = 0;
+        safeStorageSet("spellingBeeStreak", "0");
         clearPracticeSession();
         applyStoredProgressToGrid();
 
@@ -2049,6 +3491,14 @@ const categoryA = [
         if (persist) safeStorageSet("spellingBeeMode", currentMode);
 
         clearPracticeSession();
+        stopPracticeTimer();
+
+        const isPractice = currentMode === PRACTICE_MODES.PRACTICE;
+        const dash = $("#practice-dashboard");
+        const filterWrap = $("#grid-filter-container");
+        if (dash) dash.hidden = !isPractice;
+        if (filterWrap) filterWrap.hidden = !isPractice;
+
         applyStoredProgressToGrid();
       }
 
@@ -2121,6 +3571,10 @@ const categoryA = [
         currentPracticeIndex = index;
         currentAudio = new Audio(`assets/audios/${selectedCategory}_${index + 1}.mp3`);
         currentAudio.preload = "auto";
+        currentAudio.playbackRate = audioPlaybackRate;
+
+        const nextWordBtn = $("#practiceNextWordBtn");
+        if (nextWordBtn) nextWordBtn.hidden = true;
 
         const word = currentCategory[index];
         $("#modalNumber").textContent = `#${index + 1}`;
@@ -2135,6 +3589,9 @@ const categoryA = [
           view.hidden = true;
           practice.hidden = false;
           initializePracticeWord(index);
+          startPracticeTimer();
+          const timerSel = $("#practiceTimerSelect");
+          if (timerSel) timerSel.value = String(practiceTimerSetting);
         } else {
           view.hidden = false;
           practice.hidden = true;
@@ -2162,6 +3619,7 @@ const categoryA = [
 
       function playAudio() {
         if (!currentAudio) return;
+        if (speechListening) stopVoiceInput({ silent: true });
 
         if (currentMode === PRACTICE_MODES.VIEW && currentPracticeIndex >= 0) {
           const gridButton = $$("#grid-container button").find(
@@ -2170,8 +3628,14 @@ const categoryA = [
           gridButton?.classList.add("played");
         }
 
+        isWordAudioPlaying = true;
+        currentAudio.onended = () => { isWordAudioPlaying = false; };
+        currentAudio.onpause = () => { isWordAudioPlaying = false; };
+
+        currentAudio.playbackRate = audioPlaybackRate;
         currentAudio.currentTime = 0;
         currentAudio.play().catch(() => {
+          isWordAudioPlaying = false;
           showAlert({
             icon: "error",
             text: "No audio was found for this word.",
@@ -2183,14 +3647,16 @@ const categoryA = [
         const word = currentCategory[index] || "";
 
         practiceAttempts = 0;
+        practiceHintsUsed = 0;
         practiceInput = [];
+        practiceHintsUsed = 0;
         practiceBoxStates = [];
         speechInterimLetters = [];
 
         $("#practiceAttempts").textContent = "0";
         $("#practiceResultMessage").textContent = "";
         $("#practiceResultMessage").className = "practice-result-message";
-        $("#voiceStatus").textContent = "Say one English letter at a time.";
+        $("#voiceStatus").textContent = "Click “🎙️ Spell by voice” to spell letters one by one using your microphone.";
         $("#voiceBtn").classList.remove("listening");
         $("#voiceBtn").setAttribute("aria-pressed", "false");
         $("#voiceBtn").textContent = "🎙️ Spell by voice";
@@ -2271,6 +3737,7 @@ const categoryA = [
 
         speechInterimLetters = [];
         clearPracticeMessage();
+        SfxEngine.playKey();
 
         if (key === "BACKSPACE") {
           if (practiceInput.length === 0) return;
@@ -2394,9 +3861,26 @@ const categoryA = [
 
         if (isCorrect) {
           setPracticeResult("Correct!", "success");
+          SfxEngine.playCorrect();
+          currentStreak += 1;
+          safeStorageSet("spellingBeeStreak", String(currentStreak));
+          stopPracticeTimer();
+
+          if (contestRoundActive) {
+            contestRoundScore += 1;
+            updateContestBanner();
+            const nextBtn = $("#practiceNextWordBtn");
+            nextBtn.hidden = false;
+            nextBtn.textContent = (contestRoundIndex + 1 >= contestRoundTotal) ? "Finish Contest 🏁" : "Next Contest Word ➔";
+          } else {
+            const nextBtn = $("#practiceNextWordBtn");
+            nextBtn.hidden = false;
+            nextBtn.textContent = "Next ➔";
+          }
           saveProgress(selectedCategory, currentPracticeIndex, PRACTICE_STATUS.CORRECT);
           updateGridButtonStatus(currentPracticeIndex, PRACTICE_STATUS.CORRECT);
           updatePracticeButtons({ canVerify: false, canReveal: false, canRetry: true, lockKeyboard: true });
+          updateDashboardStats();
 
           if (typeof Swal !== "undefined") {
             // Feedback visual breve; no bloquea el flujo.
@@ -2416,9 +3900,22 @@ const categoryA = [
         }
 
         setPracticeResult("Incorrect", "error");
+        SfxEngine.playIncorrect();
+        currentStreak = 0;
+        safeStorageSet("spellingBeeStreak", "0");
+        stopPracticeTimer();
+
+        if (contestRoundActive) {
+          contestMissedWords.push(currentCategory[currentPracticeIndex]);
+          updateContestBanner();
+          const nextBtn = $("#practiceNextWordBtn");
+          nextBtn.hidden = false;
+          nextBtn.textContent = (contestRoundIndex + 1 >= contestRoundTotal) ? "Finish Contest 🏁" : "Next Contest Word ➔";
+        }
         saveProgress(selectedCategory, currentPracticeIndex, PRACTICE_STATUS.INCORRECT);
         updateGridButtonStatus(currentPracticeIndex, PRACTICE_STATUS.INCORRECT);
         updatePracticeButtons({ canVerify: false, canReveal: true, canRetry: true, lockKeyboard: true });
+        updateDashboardStats();
       }
 
       function revealPracticeWord() {
@@ -2433,9 +3930,14 @@ const categoryA = [
 
         renderPracticeInput();
         setPracticeResult(`Word revealed: ${target}`, "revealed");
+        currentStreak = 0;
+        safeStorageSet("spellingBeeStreak", "0");
+        stopPracticeTimer();
+        $("#practiceNextWordBtn").hidden = false;
         saveProgress(selectedCategory, currentPracticeIndex, PRACTICE_STATUS.REVEALED);
         updateGridButtonStatus(currentPracticeIndex, PRACTICE_STATUS.REVEALED);
         updatePracticeButtons({ canVerify: false, canReveal: false, canRetry: true, lockKeyboard: true });
+        updateDashboardStats();
       }
 
       function retryPracticeWord() {
@@ -2443,14 +3945,18 @@ const categoryA = [
 
         stopVoiceInput({ silent: true });
         practiceInput = [];
+        practiceHintsUsed = 0;
         practiceBoxStates = [];
         speechInterimLetters = [];
         clearPracticeMessage();
+        SfxEngine.playKey();
         buildPracticeKeyboard();
         renderPracticeInput();
         updatePracticeButtons({ canVerify: false, canReveal: true, canRetry: false, lockKeyboard: false });
+        $("#practiceNextWordBtn").hidden = true;
+        startPracticeTimer();
 
-        $("#voiceStatus").textContent = "Say one English letter at a time.";
+        $("#voiceStatus").textContent = "Click “🎙️ Spell by voice” to spell letters one by one using your microphone.";
         requestAnimationFrame(() => $("#practiceListenBtn")?.focus());
       }
 
@@ -2484,6 +3990,7 @@ const categoryA = [
       }
 
       function closeModal(options = {}) {
+        stopPracticeTimer();
         const modal = $("#wordModal");
         const modalContent = modal.querySelector(".modal-content");
 
@@ -2509,73 +4016,52 @@ const categoryA = [
         }, 240);
       }
 
-      /* VOICE SPELLING ENGINE
-         Uses the microphone directly and transcribes short English spelling phrases
-         with Whisper in the browser. No Web Speech API dependency.
-      */
-      const VOICE_MODEL = "onnx-community/whisper-base.en";
-      const TRANSFORMERS_URL = "https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1";
-      const VOICE_RMS_THRESHOLD = 0.006;
-      const VOICE_SILENCE_MS = 520;
-      const VOICE_MIN_SEGMENT_MS = 220;
-      const VOICE_MAX_SEGMENT_MS = 2400;
-      const VOICE_PRE_ROLL_MS = 130;
+      /* ==========================================================================
+         VOICE SPELLING ENGINE (Web Speech API)
+         High-performance, real-time, zero-download English spelling recognition.
+         Allows students to spell words letter by letter using their voice.
+         ========================================================================== */
 
+      let speechRecognitionInstance = null;
+      let speechRestartTimer = null;
+      let speechIsManualStop = false;
+      let speechRecognitionActive = false;
+      let speechRestartAttempts = 0;
+      let speechFinalResultCache = new Map();
+      let isWordAudioPlaying = false;
+
+      // These are words that speech engines commonly return when a student says
+      // an English letter name. Keep aliases explicit so ordinary conversation
+      // is not accidentally converted into guessed letters.
       const SPOKEN_LETTER_ALIASES = Object.freeze({
-        a: "A", ay: "A", aye: "A", eh: "A", alpha: "A",
-        b: "B", be: "B", bee: "B", bravo: "B",
-        c: "C", see: "C", sea: "C", charlie: "C",
-        d: "D", dee: "D", de: "D", delta: "D",
-        e: "E", ee: "E", he: "E", echo: "E",
+        a: "A", ay: "A", aye: "A", eh: "A", ey: "A", ei: "A", hey: "A", alpha: "A",
+        b: "B", be: "B", bee: "B", beat: "B", bravo: "B",
+        c: "C", see: "C", sea: "C", si: "C", ce: "C", charlie: "C",
+        d: "D", dee: "D", de: "D", di: "D", delta: "D",
+        e: "E", ee: "E", echo: "E", ii: "E",
         f: "F", ef: "F", eff: "F", foxtrot: "F",
-        g: "G", gee: "G", jeep: "G", golf: "G",
-        h: "H", aitch: "H", haitch: "H", hotel: "H",
-        i: "I", eye: "I", aye: "I", india: "I",
+        g: "G", gee: "G", jeep: "G", ji: "G", jee: "G", golf: "G",
+        h: "H", aitch: "H", haitch: "H", eitch: "H", ach: "H", hotel: "H", eight: "H", "8": "H",
+        i: "I", eye: "I", ai: "I", india: "I",
         j: "J", jay: "J", jae: "J", juliet: "J", juliett: "J",
-        k: "K", kay: "K", okay: "K", kilo: "K",
-        l: "L", el: "L", elle: "L", lima: "L",
+        k: "K", kay: "K", cay: "K", kilo: "K",
+        l: "L", el: "L", elle: "L", ell: "L", lima: "L",
         m: "M", em: "M", mike: "M", mic: "M",
         n: "N", en: "N", inn: "N", november: "N",
         o: "O", oh: "O", owe: "O", oscar: "O",
-        p: "P", pee: "P", pea: "P", papa: "P",
-        q: "Q", cue: "Q", queue: "Q", quebec: "Q",
-        r: "R", are: "R", our: "R", ar: "R", romeo: "R",
+        p: "P", pee: "P", pea: "P", pi: "P", papa: "P",
+        q: "Q", cue: "Q", queue: "Q", quebec: "Q", kew: "Q",
+        r: "R", are: "R", our: "R", ar: "R", hour: "R", romeo: "R",
         s: "S", ess: "S", es: "S", sierra: "S",
         t: "T", tee: "T", tea: "T", tango: "T",
-        u: "U", you: "U", yew: "U", ewe: "U", uniform: "U",
-        v: "V", vee: "V", victor: "V",
+        u: "U", you: "U", yew: "U", ewe: "U", yu: "U", uniform: "U",
+        v: "V", vee: "V", vi: "V", victor: "V",
         w: "W", doubleyou: "W", doubleyoo: "W", whiskey: "W", whisky: "W",
         x: "X", ex: "X", axe: "X", xray: "X",
         y: "Y", why: "Y", wai: "Y", yankee: "Y",
         z: "Z", zee: "Z", zed: "Z", zebra: "Z",
-        enye: "Ñ", enyeh: "Ñ"
+        enye: "Ñ", enyeh: "Ñ", ene: "Ñ"
       });
-
-      const VOICE_LETTER_CANONICAL = Object.freeze({
-        A: ["a", "ay"], B: ["b", "be", "bee"], C: ["c", "see"], D: ["d", "dee"],
-        E: ["e", "ee"], F: ["f", "ef", "eff"], G: ["g", "gee"], H: ["h", "aitch"],
-        I: ["i", "eye"], J: ["j", "jay"], K: ["k", "kay"], L: ["l", "el"],
-        M: ["m", "em"], N: ["n", "en"], O: ["o", "oh"], P: ["p", "pee"],
-        Q: ["q", "cue"], R: ["r", "are"], S: ["s", "ess"], T: ["t", "tee"],
-        U: ["u", "you"], V: ["v", "vee"], W: ["w", "doubleyou"], X: ["x", "ex"],
-        Y: ["y", "why"], Z: ["z", "zee"], Ñ: ["enye"]
-      });
-
-      let voiceStream = null;
-      let voiceContext = null;
-      let voiceSource = null;
-      let voiceProcessor = null;
-      let voiceSilentGain = null;
-      let voiceSpeechStarted = false;
-      let voiceSilenceStartedAt = 0;
-      let voiceSegmentStartedAt = 0;
-      let voiceLastSpeechAt = 0;
-      let voicePreRoll = [];
-      let voiceSpeechChunks = [];
-      let voiceProcessing = false;
-      let voiceStopRequested = false;
-      let whisperTranscriber = null;
-      let whisperLoadingPromise = null;
 
       function cleanSpeechText(transcript) {
         return String(transcript || "")
@@ -2584,8 +4070,10 @@ const categoryA = [
           .replace(/[\u0300-\u036f]/g, "")
           .replace(/double[\s-]*you/g, "doubleyou")
           .replace(/double[\s-]*yoo/g, "doubleyoo")
+          .replace(/double[\s-]*u/g, "doubleyou")
           .replace(/x[\s-]*ray/g, "xray")
-          .replace(/[^a-z0-9\s]/g, " ")
+          .replace(/en[\s-]*ye/g, "enye")
+          .replace(/[^a-z0-9ñ\s]/g, " ")
           .replace(/\s+/g, " ")
           .trim();
       }
@@ -2612,58 +4100,123 @@ const categoryA = [
       }
 
       function resolveSpokenLetter(token) {
-        const value = String(token || "").toLowerCase();
+        const value = String(token || "").toLowerCase().trim();
         if (!value) return null;
-        if (SPOKEN_LETTER_ALIASES[value]) return SPOKEN_LETTER_ALIASES[value];
-        if (/^[a-z]$/.test(value)) return value.toUpperCase();
+        if (Object.prototype.hasOwnProperty.call(SPOKEN_LETTER_ALIASES, value)) {
+          return SPOKEN_LETTER_ALIASES[value];
+        }
+        if (/^[a-zñ]$/i.test(value)) return value.toUpperCase();
 
-        let bestLetter = null;
-        let bestDistance = Infinity;
+        // Tolerate a single ASR typo only for longer, distinctive phonetic names.
+        // Short words are deliberately excluded to prevent false letters.
+        if (value.length < 4) return null;
+        let bestDistance = 2;
+        let bestLetters = new Set();
         for (const [alias, letter] of Object.entries(SPOKEN_LETTER_ALIASES)) {
+          if (alias.length < 4 || Math.abs(alias.length - value.length) > 1) continue;
           const distance = levenshteinDistance(value, alias);
-          const allowed = alias.length <= 3 ? 1 : Math.min(2, Math.floor(alias.length / 2));
-          if (distance <= allowed && distance < bestDistance) {
+          if (distance < bestDistance) {
             bestDistance = distance;
-            bestLetter = letter;
+            bestLetters = new Set([letter]);
+          } else if (distance === bestDistance) {
+            bestLetters.add(letter);
           }
         }
-        return bestLetter;
+        return bestDistance <= 1 && bestLetters.size === 1 ? [...bestLetters][0] : null;
       }
 
-      function transcriptToLetters(transcript) {
-        const cleaned = cleanSpeechText(transcript);
-        if (!cleaned) return [];
+      function checkVoiceCommand(token) {
+        const val = String(token || "").toLowerCase();
+        if (["backspace", "delete", "erase", "undo", "borrar"].includes(val)) return "BACKSPACE";
+        if (["check", "verify", "submit", "enter", "verificar", "comprobar"].includes(val)) return "CHECK";
+        if (["clear", "reset", "limpiar", "reiniciar"].includes(val)) return "CLEAR";
+        if (["listen", "repeat", "audio", "escuchar", "repetir"].includes(val)) return "LISTEN";
+        if (["reveal", "mostrar", "revelar"].includes(val)) return "REVEAL";
+        return null;
+      }
+
+      function parseVoiceTranscript(rawText, targetWord = "", alreadyEntered = 0) {
+        const cleaned = cleanSpeechText(rawText);
+        if (!cleaned) return { command: null, letters: [] };
 
         const tokens = cleaned.split(/\s+/).filter(Boolean);
+        if (!tokens.length) return { command: null, letters: [] };
+        const fillers = new Set(["letter", "letters", "the", "is", "and", "spell", "spelling", "my", "capital", "please", "por", "favor", "um", "uh"]);
+        const meaningfulTokens = tokens.filter((token) => !fillers.has(token));
+
+        // Commands take priority over a target with the same spelling (for
+        // example, saying "check" while the target happens to be CHECK).
+        if (meaningfulTokens.length === 1) {
+          const cmd = checkVoiceCommand(meaningfulTokens[0]);
+          if (cmd) return { command: cmd, letters: [] };
+        }
+
+        // Handle commands surrounded by one polite filler word.
+        const commandToken = meaningfulTokens.find((token) => checkVoiceCommand(token));
+        if (commandToken && meaningfulTokens.length <= 2) {
+          return { command: checkVoiceCommand(commandToken), letters: [] };
+        }
+
+        // Speech engines sometimes autocorrect separately spoken letters into
+        // the whole target word ("A P P L E" -> "apple"). Recover this case
+        // after checking commands, so commands remain predictable.
+        const target = normalizeWord(targetWord || "");
+        const compactTranscript = cleaned.replace(/\s+/g, "").toUpperCase();
+        const singleTokenLetter = tokens.length === 1 ? resolveSpokenLetter(tokens[0]) : null;
+        if (target.length > 1 && compactTranscript === target && !singleTokenLetter) {
+          return { command: null, letters: [...target].slice(Math.max(0, alreadyEntered)) };
+        }
+
         const letters = [];
+        let targetOffset = Math.max(0, Number(alreadyEntered) || 0);
 
         for (let i = 0; i < tokens.length; i++) {
           const token = tokens[i];
-          if (["letter", "the", "is", "and", "spell", "spelling", "my"].includes(token)) continue;
-
-          const direct = resolveSpokenLetter(token);
-          if (direct) {
-            letters.push(direct);
+          const tokenCmd = checkVoiceCommand(token);
+          if (tokenCmd === "BACKSPACE" || tokenCmd === "CHECK" || tokenCmd === "CLEAR" || tokenCmd === "LISTEN" || tokenCmd === "REVEAL") {
+            if (letters.length === 0 && meaningfulTokens.length === 1) return { command: tokenCmd, letters: [] };
             continue;
           }
+          if (fillers.has(token)) continue;
 
-          if (token === "double") {
-            const next = tokens[i + 1];
-            const nextLetter = resolveSpokenLetter(next);
-            if (nextLetter) {
-              letters.push(nextLetter, nextLetter);
+          if ((token === "double" || token === "triple") && i + 1 < tokens.length) {
+            const next = resolveSpokenLetter(tokens[i + 1]);
+            if (next) {
+              const repeatCount = token === "double" ? 2 : 3;
+              for (let repeat = 0; repeat < repeatCount; repeat++) letters.push(next);
+              targetOffset += repeatCount;
               i++;
               continue;
             }
           }
 
-          if (/^[a-z]{2,6}$/.test(token)) {
-            const compact = [...token];
-            if (compact.length <= 4) letters.push(...compact.map((letter) => letter.toUpperCase()));
+          const direct = resolveSpokenLetter(token);
+          if (direct) {
+            letters.push(direct);
+            targetOffset += 1;
+            continue;
+          }
+
+          // If ASR merged adjacent letter names into a short or long token,
+          // accept it as characters only when it matches the next target segment.
+          const asCharacters = token.toUpperCase();
+          if (/^[A-ZÑ]{2,}$/.test(asCharacters) && target && target.slice(targetOffset, targetOffset + asCharacters.length) === asCharacters) {
+            letters.push(...asCharacters.split(""));
+            targetOffset += asCharacters.length;
+            continue;
+          }
+
+          // Generic fallback for a merged short sequence such as "ppl" only
+          // when it matches the remaining target segment. This avoids filling
+          // boxes with unrelated words accidentally recognized by the ASR.
+          if (/^[a-zñ]{2,4}$/i.test(token) &&
+              (!target || target.slice(targetOffset, targetOffset + token.length) === asCharacters)) {
+            letters.push(...[...token].map((c) => c.toUpperCase()));
+            targetOffset += token.length;
           }
         }
 
-        return letters;
+        return { command: null, letters };
       }
 
       function setVoiceStatus(message) {
@@ -2698,11 +4251,11 @@ const categoryA = [
         renderPracticeInput();
 
         accepted.forEach((letter) => {
-          const key = $("#practiceKeyboard").querySelector(`[data-key="${letter}"]`);
+          const key = $("#practiceKeyboard")?.querySelector(`[data-key="${letter}"]`);
           key?.animate?.(
             [
               { transform: "translateY(0) scale(1)" },
-              { transform: "translateY(-3px) scale(1.05)" },
+              { transform: "translateY(-4px) scale(1.12)" },
               { transform: "translateY(0) scale(1)" },
             ],
             { duration: 250, easing: "cubic-bezier(.2,.8,.2,1)" }
@@ -2716,359 +4269,786 @@ const categoryA = [
         return speechListening && currentMode === PRACTICE_MODES.PRACTICE && currentPracticeIndex >= 0;
       }
 
-      function calculateFloatRms(data) {
-        let sum = 0;
-        for (let i = 0; i < data.length; i++) sum += data[i] * data[i];
-        return Math.sqrt(sum / Math.max(1, data.length));
+      function getSpeechRecognitionClass() {
+        return window.SpeechRecognition || window.webkitSpeechRecognition || null;
       }
 
-      function mergeFloat32Chunks(chunks) {
-        const total = chunks.reduce((sum, chunk) => sum + chunk.length, 0);
-        const output = new Float32Array(total);
-        let offset = 0;
-        for (const chunk of chunks) {
-          output.set(chunk, offset);
-          offset += chunk.length;
-        }
-        return output;
-      }
-
-      function trimSilence(samples, sampleRate) {
-        if (!samples?.length) return samples;
-        const window = Math.max(64, Math.floor(sampleRate * 0.025));
-        const threshold = 0.008;
-        let start = 0;
-        let end = samples.length;
-
-        for (let i = 0; i + window <= samples.length; i += window) {
-          if (calculateFloatRms(samples.subarray(i, i + window)) >= threshold) {
-            start = Math.max(0, i - Math.floor(sampleRate * 0.06));
-            break;
-          }
-        }
-
-        for (let i = samples.length - window; i >= 0; i -= window) {
-          if (calculateFloatRms(samples.subarray(i, i + window)) >= threshold) {
-            end = Math.min(samples.length, i + window + Math.floor(sampleRate * 0.09));
-            break;
-          }
-        }
-
-        return samples.slice(start, end);
-      }
-
-      function resampleTo16k(input, sourceRate) {
-        if (sourceRate === 16000) return input;
-        const ratio = sourceRate / 16000;
-        const targetLength = Math.max(1, Math.round(input.length / ratio));
-        const output = new Float32Array(targetLength);
-
-        for (let i = 0; i < targetLength; i++) {
-          const position = i * ratio;
-          const left = Math.floor(position);
-          const right = Math.min(left + 1, input.length - 1);
-          const amount = position - left;
-          output[i] = input[left] * (1 - amount) + input[right] * amount;
-        }
-        return output;
-      }
-
-      async function loadWhisperTranscriber() {
-        if (whisperTranscriber) return whisperTranscriber;
-        if (whisperLoadingPromise) return whisperLoadingPromise;
-
-        whisperLoadingPromise = (async () => {
-          setVoiceStatus("Loading voice model… the first time may take a little while.");
-          const { pipeline } = await import(TRANSFORMERS_URL);
-
-          const progress_callback = (info) => {
-            if (info?.status === "progress" && Number.isFinite(info.progress)) {
-              setVoiceStatus(`Loading voice model… ${Math.round(info.progress)}%`);
-            } else if (info?.status === "progress_total" && Number.isFinite(info.progress)) {
-              setVoiceStatus(`Loading voice model… ${Math.round(info.progress)}%`);
-            }
-          };
-
-          if (navigator.gpu) {
-            try {
-              whisperTranscriber = await pipeline(
-                "automatic-speech-recognition",
-                VOICE_MODEL,
-                { device: "webgpu", dtype: "fp16", progress_callback }
-              );
-            } catch (error) {
-              console.warn("WebGPU Whisper failed; falling back to WASM/CPU.", error);
-            }
-          }
-
-          if (!whisperTranscriber) {
-            whisperTranscriber = await pipeline(
-              "automatic-speech-recognition",
-              VOICE_MODEL,
-              { device: "wasm", dtype: "q8", progress_callback }
-            );
-          }
-
-          return whisperTranscriber;
-        })().catch((error) => {
-          whisperLoadingPromise = null;
-          throw error;
-        });
-
-        return whisperLoadingPromise;
-      }
-
-      async function transcribeVoiceSamples(samples, sampleRate) {
-        const prepared = resampleTo16k(trimSilence(samples, sampleRate), sampleRate);
-        const transcriber = await loadWhisperTranscriber();
-
-        const baseOptions = {
-          task: "transcribe",
-          temperature: 0,
-          no_speech_threshold: 0.12,
-          logprob_threshold: -3.0,
-          return_timestamps: false,
-        };
-
-        const first = await transcriber(prepared, baseOptions);
-        const firstText = String(first?.text || "").trim();
-
-        if (transcriptToLetters(firstText).length) return firstText;
-
-        // A second pass strongly biases Whisper toward letter names. This helps
-        // with short isolated sounds such as “B”, “R”, “I”, etc.
-        const prompted = await transcriber(prepared, {
-          ...baseOptions,
-          initial_prompt: "English spelling practice. The speaker is naming one letter of the alphabet. Possible names include: A ay, B bee, C see, D dee, E ee, F ef, G gee, H aitch, I eye, J jay, K kay, L el, M em, N en, O oh, P pee, Q cue, R are, S ess, T tee, U you, V vee, W double you, X ex, Y why, Z zee.",
-        });
-        const promptedText = String(prompted?.text || "").trim();
-
-        return promptedText || firstText;
-      }
-
-      function resetVoiceBuffers() {
-        voicePreRoll = [];
-        voiceSpeechChunks = [];
-        voiceSpeechStarted = false;
-        voiceSilenceStartedAt = 0;
-        voiceSegmentStartedAt = 0;
-        voiceLastSpeechAt = 0;
-      }
-
-      function setupVoiceProcessor() {
-        const processor = voiceContext.createScriptProcessor(4096, 1, 1);
-        const silentGain = voiceContext.createGain();
-        silentGain.gain.value = 0;
-
-        voiceProcessor = processor;
-        voiceSilentGain = silentGain;
-
-        voiceSource.connect(voiceProcessor);
-        voiceProcessor.connect(voiceSilentGain);
-        voiceSilentGain.connect(voiceContext.destination);
-
-        voiceProcessor.onaudioprocess = (event) => {
-          if (!speechIsActuallyListening() || voiceStopRequested || voiceProcessing) return;
-
-          const input = event.inputBuffer.getChannelData(0);
-          const copy = new Float32Array(input.length);
-          copy.set(input);
-
-          voicePreRoll.push(copy);
-          const maxPreRollSamples = Math.floor((voiceContext.sampleRate * VOICE_PRE_ROLL_MS) / 1000);
-          let preRollSamples = 0;
-          for (let i = voicePreRoll.length - 1; i >= 0; i--) {
-            preRollSamples += voicePreRoll[i].length;
-            if (preRollSamples >= maxPreRollSamples) {
-              voicePreRoll = voicePreRoll.slice(i);
-              break;
-            }
-          }
-
-          const rms = calculateFloatRms(input);
-          const now = performance.now();
-          const speaking = rms >= VOICE_RMS_THRESHOLD;
-
-          if (speaking) {
-            if (!voiceSpeechStarted) {
-              voiceSpeechStarted = true;
-              voiceSegmentStartedAt = now;
-              voiceSpeechChunks = [...voicePreRoll];
-            }
-            voiceSilenceStartedAt = 0;
-            voiceLastSpeechAt = now;
-            voiceSpeechChunks.push(copy);
-            return;
-          }
-
-          if (!voiceSpeechStarted) return;
-          voiceSpeechChunks.push(copy);
-
-          if (!voiceSilenceStartedAt) voiceSilenceStartedAt = now;
-          const silentFor = now - voiceSilenceStartedAt;
-          const segmentFor = now - voiceSegmentStartedAt;
-
-          if (silentFor >= VOICE_SILENCE_MS && segmentFor >= VOICE_MIN_SEGMENT_MS) {
-            finalizeVoiceSegment();
-          } else if (segmentFor >= VOICE_MAX_SEGMENT_MS) {
-            finalizeVoiceSegment();
-          }
-        };
-      }
-
-      async function finalizeVoiceSegment() {
-        if (!speechIsActuallyListening() || voiceProcessing || !voiceSpeechChunks.length) return;
-
-        voiceProcessing = true;
-        const samples = mergeFloat32Chunks(voiceSpeechChunks);
-        resetVoiceBuffers();
-
-        const button = $("#voiceBtn");
-        button.classList.add("processing");
-        button.disabled = true;
-        setVoiceStatus("Listening finished. Identifying the letter…");
-
-        try {
-          const transcript = await transcribeVoiceSamples(samples, voiceContext?.sampleRate || 48000);
-          const letters = transcriptToLetters(transcript);
-
-          if (!speechIsActuallyListening()) return;
-
-          if (!letters.length) {
-            setVoiceStatus(
-              transcript
-                ? `I heard “${transcript}”, but I could not map it to a letter. Try saying “bee”, “are”, or “eye”.`
-                : "No clear letter was detected. Try saying the letter name a little closer to the microphone."
-            );
-          } else {
-            const word = normalizeWord(currentCategory[currentPracticeIndex] || "");
-            const accepted = letters.slice(0, Math.max(0, word.length - practiceInput.length));
-            const added = appendVoiceLetters(accepted);
-            const remaining = Math.max(0, word.length - practiceInput.length);
-
-            setVoiceStatus(
-              added
-                ? `${accepted.slice(0, added).join(" ")} detected. ${remaining} letter${remaining === 1 ? "" : "s"} remaining.`
-                : "That letter was already outside the word length. Try again."
-            );
-
-            if (practiceInput.length >= word.length) {
-              setVoiceStatus("The spelling is complete. Press Check.");
-              stopVoiceInput({ silent: true, keepStatus: true });
-              setVoiceStatus("The spelling is complete. Press Check.");
-              return;
-            }
-          }
-        } catch (error) {
-          console.error("Voice recognition error:", error);
-          setVoiceStatus("Voice recognition could not identify that letter. Try again or use the keyboard.");
-        } finally {
-          button.classList.remove("processing");
-          voiceProcessing = false;
-        }
-      }
-
-      async function startVoiceInput() {
-        if (!navigator.mediaDevices?.getUserMedia) {
-          setVoiceStatus("Microphone capture is not available in this browser.");
-          showAlert({ icon: "warning", title: "Microphone unavailable", text: "This browser cannot provide microphone access to the page." });
-          return;
-        }
-
-        if (!(window.isSecureContext || ["localhost", "127.0.0.1"].includes(location.hostname))) {
-          setVoiceStatus("Voice input requires HTTPS or localhost.");
-          showAlert({ icon: "warning", title: "Secure connection required", text: "Open the site over HTTPS, such as GitHub Pages, or use localhost." });
-          return;
-        }
-
-        voiceStopRequested = false;
-        speechListening = true;
-        voiceProcessing = false;
-        resetVoiceBuffers();
-
-        const button = $("#voiceBtn");
-        button.classList.add("listening");
-        button.setAttribute("aria-pressed", "true");
-        button.textContent = "⏹️ Stop microphone";
-
-        try {
-          setVoiceStatus("Requesting microphone access…");
-          voiceStream = await navigator.mediaDevices.getUserMedia({
-            audio: {
-              channelCount: 1,
-              sampleRate: 48000,
-              echoCancellation: true,
-              noiseSuppression: true,
-              autoGainControl: true,
-            },
+      function showFileProtocolAlert() {
+        setVoiceStatus("Voice needs HTTPS or a local server (localhost).");
+        if (typeof Swal !== "undefined") {
+          Swal.fire({
+            icon: "warning",
+            title: "Secure connection required for voice",
+            html: `
+              <p style="margin-bottom:0.75rem; font-size:0.95rem;">Browsers restrict microphone speech recognition on files opened directly with <code>file://</code>.</p>
+              <div style="background:rgba(0,212,255,0.08); border:1px solid rgba(0,212,255,0.25); border-radius:10px; padding:0.85rem; text-align:left; font-size:0.9rem; margin-bottom:1rem; color:#e0f7fa;">
+                <strong>Enable voice in three steps:</strong>
+                <ol style="margin-top:0.5rem; margin-left:1.2rem; line-height:1.6;">
+                  <li>Run <code>python -m http.server 8000</code> in your project folder (or use <code>iniciar_servidor.bat</code>).</li>
+                  <li>Open <strong>http://localhost:8000</strong> in Chrome or Edge.</li>
+                  <li>Allow microphone access and keep an internet connection.</li>
+                </ol>
+              </div>
+              <p style="font-size:0.85rem; color:#a8a8bd;">Speech-to-text is supplied by the browser service, so availability can depend on browser settings and network access.</p>
+            `,
+            confirmButtonText: "Got it",
+            confirmButtonColor: "#00d4ff",
+            background: "#14142e",
+            color: "#f0f0f5",
           });
+        } else {
+          alert("Run python -m http.server 8000 in the project folder and open http://localhost:8000 in Chrome or Edge.");
+        }
+      }
 
-          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-          if (!AudioContextClass) throw new Error("AudioContext unavailable");
+      function getBestSpeechParse(result, targetWord) {
+        if (!result || !result.length) return { command: null, letters: [], transcript: "" };
+        let best = { command: null, letters: [], transcript: result[0]?.transcript || "" };
+        // Prefer the first (highest-confidence) result whenever it is useful.
+        // Alternatives are used to recover words the ASR could not parse at all.
+        for (let i = 0; i < result.length; i++) {
+          const transcript = result[i]?.transcript || "";
+          const parsed = parseVoiceTranscript(transcript, targetWord, practiceInput.length);
+          if (parsed.command) return { ...parsed, transcript };
+          if (parsed.letters.length > best.letters.length) best = { ...parsed, transcript };
+          if (i === 0 && parsed.letters.length) return { ...parsed, transcript };
+        }
+        return best;
+      }
 
-          voiceContext = new AudioContextClass({ latencyHint: "interactive" });
-          if (voiceContext.state === "suspended") await voiceContext.resume();
+      function handleSpeechResult(event) {
+        if (!speechIsActuallyListening() || isWordAudioPlaying) return;
 
-          voiceSource = voiceContext.createMediaStreamSource(voiceStream);
-          setupVoiceProcessor();
+        const word = normalizeWord(currentCategory[currentPracticeIndex] || "");
+        let interimLetters = [];
+        const startIndex = Math.max(0, Number(event.resultIndex) || 0);
 
-          setVoiceStatus("Microphone ready. Loading the spelling engine…");
-          await loadWhisperTranscriber();
-          setVoiceStatus("Listening. Say one English letter clearly, then pause.");
-        } catch (error) {
-          console.error("Voice input start error:", error);
-          stopVoiceInput({ silent: true });
+        for (let i = startIndex; i < event.results.length; i++) {
+          const res = event.results[i];
+          const rawTranscript = res[0]?.transcript || "";
+          if (!String(rawTranscript).trim()) continue;
 
-          if (error?.name === "NotAllowedError" || error?.name === "SecurityError") {
-            setVoiceStatus("Microphone permission was denied. Check Brave site permissions and try again.");
-            showAlert({ icon: "warning", title: "Microphone permission", text: "Allow microphone access for this site, then press Spell by Voice again." });
+          if (res.isFinal) {
+            // Some speech engines resend already-final results when an event
+            // updates a later result. Dedupe by result index + transcript, not
+            // by transcript alone, so repeated letters such as "P P" still work.
+            const finalSignature = cleanSpeechText(rawTranscript);
+            if (speechFinalResultCache.get(i) === finalSignature) continue;
+            speechFinalResultCache.set(i, finalSignature);
+
+            const parsed = getBestSpeechParse(res, word);
+            if (parsed.command) {
+              speechInterimLetters = [];
+              renderPracticeInput();
+
+              if (parsed.command === "BACKSPACE") {
+                handlePracticeKey("BACKSPACE");
+                setVoiceStatus("Deleted the last letter.");
+              } else if (parsed.command === "CHECK") {
+                if (practiceInput.length === word.length) {
+                  setVoiceStatus("Checking word…");
+                  verifyPracticeWord();
+                } else {
+                  setVoiceStatus(`Not ready to check: ${practiceInput.length} of ${word.length} letters entered.`);
+                }
+              } else if (parsed.command === "CLEAR") {
+                practiceInput = [];
+                practiceBoxStates = [];
+                renderPracticeInput();
+                setVoiceStatus("Letters cleared. Ready to spell.");
+              } else if (parsed.command === "LISTEN") {
+                stopVoiceInput({ silent: true });
+                playAudio();
+                setVoiceStatus("Playing the word pronunciation. Start voice input again when ready.");
+              } else if (parsed.command === "REVEAL") {
+                revealPracticeWord();
+              }
+              continue;
+            }
+
+            if (parsed.letters.length) {
+              speechInterimLetters = [];
+              const remainingBefore = Math.max(0, word.length - practiceInput.length);
+              const added = appendVoiceLetters(parsed.letters);
+              const remainingAfter = Math.max(0, word.length - practiceInput.length);
+
+              if (added > 0) {
+                const spelled = parsed.letters.slice(0, added).join(" ");
+                if (remainingAfter === 0) {
+                  setVoiceStatus(`Spelling captured (${practiceInput.join(" ")}). Press Check or say “check”.`);
+                } else {
+                  setVoiceStatus(`Captured ${spelled}. ${remainingAfter} letter${remainingAfter === 1 ? "" : "s"} remaining.`);
+                }
+              } else if (remainingBefore === 0) {
+                setVoiceStatus(`All ${word.length} letters are entered. Press Check or say “check”.`);
+              }
+            } else {
+              speechInterimLetters = [];
+              renderPracticeInput();
+              setVoiceStatus(`Heard “${String(parsed.transcript || rawTranscript).trim()}”, but could not safely map it to a letter. Try saying one letter at a time, or use the keyboard.`);
+            }
           } else {
-            setVoiceStatus("The voice engine could not start. You can still use the keyboard.");
+            const parsedInterim = parseVoiceTranscript(rawTranscript, word, practiceInput.length);
+            if (parsedInterim.letters.length) interimLetters.push(...parsedInterim.letters);
+          }
+        }
+
+        if (interimLetters.length > 0) {
+          speechInterimLetters = interimLetters;
+          renderPracticeInput();
+          setVoiceStatus(`Hearing ${interimLetters.join(" ")}…`);
+        }
+      }
+
+      function scheduleSpeechRestart(delay = 280) {
+        clearTimeout(speechRestartTimer);
+        speechRestartTimer = setTimeout(() => {
+          if (!speechIsActuallyListening() || speechIsManualStop || !speechRecognitionInstance) return;
+          try {
+            speechRecognitionInstance.start();
+            speechRestartAttempts = 0;
+          } catch (error) {
+            // Some engines briefly remain in a stopping state. Retry with backoff.
+            speechRestartAttempts += 1;
+            if (speechRestartAttempts <= 7) {
+              scheduleSpeechRestart(Math.min(1400, 180 * (2 ** Math.min(speechRestartAttempts, 3))));
+            } else {
+              speechListening = false;
+              speechIsManualStop = true;
+              resetVoiceButton();
+              setVoiceStatus("Voice service would not restart. Click Spell by voice to try again, or use the keyboard.");
+            }
+          }
+        }, delay);
+      }
+
+      function handleSpeechEnd() {
+        speechRecognitionActive = false;
+        // A new continuous-recognition session may restart result indexes at 0.
+        // Clear the per-session cache so the same letter spoken again is accepted.
+        speechFinalResultCache.clear();
+        if (speechIsActuallyListening() && !speechIsManualStop) {
+          // Chrome/Brave/Edge may end a continuous recognition session after a
+          // pause. Restart it carefully instead of calling start() in a tight loop.
+          setVoiceStatus("Brief pause detected — reconnecting the microphone automatically…");
+          scheduleSpeechRestart(320);
+        } else {
+          resetVoiceButton();
+        }
+      }
+
+      function resetSpeechRecognitionInstance() {
+        const oldInstance = speechRecognitionInstance;
+        speechRecognitionInstance = null;
+        speechRecognitionActive = false;
+        speechFinalResultCache.clear();
+        if (!oldInstance) return;
+        // Remove callbacks before aborting so a delayed event from a failed
+        // service cannot restart a recognizer that has already been replaced.
+        oldInstance.onresult = null;
+        oldInstance.onstart = null;
+        oldInstance.onaudiostart = null;
+        oldInstance.onspeechstart = null;
+        oldInstance.onend = null;
+        oldInstance.onerror = null;
+        try { oldInstance.abort(); } catch (error) { /* already closed */ }
+      }
+
+      function handleSpeechError(event) {
+        console.warn("Speech recognition event error:", event.error);
+
+        if (event.error === "aborted" && (speechIsManualStop || !speechListening)) return;
+        if (event.error === "no-speech") {
+          if (speechListening) {
+            setVoiceStatus("I did not hear a letter. Keep the microphone open and try again, with a short pause between letters.");
+            // Some implementations do not reliably pair no-speech with onend.
+            // This timer is replaced if onend also schedules a restart.
+            scheduleSpeechRestart(420);
+          }
+          return;
+        }
+
+        if (event.error === "not-allowed" || event.error === "permission-denied") {
+          stopVoiceInput({ silent: true });
+          resetSpeechRecognitionInstance();
+          setVoiceStatus("Microphone permission was blocked. Allow it in the address bar/site settings, then try again.");
+          showAlert({
+            icon: "warning",
+            title: "Microphone permission required",
+            text: "Allow microphone access for this site. If it is already allowed, check your operating-system microphone privacy settings.",
+          });
+          return;
+        }
+
+        if (event.error === "service-not-allowed") {
+          stopVoiceInput({ silent: true });
+          resetSpeechRecognitionInstance();
+          setVoiceStatus("The browser speech service is blocked. Check your browser's speech/privacy settings or use Chrome/Edge.");
+          showAlert({
+            icon: "info",
+            title: "Speech service blocked",
+            text: "Speech recognition requires a browser speech service. In Brave, check its Google speech recognition service setting, or try current Chrome or Microsoft Edge.",
+          });
+          return;
+        }
+
+        if (event.error === "audio-capture") {
+          stopVoiceInput({ silent: true });
+          resetSpeechRecognitionInstance();
+          setVoiceStatus("No microphone was found. Connect or enable a microphone, then try again.");
+          return;
+        }
+
+        if (event.error === "network") {
+          stopVoiceInput({ silent: true });
+          resetSpeechRecognitionInstance();
+          setVoiceStatus("The speech service could not connect. Check your internet connection or browser speech-service settings.");
+          return;
+        }
+
+        if (event.error === "aborted") return;
+        stopVoiceInput({ silent: true });
+        resetSpeechRecognitionInstance();
+        setVoiceStatus(`Voice recognition stopped (${event.error || "unknown error"}). You can keep spelling with the keyboard.`);
+      }
+
+      function ensureSpeechRecognitionInstance(SpeechClass) {
+        if (speechRecognitionInstance) return speechRecognitionInstance;
+        const recognition = new SpeechClass();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        recognition.lang = "en-US";
+        recognition.maxAlternatives = 4;
+        recognition.onstart = () => {
+          speechRecognitionActive = true;
+          speechRestartAttempts = 0;
+          if (speechIsActuallyListening()) {
+            setVoiceStatus("Microphone is listening. Say English letter names one at a time and pause briefly between them.");
+          }
+        };
+        recognition.onaudiostart = () => {
+          if (speechIsActuallyListening()) setVoiceStatus("Microphone ready — spell the word one letter at a time.");
+        };
+        recognition.onspeechstart = () => {
+          if (speechIsActuallyListening()) setVoiceStatus("I hear you… keep spelling one letter at a time.");
+        };
+        recognition.onresult = handleSpeechResult;
+        recognition.onend = handleSpeechEnd;
+        recognition.onerror = handleSpeechError;
+        speechRecognitionInstance = recognition;
+        return recognition;
+      }
+
+      function startVoiceInput() {
+        const SpeechClass = getSpeechRecognitionClass();
+
+        if (currentMode !== PRACTICE_MODES.PRACTICE || currentPracticeIndex < 0) {
+          setVoiceStatus("Open a word in Practice mode before starting voice input.");
+          return;
+        }
+        if (!SpeechClass) {
+          setVoiceStatus("This browser does not support speech recognition. Use current Chrome or Edge, or spell with the keyboard.");
+          showAlert({
+            icon: "info",
+            title: "Speech recognition unsupported",
+            text: "This browser does not expose the Web Speech recognition API. Try current Google Chrome or Microsoft Edge.",
+          });
+          return;
+        }
+        if (window.location.protocol === "file:" || (!window.isSecureContext && !/^(localhost|127\.0\.0\.1|\[::1\])$/.test(window.location.hostname))) {
+          showFileProtocolAlert();
+          return;
+        }
+        if (speechListening) return;
+
+        speechIsManualStop = false;
+        speechListening = true;
+        speechRestartAttempts = 0;
+        speechInterimLetters = [];
+        speechFinalResultCache.clear();
+
+        const button = $("#voiceBtn");
+        if (button) {
+          button.classList.add("listening");
+          button.setAttribute("aria-pressed", "true");
+          button.textContent = "⏹️ Stop microphone";
+        }
+        setVoiceStatus("Requesting microphone… allow access if your browser asks.");
+
+        try {
+          const recognition = ensureSpeechRecognitionInstance(SpeechClass);
+          clearTimeout(speechRestartTimer);
+          recognition.start();
+        } catch (error) {
+          console.warn("Speech recognition start issue:", error);
+          // An instance can still be transitioning after a very fast stop/start.
+          if (error?.name === "InvalidStateError") {
+            scheduleSpeechRestart(350);
+          } else {
+            speechListening = false;
+            speechIsManualStop = true;
+            resetSpeechRecognitionInstance();
+            resetVoiceButton();
+            setVoiceStatus("Could not start voice recognition. Check microphone permissions and try again.");
           }
         }
       }
 
       function stopVoiceInput({ silent = false, keepStatus = false } = {}) {
-        voiceStopRequested = true;
+        speechIsManualStop = true;
         speechListening = false;
-        voiceProcessing = false;
-        resetVoiceBuffers();
+        speechRecognitionActive = false;
+        speechRestartAttempts = 0;
+        clearTimeout(speechRestartTimer);
+        speechInterimLetters = [];
 
-        if (voiceProcessor) {
-          voiceProcessor.onaudioprocess = null;
-          try { voiceProcessor.disconnect(); } catch {}
-          voiceProcessor = null;
+        if (speechRecognitionInstance) {
+          try { speechRecognitionInstance.abort(); } catch (error) { /* already stopped */ }
         }
-        if (voiceSilentGain) {
-          try { voiceSilentGain.disconnect(); } catch {}
-          voiceSilentGain = null;
-        }
-        if (voiceSource) {
-          try { voiceSource.disconnect(); } catch {}
-          voiceSource = null;
-        }
-        if (voiceStream) {
-          voiceStream.getTracks().forEach((track) => track.stop());
-          voiceStream = null;
-        }
-        if (voiceContext) {
-          try { voiceContext.close(); } catch {}
-          voiceContext = null;
-        }
-
         resetVoiceButton();
-        if (!silent && !keepStatus) setVoiceStatus("Microphone stopped.");
+        renderPracticeInput();
+        if (!silent && !keepStatus) setVoiceStatus("Microphone stopped. You can resume whenever you are ready.");
       }
 
-      async function toggleVoiceInput() {
-        if (speechListening) {
-          stopVoiceInput();
-          return;
+      function toggleVoiceInput() {
+        if (speechListening) stopVoiceInput();
+        else startVoiceInput();
+      }
+
+
+      // =========================================================================
+      // FEATURE PACK 3: BOOKMARKS, SESSION STATS, BLIND MODE, CONFETTI
+      // =========================================================================
+
+      // ── ⭐ BOOKMARKS ──────────────────────────────────────────────────────────
+      function getBookmarkKey(category) {
+        return `spellingBeeBookmarks${category}`;
+      }
+
+      function getBookmarks(category) {
+        try {
+          const raw = safeStorageGet(getBookmarkKey(category), "[]");
+          const arr = JSON.parse(raw);
+          return Array.isArray(arr) ? new Set(arr.map(Number)) : new Set();
+        } catch { return new Set(); }
+      }
+
+      function saveBookmarks(category, set) {
+        safeStorageSet(getBookmarkKey(category), JSON.stringify([...set]));
+      }
+
+      function toggleBookmark(index) {
+        if (!selectedCategory || index < 0) return;
+        const bookmarks = getBookmarks(selectedCategory);
+        if (bookmarks.has(index)) {
+          bookmarks.delete(index);
+        } else {
+          bookmarks.add(index);
+          SfxEngine.playKey();
         }
-        await startVoiceInput();
+        saveBookmarks(selectedCategory, bookmarks);
+        refreshBookmarkUI(index, bookmarks.has(index));
+        updateBookmarkChipCount();
       }
 
-      $("#search-container").addEventListener("submit", (event) => {
+      function refreshBookmarkUI(index, isStarred) {
+        // Update grid button star
+        const gridBtn = $$("#grid-container button").find((b) => b.dataset.index === String(index));
+        if (gridBtn) {
+          gridBtn.classList.toggle("bookmarked", isStarred);
+        }
+
+        // Update modal buttons
+        const label = isStarred ? "★ Starred" : "☆ Star";
+        const practiceBookmarkBtn = $("#practiceBookmarkBtn");
+        if (practiceBookmarkBtn) {
+          practiceBookmarkBtn.textContent = label;
+          practiceBookmarkBtn.classList.toggle("bookmarked", isStarred);
+        }
+        const viewBookmarkBtn = $("#viewBookmarkBtn");
+        if (viewBookmarkBtn) {
+          viewBookmarkBtn.textContent = label;
+          viewBookmarkBtn.classList.toggle("bookmarked", isStarred);
+        }
+      }
+
+      function applyBookmarksToGrid() {
+        if (!selectedCategory) return;
+        const bookmarks = getBookmarks(selectedCategory);
+        $$("#grid-container button").forEach((btn) => {
+          const idx = Number(btn.dataset.index);
+          btn.classList.toggle("bookmarked", bookmarks.has(idx));
+          // Ensure star span exists
+          if (!btn.querySelector(".grid-star")) {
+            const star = document.createElement("span");
+            star.className = "grid-star";
+            star.textContent = "⭐";
+            star.setAttribute("aria-hidden", "true");
+            btn.appendChild(star);
+          }
+        });
+        updateBookmarkChipCount();
+      }
+
+      function updateBookmarkChipCount() {
+        const countEl = $("#count-starred");
+        if (!countEl || !selectedCategory) return;
+        countEl.textContent = String(getBookmarks(selectedCategory).size);
+      }
+
+      function syncBookmarkModalState(index) {
+        if (!selectedCategory || index < 0) return;
+        const isStarred = getBookmarks(selectedCategory).has(index);
+        refreshBookmarkUI(index, isStarred);
+      }
+
+      // ── Grid filter extension for starred ────────────────────────────────────
+      // Patch applyGridFilter to handle "starred"
+      const _origApplyGridFilter = applyGridFilter;
+      applyGridFilter = function () {
+        if (!selectedCategory) return;
+        const progress = currentMode === PRACTICE_MODES.PRACTICE ? getStoredProgress(selectedCategory) : {};
+        const bookmarks = getBookmarks(selectedCategory);
+
+        $$("#grid-container button").forEach((button) => {
+          const idx = button.dataset.index;
+          const status = progress[idx] || PRACTICE_STATUS.PENDING;
+          const numIdx = Number(idx);
+          let visible = true;
+          const word = currentCategory[numIdx] || "";
+
+          if (currentGridFilter === "starred") {
+            visible = bookmarks.has(numIdx);
+          } else if (currentMode === PRACTICE_MODES.PRACTICE) {
+            if (currentGridFilter === "pending") visible = status === PRACTICE_STATUS.PENDING;
+            else if (currentGridFilter === "incorrect") visible = status === PRACTICE_STATUS.INCORRECT;
+            else if (currentGridFilter === "correct") visible = status === PRACTICE_STATUS.CORRECT || status === PRACTICE_STATUS.BLIND_CORRECT;
+            else if (currentGridFilter === "short") visible = word.length <= 5;
+            else if (currentGridFilter === "long") visible = word.length >= 8;
+          }
+
+          button.style.display = visible ? "" : "none";
+        });
+      };
+
+      // ── 📊 SESSION STATISTICS ────────────────────────────────────────────────
+      const SESSION_KEY = "spellingBeeSession";
+
+      function getSessionStats() {
+        try {
+          const raw = sessionStorage.getItem(SESSION_KEY);
+          if (!raw) return { attempted: 0, correct: 0, wrong: 0, bestStreak: 0 };
+          return JSON.parse(raw);
+        } catch { return { attempted: 0, correct: 0, wrong: 0, bestStreak: 0 }; }
+      }
+
+      function saveSessionStats(stats) {
+        try { sessionStorage.setItem(SESSION_KEY, JSON.stringify(stats)); } catch {}
+      }
+
+      function recordSessionAttempt(isCorrect) {
+        const s = getSessionStats();
+        s.attempted += 1;
+        if (isCorrect) {
+          s.correct += 1;
+        } else {
+          s.wrong += 1;
+        }
+        s.bestStreak = Math.max(s.bestStreak, currentStreak);
+        saveSessionStats(s);
+        renderSessionStats();
+      }
+
+      function renderSessionStats() {
+        const s = getSessionStats();
+        const el = (id) => document.getElementById(id);
+        if (el("sessAttempted")) el("sessAttempted").textContent = String(s.attempted);
+        if (el("sessCorrect"))  el("sessCorrect").textContent  = String(s.correct);
+        if (el("sessWrong"))    el("sessWrong").textContent    = String(s.wrong);
+        if (el("sessBestStreak")) el("sessBestStreak").textContent = String(Math.max(s.bestStreak, currentStreak));
+      }
+
+      function openMyStats() {
+        const s = getSessionStats();
+        const bestStreak = Math.max(s.bestStreak, currentStreak);
+        const pct = s.attempted > 0 ? Math.round((s.correct / s.attempted) * 100) : 0;
+
+        // All-time progress for each category
+        function catSummary(cat) {
+          const total = cat === "A" ? categoryA.length : categoryB.length;
+          const progress = getStoredProgress(cat);
+          let correct = 0;
+          for (let i = 0; i < total; i++) {
+            if (progress[String(i)] === PRACTICE_STATUS.CORRECT || progress[String(i)] === PRACTICE_STATUS.BLIND_CORRECT) correct++;
+          }
+          return { total, correct };
+        }
+
+        const a = catSummary("A");
+        const b = catSummary("B");
+
+        Swal.fire({
+          title: "📊 My Practice Statistics",
+          html: `
+            <div style="text-align:left; font-size:0.9rem; line-height:1.7;">
+              <p style="font-size:0.8rem; color:#a8a8bd; margin-bottom:0.7rem;">
+                Session stats reset when you close the browser tab. All-time progress is saved.
+              </p>
+
+              <div style="background:rgba(0,212,255,0.08); border:1px solid rgba(0,212,255,0.22); border-radius:10px; padding:0.75rem 1rem; margin-bottom:0.75rem;">
+                <strong style="color:#00d4ff;">📅 This Session</strong>
+                <div style="margin-top:0.4rem; display:grid; grid-template-columns:1fr 1fr; gap:0.35rem 1rem;">
+                  <span>Words attempted:</span><strong>${s.attempted}</strong>
+                  <span>Correct:</span><strong style="color:#22c55e;">${s.correct}</strong>
+                  <span>Wrong:</span><strong style="color:#ef4444;">${s.wrong}</strong>
+                  <span>Accuracy:</span><strong>${pct}%</strong>
+                  <span>Best streak 🔥:</span><strong>${bestStreak}</strong>
+                  <span>Current streak 🔥:</span><strong>${currentStreak}</strong>
+                </div>
+              </div>
+
+              <div style="background:rgba(124,58,237,0.10); border:1px solid rgba(124,58,237,0.3); border-radius:10px; padding:0.75rem 1rem;">
+                <strong style="color:#c084fc;">📈 All-Time Progress</strong>
+                <div style="margin-top:0.4rem; display:grid; grid-template-columns:1fr 1fr; gap:0.35rem 1rem;">
+                  <span>Category A mastered:</span><strong>${a.correct}/${a.total}</strong>
+                  <span>Category B mastered:</span><strong>${b.correct}/${b.total}</strong>
+                  <span>⭐ Bookmarks A:</span><strong>${getBookmarks("A").size}</strong>
+                  <span>⭐ Bookmarks B:</span><strong>${getBookmarks("B").size}</strong>
+                </div>
+              </div>
+            </div>
+          `,
+          confirmButtonText: "Close",
+          confirmButtonColor: "#00d4ff",
+          background: "#14142e",
+          color: "#f0f0f5",
+          width: "min(92vw, 520px)",
+        });
+      }
+
+      // ── 🎯 BLIND SPELLING MODE ────────────────────────────────────────────────
+      let blindModeActive = false;
+
+      function toggleBlindMode() {
+        blindModeActive = !blindModeActive;
+        const btn = $("#blindModeBtn");
+        if (btn) {
+          btn.classList.toggle("active", blindModeActive);
+          btn.textContent = blindModeActive ? "👁️ Blind: On" : "👁️ Blind";
+        }
+        renderPracticeInput();
+        if (blindModeActive) {
+          SfxEngine.playHint();
+        }
+      }
+
+      // ── 🎉 CONFETTI ENGINE ────────────────────────────────────────────────────
+      (function buildConfetti() {
+        const canvas = document.getElementById("confettiCanvas");
+        if (!canvas) return;
+        const ctx = canvas.getContext("2d");
+        let particles = [];
+        let animId = null;
+
+        const COLORS = ["#f6c515","#00d4ff","#7c3aed","#ec4899","#22c55e","#ef4444","#fb923c","#ffffff"];
+
+        function resize() {
+          canvas.width  = window.innerWidth;
+          canvas.height = window.innerHeight;
+        }
+        window.addEventListener("resize", resize);
+
+        function spawn(count) {
+          resize();
+          particles = [];
+          for (let i = 0; i < count; i++) {
+            particles.push({
+              x: Math.random() * canvas.width,
+              y: Math.random() * canvas.height * 0.4 - canvas.height * 0.1,
+              vx: (Math.random() - 0.5) * 5.5,
+              vy: Math.random() * 3.5 + 1.8,
+              size: Math.random() * 8 + 4,
+              color: COLORS[Math.floor(Math.random() * COLORS.length)],
+              rot: Math.random() * Math.PI * 2,
+              rotV: (Math.random() - 0.5) * 0.18,
+              alpha: 1,
+              shape: Math.random() < 0.6 ? "rect" : "circle",
+            });
+          }
+        }
+
+        function tick() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          let alive = false;
+
+          particles.forEach((p) => {
+            p.x  += p.vx;
+            p.y  += p.vy;
+            p.vy += 0.07; // gravity
+            p.rot += p.rotV;
+            p.alpha -= 0.008;
+
+            if (p.alpha <= 0) return;
+            alive = true;
+
+            ctx.save();
+            ctx.globalAlpha = Math.max(0, p.alpha);
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.rot);
+            ctx.fillStyle = p.color;
+
+            if (p.shape === "circle") {
+              ctx.beginPath();
+              ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
+              ctx.fill();
+            } else {
+              ctx.fillRect(-p.size / 2, -p.size / 4, p.size, p.size / 2);
+            }
+
+            ctx.restore();
+          });
+
+          if (alive) {
+            animId = requestAnimationFrame(tick);
+          } else {
+            canvas.style.display = "none";
+            cancelAnimationFrame(animId);
+            animId = null;
+          }
+        }
+
+        window.launchConfetti = function (count = 180) {
+          cancelAnimationFrame(animId);
+          canvas.style.display = "block";
+          spawn(count);
+          tick();
+        };
+      })();
+
+      function checkCategoryCompletion() {
+        if (!selectedCategory || !currentCategory.length) return;
+        const progress = getStoredProgress(selectedCategory);
+        const total = currentCategory.length;
+        let correct = 0;
+        for (let i = 0; i < total; i++) {
+          if (progress[String(i)] === PRACTICE_STATUS.CORRECT || progress[String(i)] === PRACTICE_STATUS.BLIND_CORRECT) correct++;
+        }
+        if (correct === total) {
+          window.launchConfetti?.(220);
+          setTimeout(() => {
+            Swal.fire({
+              toast: true,
+              position: "top",
+              icon: "success",
+              title: `🎉 Category ${selectedCategory} Complete! 100% Mastered!`,
+              showConfirmButton: false,
+              timer: 3500,
+              timerProgressBar: true,
+              background: "#14142e",
+              color: "#f0f0f5",
+            });
+          }, 400);
+        }
+      }
+
+      // ── RENDER PATCH: blind slots, star icons ────────────────────────────────
+      // Patch renderPracticeInput to apply blind mode
+      const _origRenderPracticeInput = renderPracticeInput;
+      renderPracticeInput = function () {
+        _origRenderPracticeInput();
+
+        if (!blindModeActive) return;
+        // Apply blind class to all filled non-revealed non-correct slots
+        $$("#practiceInputDisplay .practice-slot").forEach((slot) => {
+          const isResult = slot.classList.contains("correct") ||
+                           slot.classList.contains("blind-correct") ||
+                           slot.classList.contains("incorrect") ||
+                           slot.classList.contains("present") ||
+                           slot.classList.contains("revealed");
+          if (!isResult && slot.classList.contains("filled")) {
+            slot.classList.add("blind");
+          }
+        });
+      };
+
+      // Patch initializePracticeWord to reset blind per word tracking & sync bookmark
+      const _origInitPracticeWord = initializePracticeWord;
+      initializePracticeWord = function (index) {
+        _origInitPracticeWord(index);
+        blindModeActive = false;
+        const blindBtn = $("#blindModeBtn");
+        if (blindBtn) {
+          blindBtn.classList.remove("active");
+          blindBtn.textContent = "👁️ Blind";
+        }
+        syncBookmarkModalState(index);
+      };
+
+      // Patch verifyPracticeWord to record session stats + check completion
+      const _origVerify = verifyPracticeWord;
+      verifyPracticeWord = function () {
+        const completedInBlindMode = blindModeActive;
+        const targetBeforeVerify = normalizeWord(currentCategory[currentPracticeIndex] || "");
+        const guessBeforeVerify = normalizeWord(practiceInput.join(""));
+        const exactCorrectAnswer = guessBeforeVerify.length === targetBeforeVerify.length && guessBeforeVerify === targetBeforeVerify;
+
+        _origVerify();
+
+        if (exactCorrectAnswer && completedInBlindMode && selectedCategory && currentPracticeIndex >= 0) {
+          // Persist a separate mastery state so the purple galaxy tile survives reloads.
+          saveProgress(selectedCategory, currentPracticeIndex, PRACTICE_STATUS.BLIND_CORRECT);
+          updateGridButtonStatus(currentPracticeIndex, PRACTICE_STATUS.BLIND_CORRECT);
+          practiceBoxStates = targetBeforeVerify.split("").map(() => "blind-correct");
+          renderPracticeInput();
+          setPracticeResult("Blind mastered! ✨", "success");
+          updateDashboardStats();
+        }
+
+        if (guessBeforeVerify.length !== targetBeforeVerify.length) return;
+        recordSessionAttempt(guessBeforeVerify === targetBeforeVerify);
+        if (guessBeforeVerify === targetBeforeVerify) checkCategoryCompletion();
+      };
+
+      // Patch loadCategory to apply bookmarks after grid is built
+      const _origLoadCategory = loadCategory;
+      loadCategory = function (category) {
+        _origLoadCategory(category);
+        // Grid is rebuilt inside loadCategory, so apply bookmark stars now
+        requestAnimationFrame(() => {
+          applyBookmarksToGrid();
+          renderSessionStats();
+        });
+      };
+
+      // Patch applyStoredProgressToGrid to keep star overlays
+      const _origApplyProgress = applyStoredProgressToGrid;
+      applyStoredProgressToGrid = function () {
+        _origApplyProgress();
+        applyBookmarksToGrid();
+      };
+
+      // ── updateDashboardStats patch for starred count ──────────────────────────
+      const _origUpdateDash = updateDashboardStats;
+      updateDashboardStats = function () {
+        _origUpdateDash();
+        updateBookmarkChipCount();
+      };
+
+      // ── showWord patch to sync bookmark button state ───────────────────────────
+      const _origShowWord = showWord;
+      showWord = function (index, opener) {
+        _origShowWord(index, opener);
+        syncBookmarkModalState(index);
+      };
+
+      // Init session stats display on page load
+      renderSessionStats();
+
+      // ── Utility-actions: "My Stats" button only appears in practice mode ──────
+      // (button is always visible; stats work in both modes)
+
+
+            $("#search-container").addEventListener("submit", (event) => {
         event.preventDefault();
         searchWord();
       });
@@ -3084,7 +5064,44 @@ const categoryA = [
         }
 
         const modalOpen = $("#wordModal").getAttribute("aria-hidden") === "false";
-        if (!modalOpen || currentMode !== PRACTICE_MODES.PRACTICE) return;
+        if (!modalOpen) return;
+
+        // View Mode Navigation & Audio shortcuts
+        if (currentMode === PRACTICE_MODES.VIEW) {
+          if (event.key === "ArrowLeft") {
+            event.preventDefault();
+            navigateWord(-1);
+            return;
+          }
+          if (event.key === "ArrowRight") {
+            event.preventDefault();
+            navigateWord(1);
+            return;
+          }
+          if (event.key === " " || event.code === "Space") {
+            event.preventDefault();
+            playAudio();
+            return;
+          }
+          return;
+        }
+
+        // Practice Mode Navigation & Shortcuts
+        if (currentMode !== PRACTICE_MODES.PRACTICE) return;
+
+        // Space to hear pronunciation (when not focused on typing input)
+        if ((event.key === " " || event.code === "Space") && document.activeElement.tagName !== "INPUT") {
+          event.preventDefault();
+          playAudio();
+          return;
+        }
+
+        // Next word shortcut when solved or revealed
+        if (!$("#practiceNextWordBtn").hidden && (event.key === "ArrowRight" || event.key === "Enter")) {
+          event.preventDefault();
+          navigateWord(1);
+          return;
+        }
 
         if (event.key === "Backspace" || event.key === "Delete") {
           event.preventDefault();
@@ -3123,7 +5140,7 @@ const categoryA = [
       });
 
       function searchWord() {
-        if (!selectedCategory) {
+        if (!selectedCategory || !currentCategory.length) {
           showAlert({
             icon: "warning",
             text: "First select Category A or Category B.",
@@ -3131,20 +5148,50 @@ const categoryA = [
           return;
         }
 
-        const value = $("#search-number").value.trim();
-        const number = Number(value);
-        const max = selectedCategory === "B" ? 100 : 60;
+        const rawValue = $("#search-number").value.trim();
+        if (!rawValue) return;
 
-        if (!Number.isInteger(number) || number < 1 || number > max) {
-          showAlert({
-            icon: "warning",
-            text: `Enter a whole number between 1 and ${max}.`,
-          });
+        const max = selectedCategory === "B" ? 100 : 60;
+        const number = Number(rawValue);
+
+        // 1. Numeric Search (e.g. 5 -> opens #5)
+        if (Number.isInteger(number) && number >= 1 && number <= max) {
+          const opener = $$("#grid-container button").find((button) => button.dataset.index === String(number - 1));
+          showWord(number - 1, opener);
           return;
         }
 
-        const opener = $$("#grid-container button").find((button) => button.dataset.index === String(number - 1));
-        showWord(number - 1, opener);
+        // 2. Text / Word Search (e.g. "bee" or "key")
+        const cleanQuery = normalizeWord(rawValue);
+        if (cleanQuery.length >= 1) {
+          const matches = [];
+          currentCategory.forEach((word, idx) => {
+            if (normalizeWord(word).includes(cleanQuery)) {
+              matches.push(idx);
+            }
+          });
+
+          if (matches.length === 1) {
+            const opener = $$("#grid-container button").find((button) => button.dataset.index === String(matches[0]));
+            showWord(matches[0], opener);
+            return;
+          } else if (matches.length > 1) {
+            highlightGridMatches(matches);
+            showAlert({
+              icon: "info",
+              title: `${matches.length} matching words found`,
+              text: "Highlighted with glow in the grid. Select any of them to practice.",
+              timer: 1600,
+              showConfirmButton: false,
+            });
+            return;
+          }
+        }
+
+        showAlert({
+          icon: "warning",
+          text: `No words found matching "${rawValue}". Enter a number (1-${max}) or a word search.`,
+        });
       }
 
       // Current year.
@@ -3163,6 +5210,9 @@ const categoryA = [
         $("#time").textContent = formatter.format(new Date());
       }
 
+      // Initialize SFX button label
+      const sfxBtn = $("#toggleSfxBtn");
+      if (sfxBtn) sfxBtn.textContent = SfxEngine.isMuted ? "🔇 SFX: Off" : "🔔 SFX: On";
       // Restore the last saved mode.
       const storedMode = safeStorageGet("spellingBeeMode", PRACTICE_MODES.VIEW);
       setMode(storedMode, false);
