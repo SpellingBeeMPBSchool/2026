@@ -2253,19 +2253,17 @@
       />
     </header>
 
-    <div class="category-buttons" aria-label="Category selection">
-      <button type="button" data-category="A" onclick="loadCategory('A')">Category A</button>
-      <button type="button" data-category="B" onclick="loadCategory('B')">Category B</button>
+    <div class="category-buttons" role="group" aria-label="Category selection">
+      <button type="button" data-category="A" aria-pressed="false" onclick="loadCategory('A')">Category A</button>
+      <button type="button" data-category="B" aria-pressed="false" onclick="loadCategory('B')">Category B</button>
     </div>
 
     <div class="mode-toggle" aria-label="Study mode">
-      <div class="mode-toggle-inner" role="tablist" aria-label="Display mode">
+      <div class="mode-toggle-inner" role="group" aria-label="Study mode">
         <button
           id="mode-view"
           type="button"
-          role="tab"
-          aria-selected="true"
-          aria-controls="grid-container"
+          aria-pressed="true"
           tabindex="0"
           onclick="setMode('view')"
         >
@@ -2274,9 +2272,7 @@
         <button
           id="mode-practice"
           type="button"
-          role="tab"
-          aria-selected="false"
-          aria-controls="grid-container"
+          aria-pressed="false"
           tabindex="0"
           onclick="setMode('practice')"
         >
@@ -2314,7 +2310,7 @@
       <button type="button" class="utility-btn achievements-btn" id="achievementsBtn" onclick="openAchievements()" title="Discover permanent secret achievements" aria-haspopup="dialog">
         🏅 Achievements <span class="achievement-count" id="achievementCount">0</span>
       </button>
-      <button type="button" class="utility-btn sfx-btn" id="toggleSfxBtn" onclick="toggleSfx()" title="Toggle sound effects (Web Audio)">
+      <button type="button" class="utility-btn sfx-btn" id="toggleSfxBtn" aria-pressed="true" onclick="toggleSfx()" title="Toggle sound effects (Web Audio)">
         🔔 SFX: On
       </button>
       <button type="button" class="utility-btn reset-btn" id="resetProgressBtn" onclick="resetCurrentCategoryProgress()">
@@ -2374,7 +2370,7 @@
           <article class="guide-card">
             <h3>4. Shortcuts and voice spelling (BETA)</h3>
             <p><kbd>Letters</kbd> enter a spelling, <kbd>Backspace</kbd> deletes a letter, <kbd>Enter</kbd> checks the answer, <kbd>Space</kbd> plays the word, and the <kbd>←</kbd>/<kbd>→</kbd> keys move between words.</p>
-            <p>The microphone spelling feature is <strong>in BETA and may not work reliably</strong>. Press <strong>Voice spelling · BETA</strong>, then say English letter names one at a time: <strong>A</strong> (“ay”), <strong>B</strong> (“bee”), <strong>C</strong> (“see”). Leave a short pause between letters and watch the status text to see what was captured. You can say <strong>delete</strong>, <strong>clear</strong>, <strong>listen</strong>, <strong>reveal</strong> or <strong>check</strong>. If the browser combines the spelling into the exact target word, the page can fill the remaining letters. Repeated final results are ignored within a session, and the microphone is reconnected after a pause when the browser allows it.</p>
+            <p>The microphone spelling feature is <strong>in BETA and may not work reliably</strong>. Press <strong>Voice spelling · BETA</strong>, then say English letter names such as <strong>A</strong> (“ay”), <strong>B</strong> (“bee”) and <strong>C</strong> (“see”). You can say several letters quickly in one short phrase; the page processes confirmed letters in order and previews letters the browser is still deciding about. A brief pause between groups can help the browser finish a phrase. Watch the status text to see what was captured. You can say <strong>delete</strong>, <strong>clear</strong>, <strong>listen</strong>, <strong>reveal</strong> or <strong>check</strong>. If the browser combines the spelling into the exact target word, the page can fill the remaining letters. Repeated final results are ignored within a session, and the microphone reconnects after a short pause when the browser allows it.</p>
             <p class="guide-note"><strong>MICROPHONE SPELLING IS IN BETA and may not work well:</strong> it can miss, merge or mishear spoken letters. It depends on the browser's speech service, microphone permissions, network and pronunciation; identical results cannot be guaranteed across devices. Use HTTPS or localhost and allow microphone access. Current Chrome or Edge may work better; Brave may have its speech service disabled. The on-screen and physical keyboards are the reliable alternatives.</p>
           </article>
         </div>
@@ -2411,25 +2407,25 @@
         <strong>Filter words</strong>
         <span>Choose a group to focus your review</span>
       </div>
-      <button type="button" class="filter-chip active" data-filter="all" onclick="setGridFilter('all')">
+      <button type="button" class="filter-chip active" data-filter="all" aria-pressed="true" onclick="setGridFilter('all')">
         All (<span id="count-all">0</span>)
       </button>
-      <button type="button" class="filter-chip" data-filter="pending" onclick="setGridFilter('pending')">
+      <button type="button" class="filter-chip" data-filter="pending" aria-pressed="false" onclick="setGridFilter('pending')">
         ⏳ Pending (<span id="count-pending">0</span>)
       </button>
-      <button type="button" class="filter-chip" data-filter="incorrect" onclick="setGridFilter('incorrect')">
+      <button type="button" class="filter-chip" data-filter="incorrect" aria-pressed="false" onclick="setGridFilter('incorrect')">
         ❌ Review (<span id="count-incorrect">0</span>)
       </button>
-      <button type="button" class="filter-chip" data-filter="correct" onclick="setGridFilter('correct')">
+      <button type="button" class="filter-chip" data-filter="correct" aria-pressed="false" onclick="setGridFilter('correct')">
         ✅ Mastered (<span id="count-correct">0</span>)
       </button>
-      <button type="button" class="filter-chip" data-filter="short" onclick="setGridFilter('short')">
+      <button type="button" class="filter-chip" data-filter="short" aria-pressed="false" onclick="setGridFilter('short')">
         ⚡ Short (≤5) (<span id="count-short">0</span>)
       </button>
-      <button type="button" class="filter-chip" data-filter="long" onclick="setGridFilter('long')">
+      <button type="button" class="filter-chip" data-filter="long" aria-pressed="false" onclick="setGridFilter('long')">
         🔥 Long (≥8) (<span id="count-long">0</span>)
       </button>
-      <button type="button" class="filter-chip" data-filter="starred" onclick="setGridFilter('starred')">
+      <button type="button" class="filter-chip" data-filter="starred" aria-pressed="false" onclick="setGridFilter('starred')">
         ⭐ Starred (<span id="count-starred">0</span>)
       </button>
     </div>
@@ -2448,7 +2444,7 @@
           <div class="modal-actions">
             <button type="button" class="base-modal-btn play-btn" onclick="playAudio()">🔊 Listen</button>
             <button type="button" class="base-modal-btn speed-btn" id="viewSpeedBtn" onclick="toggleAudioSpeed()" title="Toggle playback speed">⚡ 1.0x</button>
-            <button type="button" class="base-modal-btn bookmark-btn" id="viewBookmarkBtn" onclick="toggleBookmark(currentPracticeIndex)" title="Bookmark this word">☆ Star</button>
+            <button type="button" class="base-modal-btn bookmark-btn" id="viewBookmarkBtn" aria-pressed="false" onclick="toggleBookmark(currentPracticeIndex)" title="Bookmark this word">☆ Star</button>
             <button type="button" class="base-modal-btn close-btn" onclick="closeModal()">Close</button>
           </div>
         </section>
@@ -2486,7 +2482,7 @@
           </div>
 
           <div id="timerBarWrap" class="timer-bar-wrap" hidden>
-            <div id="timerBar" class="timer-bar"></div>
+            <div id="timerBar" class="timer-bar" role="progressbar" aria-label="Practice time remaining" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"></div>
           </div>
 
           <div
@@ -2529,10 +2525,10 @@
             <button type="button" class="practice-btn hint-btn" id="practiceHintBtn" onclick="requestPracticeHint()" title="Reveal a letter or clue">
               💡 Hint
             </button>
-            <button type="button" class="practice-btn blind-btn" id="blindModeBtn" onclick="toggleBlindMode()" title="Hide letter slots (Blind spelling mode)">
+            <button type="button" class="practice-btn blind-btn" id="blindModeBtn" aria-pressed="false" onclick="toggleBlindMode()" title="Hide letter slots (Blind spelling mode)">
               👁️ Blind
             </button>
-            <button type="button" class="practice-btn bookmark-btn" id="practiceBookmarkBtn" onclick="toggleBookmark(currentPracticeIndex)" title="Bookmark this word for focused review">
+            <button type="button" class="practice-btn bookmark-btn" id="practiceBookmarkBtn" aria-pressed="false" onclick="toggleBookmark(currentPracticeIndex)" title="Bookmark this word for focused review">
               ☆ Star
             </button>
             <button type="button" class="practice-btn verify-btn" id="verifyBtn" onclick="verifyPracticeWord()" disabled>
@@ -2803,7 +2799,7 @@ const categoryA = [
             if (AudioCtx) this.audioCtx = new AudioCtx();
           }
           if (this.audioCtx && this.audioCtx.state === "suspended") {
-            this.audioCtx.resume();
+            this.audioCtx.resume().catch(() => {});
           }
         },
 
@@ -2870,7 +2866,10 @@ const categoryA = [
           this.isMuted = !this.isMuted;
           safeStorageSet("spellingBeeSfxMuted", String(this.isMuted));
           const btn = $("#toggleSfxBtn");
-          if (btn) btn.textContent = this.isMuted ? "🔇 SFX: Off" : "🔔 SFX: On";
+          if (btn) {
+            btn.textContent = this.isMuted ? "🔇 SFX: Off" : "🔔 SFX: On";
+            btn.setAttribute("aria-pressed", String(!this.isMuted));
+          }
           return !this.isMuted;
         }
       };
@@ -2880,30 +2879,43 @@ const categoryA = [
       }
 
       // --- TIMER CHALLENGE MODE ---
-      let practiceTimerSetting = Number(safeStorageGet("spellingBeeTimer", "0"));
+      const storedPracticeTimerSetting = Number(safeStorageGet("spellingBeeTimer", "0"));
+      const allowedPracticeTimerSettings = Object.freeze([0, 30, 45, 60]);
+      let practiceTimerSetting = allowedPracticeTimerSettings.includes(storedPracticeTimerSetting)
+        ? storedPracticeTimerSetting
+        : 0;
       let practiceTimerInterval = null;
-      let practiceTimerRemaining = 0;
 
       function changeTimerSetting(val) {
-        practiceTimerSetting = Number(val) || 0;
+        const selectedValue = Number(val);
+        practiceTimerSetting = allowedPracticeTimerSettings.includes(selectedValue) ? selectedValue : 0;
         safeStorageSet("spellingBeeTimer", String(practiceTimerSetting));
-        if (currentMode === PRACTICE_MODES.PRACTICE && currentPracticeIndex >= 0) {
-          startPracticeTimer();
+        const modal = $("#wordModal");
+        const nextButton = $("#practiceNextWordBtn");
+        if (
+          currentMode === PRACTICE_MODES.PRACTICE &&
+          currentPracticeIndex >= 0 &&
+          modal?.getAttribute("aria-hidden") === "false"
+        ) {
+          if (nextButton?.hidden) startPracticeTimer();
+          else if (practiceTimerSetting <= 0) stopPracticeTimer();
         }
       }
 
-      function stopPracticeTimer() {
+      function stopPracticeTimer({ hide = true } = {}) {
         if (practiceTimerInterval) {
           clearInterval(practiceTimerInterval);
           practiceTimerInterval = null;
         }
         const wrap = $("#timerBarWrap");
-        if (wrap) wrap.hidden = true;
+        if (wrap) wrap.hidden = hide;
       }
 
       function startPracticeTimer() {
         stopPracticeTimer();
         if (practiceTimerSetting <= 0) return;
+        if ($("#wordModal")?.getAttribute("aria-hidden") !== "false") return;
+        if ($("#practiceNextWordBtn") && !$("#practiceNextWordBtn").hidden) return;
 
         const wrap = $("#timerBarWrap");
         const bar = $("#timerBar");
@@ -2912,16 +2924,17 @@ const categoryA = [
         wrap.hidden = false;
         bar.className = "timer-bar";
         bar.style.width = "100%";
+        bar.setAttribute("aria-valuenow", "100");
 
-        practiceTimerRemaining = practiceTimerSetting;
         const totalMs = practiceTimerSetting * 1000;
-        const startTime = Date.now();
+        const startTime = performance.now();
 
         practiceTimerInterval = setInterval(() => {
-          const elapsed = Date.now() - startTime;
+          const elapsed = performance.now() - startTime;
           const leftMs = Math.max(0, totalMs - elapsed);
           const pct = (leftMs / totalMs) * 100;
           bar.style.width = `${pct}%`;
+          bar.setAttribute("aria-valuenow", String(Math.ceil(pct)));
 
           if (pct < 30) {
             bar.className = "timer-bar critical";
@@ -2932,23 +2945,40 @@ const categoryA = [
           }
 
           if (leftMs <= 0) {
-            stopPracticeTimer();
+            stopPracticeTimer({ hide: false });
             bar.style.width = "0%";
+            bar.setAttribute("aria-valuenow", "0");
+            stopVoiceInput({ silent: true });
+            markContestWordMissed(currentCategory[currentPracticeIndex]);
             SfxEngine.playTimeout();
+            currentStreak = 0;
+            safeStorageSet("spellingBeeStreak", "0");
+            if (selectedCategory && currentPracticeIndex >= 0) {
+              saveProgress(selectedCategory, currentPracticeIndex, PRACTICE_STATUS.INCORRECT);
+              updateGridButtonStatus(currentPracticeIndex, PRACTICE_STATUS.INCORRECT);
+              syncCategoryCompletionCelebration(selectedCategory);
+            }
+            updateDashboardStats();
             setPracticeResult("Time's up! ⌛ Press Retry or Reveal.", "error");
             updatePracticeButtons({ canVerify: false, canReveal: true, canRetry: true, lockKeyboard: true });
-            $("#practiceNextWordBtn").hidden = false;
+            const nextButton = $("#practiceNextWordBtn");
+            nextButton.hidden = false;
+            nextButton.textContent = contestRoundActive
+              ? (contestRoundIndex + 1 >= contestRoundTotal ? "Finish Contest 🏁" : "Next Contest Word ➔")
+              : "Next ➔";
+            setVoiceStatus("Time is up. Voice spelling has stopped; press Retry to start a fresh timed attempt.");
           }
         }, 80);
       }
 
       // --- PRACTICE DASHBOARD & STREAK ---
-      let currentStreak = Number(safeStorageGet("spellingBeeStreak", "0"));
+      const storedStreak = Number(safeStorageGet("spellingBeeStreak", "0"));
+      let currentStreak = Number.isSafeInteger(storedStreak) && storedStreak > 0 ? storedStreak : 0;
 
       function updateDashboardStats() {
         if (!selectedCategory) return;
         const progress = getStoredProgress(selectedCategory);
-        const total = currentCategory.length || (selectedCategory === "B" ? 100 : 60);
+        const total = currentCategory.length;
 
         let correctCount = 0;
         let incorrectCount = 0;
@@ -3045,6 +3075,32 @@ const categoryA = [
       let contestRoundScore = 0;
       let contestRoundTotal = 0;
       let contestMissedWords = [];
+      let contestRoundScoredWords = new Set();
+
+      function markContestWordMissed(word) {
+        if (!contestRoundActive || !word) return;
+        const wordIndex = contestRoundWords[contestRoundIndex];
+        if (contestRoundScoredWords.has(wordIndex)) return;
+        if (!contestMissedWords.includes(word)) contestMissedWords.push(word);
+        updateContestBanner();
+      }
+
+      function clearContestWordMissed(word) {
+        if (!word) return;
+        contestMissedWords = contestMissedWords.filter((missedWord) => missedWord !== word);
+      }
+
+      function cancelContestRound() {
+        if (!contestRoundActive) return;
+        contestRoundActive = false;
+        contestRoundWords = [];
+        contestRoundIndex = 0;
+        contestRoundScore = 0;
+        contestRoundTotal = 0;
+        contestMissedWords = [];
+        contestRoundScoredWords.clear();
+        updateContestBanner();
+      }
 
       async function startContestRound() {
         if (!selectedCategory || !currentCategory.length) {
@@ -3081,16 +3137,17 @@ const categoryA = [
           [indices[i], indices[j]] = [indices[j], indices[i]];
         }
 
+        if (currentMode !== PRACTICE_MODES.PRACTICE) {
+          setMode(PRACTICE_MODES.PRACTICE, false);
+        }
+
         contestRoundActive = true;
         contestRoundTotal = Math.min(total, currentCategory.length);
         contestRoundWords = indices.slice(0, contestRoundTotal);
         contestRoundIndex = 0;
         contestRoundScore = 0;
         contestMissedWords = [];
-
-        if (currentMode !== PRACTICE_MODES.PRACTICE) {
-          setMode(PRACTICE_MODES.PRACTICE, false);
-        }
+        contestRoundScoredWords = new Set();
 
         openNextContestWord();
       }
@@ -3112,15 +3169,20 @@ const categoryA = [
         if (!banner) return;
         if (!contestRoundActive) {
           banner.hidden = true;
+          const prevButton = $("#practicePrevBtn");
+          if (prevButton) prevButton.disabled = false;
           return;
         }
         banner.hidden = false;
+        const prevButton = $("#practicePrevBtn");
+        if (prevButton) prevButton.disabled = true;
         $("#contestRoundTitle").textContent = `🏆 Contest Round: Word ${contestRoundIndex + 1} of ${contestRoundTotal}`;
-        $("#contestRoundScore").textContent = `Score: ${contestRoundScore} / ${contestRoundIndex}`;
+        $("#contestRoundScore").textContent = `Score: ${contestRoundScore} / ${contestRoundTotal}`;
       }
 
       function finishContestRound() {
         contestRoundActive = false;
+        updateContestBanner();
         closeModal({ immediate: true });
 
         const pct = Math.round((contestRoundScore / contestRoundTotal) * 100);
@@ -3263,7 +3325,9 @@ const categoryA = [
       function setGridFilter(filter) {
         currentGridFilter = filter;
         $$(".filter-chip").forEach((chip) => {
-          chip.classList.toggle("active", chip.dataset.filter === filter);
+          const selected = chip.dataset.filter === filter;
+          chip.classList.toggle("active", selected);
+          chip.setAttribute("aria-pressed", String(selected));
         });
         applyGridFilter();
       }
@@ -3301,6 +3365,7 @@ const categoryA = [
           openNextContestWord();
           return;
         }
+        if (contestRoundActive) return;
 
         let next = currentPracticeIndex + direction;
         if (next < 0) next = currentCategory.length - 1;
@@ -3364,9 +3429,17 @@ const categoryA = [
       }
 
       function saveProgress(category, index, status) {
+        const words = category === "B" ? categoryB : categoryA;
+        if (
+          (category !== "A" && category !== "B") ||
+          !Number.isInteger(index) ||
+          index < 0 ||
+          index >= words.length ||
+          !Object.values(PRACTICE_STATUS).includes(status)
+        ) return false;
         const progress = getStoredProgress(category);
         progress[String(index)] = status;
-        safeStorageSet(getProgressKey(category), JSON.stringify(progress));
+        return safeStorageSet(getProgressKey(category), JSON.stringify(progress));
       }
 
       function formatPracticeGridWord(word) {
@@ -3528,10 +3601,9 @@ const categoryA = [
         if (!result.isConfirmed) return;
 
         safeStorageSet(getProgressKey(selectedCategory), "{}");
+        syncCategoryCompletionCelebration(selectedCategory);
         stopVoiceInput({ silent: true });
         hideModalImmediately();
-        currentStreak = 0;
-        safeStorageSet("spellingBeeStreak", "0");
         clearPracticeSession();
         applyStoredProgressToGrid();
 
@@ -3576,8 +3648,8 @@ const categoryA = [
 
         viewButton.classList.toggle("active", isView);
         practiceButton.classList.toggle("active", !isView);
-        viewButton.setAttribute("aria-selected", String(isView));
-        practiceButton.setAttribute("aria-selected", String(!isView));
+        viewButton.setAttribute("aria-pressed", String(isView));
+        practiceButton.setAttribute("aria-pressed", String(!isView));
 
         if (persist) safeStorageSet("spellingBeeMode", currentMode);
 
@@ -3598,22 +3670,24 @@ const categoryA = [
 
         stopVoiceInput({ silent: true });
         closeModal({ immediate: true });
+        clearPracticeSession();
 
         selectedCategory = category;
         currentCategory = category === "A" ? categoryA : categoryB;
 
         $$(".category-buttons button").forEach((button) => {
           button.classList.toggle("active", button.dataset.category === category);
+          button.setAttribute("aria-pressed", String(button.dataset.category === category));
         });
 
-        $("#category-title").textContent = `Category ${category}`;
-        $("#search-number").max = category === "B" ? "100" : "60";
+        $("#category-title").textContent = `Category ${category} · ${currentCategory.length} words`;
+        $("#search-number").maxLength = 32;
 
         const grid = $("#grid-container");
         grid.innerHTML = "";
         grid.className = `grid ${category === "B" ? "gridB" : "gridA"}`;
 
-        const totalButtons = category === "B" ? 100 : 60;
+        const totalButtons = currentCategory.length;
 
         for (let i = 0; i < totalButtons; i++) {
           const button = document.createElement("button");
@@ -3629,13 +3703,6 @@ const categoryA = [
 
         applyStoredProgressToGrid();
 
-        showAlert({
-          icon: "info",
-          title: `You have selected Category ${category}`,
-          text: currentMode === PRACTICE_MODES.PRACTICE
-            ? "Choose a number and start spelling."
-            : "Choose a number to listen to its word.",
-        });
       }
 
       function showWord(index, opener = null) {
@@ -3653,6 +3720,7 @@ const categoryA = [
         }
 
         stopVoiceInput({ silent: true });
+        isWordAudioPlaying = false;
         if (currentAudio) {
           currentAudio.pause();
           currentAudio.currentTime = 0;
@@ -3680,7 +3748,6 @@ const categoryA = [
           view.hidden = true;
           practice.hidden = false;
           initializePracticeWord(index);
-          startPracticeTimer();
           const timerSel = $("#practiceTimerSelect");
           if (timerSel) timerSel.value = String(practiceTimerSetting);
         } else {
@@ -3694,6 +3761,8 @@ const categoryA = [
         modal.style.display = "flex";
         modal.setAttribute("aria-hidden", "false");
         document.body.classList.add("modal-open");
+
+        if (currentMode === PRACTICE_MODES.PRACTICE) startPracticeTimer();
 
         modalContent.style.animation = "none";
         void modalContent.offsetWidth;
@@ -3958,7 +4027,12 @@ const categoryA = [
           stopPracticeTimer();
 
           if (contestRoundActive) {
-            contestRoundScore += 1;
+            const contestWordIndex = contestRoundWords[contestRoundIndex];
+            if (!contestRoundScoredWords.has(contestWordIndex)) {
+              contestRoundScoredWords.add(contestWordIndex);
+              contestRoundScore += 1;
+            }
+            clearContestWordMissed(currentCategory[currentPracticeIndex]);
             updateContestBanner();
             const nextBtn = $("#practiceNextWordBtn");
             nextBtn.hidden = false;
@@ -3970,23 +4044,9 @@ const categoryA = [
           }
           saveProgress(selectedCategory, currentPracticeIndex, PRACTICE_STATUS.CORRECT);
           updateGridButtonStatus(currentPracticeIndex, PRACTICE_STATUS.CORRECT);
-          updatePracticeButtons({ canVerify: false, canReveal: false, canRetry: true, lockKeyboard: true });
+          updatePracticeButtons({ canVerify: false, canReveal: false, canRetry: !contestRoundActive, lockKeyboard: true });
           updateDashboardStats();
 
-          if (typeof Swal !== "undefined") {
-            // Feedback visual breve; no bloquea el flujo.
-            Swal.fire({
-              toast: true,
-              position: "top-end",
-              icon: "success",
-              title: "Correct!",
-              showConfirmButton: false,
-              timer: 1100,
-              timerProgressBar: true,
-              background: "#14142e",
-              color: "#f0f0f5",
-            });
-          }
           return;
         }
 
@@ -3997,7 +4057,7 @@ const categoryA = [
         stopPracticeTimer();
 
         if (contestRoundActive) {
-          contestMissedWords.push(currentCategory[currentPracticeIndex]);
+          markContestWordMissed(currentCategory[currentPracticeIndex]);
           updateContestBanner();
           const nextBtn = $("#practiceNextWordBtn");
           nextBtn.hidden = false;
@@ -4015,6 +4075,7 @@ const categoryA = [
         const target = normalizeWord(currentCategory[currentPracticeIndex]);
 
         stopVoiceInput({ silent: true });
+        markContestWordMissed(currentCategory[currentPracticeIndex]);
         practiceInput = [...target];
         practiceBoxStates = target.split("").map(() => "revealed");
         speechInterimLetters = [];
@@ -4025,6 +4086,9 @@ const categoryA = [
         safeStorageSet("spellingBeeStreak", "0");
         stopPracticeTimer();
         $("#practiceNextWordBtn").hidden = false;
+        $("#practiceNextWordBtn").textContent = contestRoundActive
+          ? (contestRoundIndex + 1 >= contestRoundTotal ? "Finish Contest 🏁" : "Next Contest Word ➔")
+          : "Next ➔";
         saveProgress(selectedCategory, currentPracticeIndex, PRACTICE_STATUS.REVEALED);
         updateGridButtonStatus(currentPracticeIndex, PRACTICE_STATUS.REVEALED);
         updatePracticeButtons({ canVerify: false, canReveal: false, canRetry: true, lockKeyboard: true });
@@ -4060,6 +4124,8 @@ const categoryA = [
       }
 
       function hideModalImmediately() {
+        stopPracticeTimer();
+        cancelContestRound();
         const modal = $("#wordModal");
         const modalContent = modal.querySelector(".modal-content");
 
@@ -4078,10 +4144,12 @@ const categoryA = [
           currentAudio.currentTime = 0;
           currentAudio = null;
         }
+        isWordAudioPlaying = false;
       }
 
       function closeModal(options = {}) {
         stopPracticeTimer();
+        cancelContestRound();
         const modal = $("#wordModal");
         const modalContent = modal.querySelector(".modal-content");
 
@@ -4100,9 +4168,13 @@ const categoryA = [
           hideModalImmediately();
           closeModalTimer = null;
 
-          if (lastFocusedElement && typeof lastFocusedElement.focus === "function") {
-            lastFocusedElement.focus();
-          }
+          const focusTarget = lastFocusedElement &&
+            typeof lastFocusedElement.focus === "function" &&
+            lastFocusedElement.isConnected !== false &&
+            lastFocusedElement.getClientRects?.().length
+            ? lastFocusedElement
+            : $("#search-number");
+          focusTarget?.focus();
           lastFocusedElement = null;
         }, 240);
       }
@@ -4118,7 +4190,7 @@ const categoryA = [
       let speechIsManualStop = false;
       let speechRecognitionActive = false;
       let speechRestartAttempts = 0;
-      let speechFinalResultCache = new Map();
+      let speechFinalResultCache = new Set();
       let speechStartWatchdog = null;
       let isWordAudioPlaying = false;
 
@@ -4154,6 +4226,7 @@ const categoryA = [
         z: "Z", zee: "Z", zed: "Z", zebra: "Z",
         enye: "Ñ", enyeh: "Ñ", ene: "Ñ"
       });
+      const SPOKEN_LETTER_ALIAS_ENTRIES = Object.entries(SPOKEN_LETTER_ALIASES);
 
       function cleanSpeechText(transcript) {
         return String(transcript || "")
@@ -4204,7 +4277,7 @@ const categoryA = [
         if (value.length < 4) return null;
         let bestDistance = 2;
         let bestLetters = new Set();
-        for (const [alias, letter] of Object.entries(SPOKEN_LETTER_ALIASES)) {
+        for (const [alias, letter] of SPOKEN_LETTER_ALIAS_ENTRIES) {
           if (alias.length < 4 || Math.abs(alias.length - value.length) > 1) continue;
           const distance = levenshteinDistance(value, alias);
           if (distance < bestDistance) {
@@ -4225,6 +4298,32 @@ const categoryA = [
         if (["listen", "repeat", "audio", "escuchar", "repetir"].includes(val)) return "LISTEN";
         if (["reveal", "mostrar", "revelar"].includes(val)) return "REVEAL";
         return null;
+      }
+
+      function parseConcatenatedSpokenLetters(token, target, targetOffset) {
+        if (!target || !token || token.length > 36) return "";
+        const matchedSequences = new Set();
+
+        function visit(tokenOffset, letters) {
+          if (tokenOffset === token.length) {
+            if (
+              letters.length >= 2 &&
+              letters.length <= 4 &&
+              target.slice(targetOffset, targetOffset + letters.length) === letters
+            ) matchedSequences.add(letters);
+            return;
+          }
+          if (letters.length >= 4) return;
+
+          for (const [alias, letter] of SPOKEN_LETTER_ALIAS_ENTRIES) {
+            if (!token.startsWith(alias, tokenOffset)) continue;
+            if (target[targetOffset + letters.length] !== letter) continue;
+            visit(tokenOffset + alias.length, letters + letter);
+          }
+        }
+
+        visit(0, "");
+        return matchedSequences.size === 1 ? [...matchedSequences][0] : "";
       }
 
       function parseVoiceTranscript(rawText, targetWord = "", alreadyEntered = 0) {
@@ -4286,6 +4385,16 @@ const categoryA = [
           if (direct) {
             letters.push(direct);
             targetOffset += 1;
+            continue;
+          }
+
+          // Speech recognition can join several quickly spoken phonetic names
+          // into one token (for example “aybee” for A-B). Accept only explicit
+          // alias sequences of 2–4 letters that match the next target segment.
+          const phoneticSequence = parseConcatenatedSpokenLetters(token, target, targetOffset);
+          if (phoneticSequence) {
+            letters.push(...phoneticSequence.split(""));
+            targetOffset += phoneticSequence.length;
             continue;
           }
 
@@ -4393,7 +4502,7 @@ const categoryA = [
         }
       }
 
-      function getBestSpeechParse(result, targetWord) {
+      function getBestSpeechParse(result, targetWord, alreadyEntered = practiceInput.length) {
         if (!result || !result.length) return { command: null, letters: [], transcript: "" };
 
         let best = { command: null, letters: [], transcript: result[0]?.transcript || "" };
@@ -4401,7 +4510,7 @@ const categoryA = [
         for (let i = 0; i < result.length; i++) {
           const candidate = result[i];
           const transcript = candidate?.transcript || "";
-          const parsed = parseVoiceTranscript(transcript, targetWord, practiceInput.length);
+          const parsed = parseVoiceTranscript(transcript, targetWord, alreadyEntered);
           if (parsed.command) return { ...parsed, transcript };
           const confidence = Number.isFinite(candidate?.confidence) ? candidate.confidence : 0;
           // Prefer a usable interpretation, then the candidate with more letters,
@@ -4419,28 +4528,36 @@ const categoryA = [
         if (!speechIsActuallyListening() || isWordAudioPlaying) return;
 
         const word = normalizeWord(currentCategory[currentPracticeIndex] || "");
-        const interimLetters = [];
         const startIndex = Math.max(0, Number(event.resultIndex) || 0);
+        const hadInterimPreview = speechInterimLetters.length > 0;
+        const interimLetters = [];
+        speechInterimLetters = [];
+        let projectedInputLength = practiceInput.length;
 
-        for (let i = startIndex; i < event.results.length; i++) {
+        for (let i = 0; i < event.results.length; i++) {
           const result = event.results[i];
+          if (i < startIndex && result?.isFinal) continue;
           const rawTranscript = result?.[0]?.transcript || "";
           if (!String(rawTranscript).trim()) continue;
 
           if (!result.isFinal) {
-            const interimParse = getBestSpeechParse(result, word);
-            if (interimParse.letters.length) interimLetters.push(...interimParse.letters);
+            const interimParse = getBestSpeechParse(result, word, projectedInputLength);
+            const remaining = Math.max(0, word.length - projectedInputLength);
+            const preview = interimParse.letters.slice(0, remaining);
+            if (preview.length) {
+              interimLetters.push(...preview);
+              projectedInputLength += preview.length;
+            }
             continue;
           }
 
           // Each recognition session is short and gets a fresh instance on restart.
           // De-dupe only inside this session, so genuinely repeated letters remain valid.
-          const signature = cleanSpeechText(rawTranscript);
-          if (speechFinalResultCache.get(i) === signature) continue;
-          speechFinalResultCache.set(i, signature);
+          const signature = `${i}:${cleanSpeechText(rawTranscript)}`;
+          if (speechFinalResultCache.has(signature)) continue;
+          speechFinalResultCache.add(signature);
 
-          const parsed = getBestSpeechParse(result, word);
-          speechInterimLetters = [];
+          const parsed = getBestSpeechParse(result, word, projectedInputLength);
 
           if (parsed.command) {
             renderPracticeInput();
@@ -4472,6 +4589,8 @@ const categoryA = [
                 revealPracticeWord();
                 break;
             }
+            projectedInputLength = practiceInput.length;
+            if (!speechIsActuallyListening()) break;
             continue;
           }
 
@@ -4479,27 +4598,45 @@ const categoryA = [
             const remainingBefore = Math.max(0, word.length - practiceInput.length);
             const acceptedCount = appendVoiceLetters(parsed.letters);
             const remainingAfter = Math.max(0, word.length - practiceInput.length);
+            projectedInputLength = practiceInput.length;
             if (acceptedCount > 0) {
               const addedLetters = parsed.letters.slice(0, acceptedCount).join(" ");
+              const capturedSummary = blindModeActive
+                ? `${acceptedCount} letter${acceptedCount === 1 ? "" : "s"}`
+                : addedLetters;
               if (remainingAfter === 0) {
-                setVoiceStatus(`Captured ${addedLetters}. All letters are entered; press Check or say “check”. Voice spelling is in BETA.`);
+                setVoiceStatus(`Captured ${capturedSummary}. All letters are entered; press Check or say “check”. Voice spelling is in BETA.`);
               } else {
-                setVoiceStatus(`Captured ${addedLetters}. ${remainingAfter} letter${remainingAfter === 1 ? "" : "s"} remaining. Voice spelling is in BETA.`);
+                setVoiceStatus(`Captured ${capturedSummary}. ${remainingAfter} letter${remainingAfter === 1 ? "" : "s"} remaining. Voice spelling is in BETA.`);
               }
             } else if (remainingBefore === 0) {
               setVoiceStatus(`All ${word.length} letters are already entered. Press Check or say “check”.`);
             }
           } else {
             renderPracticeInput();
-            const heard = String(parsed.transcript || rawTranscript).trim();
-            setVoiceStatus(`I heard “${heard}”, but could not identify a letter safely. Try saying the English letter name alone, or use the keyboard. Voice spelling is in BETA.`);
+            if (blindModeActive) {
+              setVoiceStatus("A phrase was heard, but its letters could not be identified safely. Try clear English letter names or use the keyboard. Voice spelling is in BETA.");
+            } else {
+              const heard = String(parsed.transcript || rawTranscript).trim();
+              setVoiceStatus(`I heard “${heard}”, but could not identify a letter safely. Try saying the English letter name alone, or use the keyboard. Voice spelling is in BETA.`);
+            }
           }
         }
 
+        if (!speechIsActuallyListening()) {
+          speechInterimLetters = [];
+          if (hadInterimPreview) renderPracticeInput();
+          return;
+        }
+
+        speechInterimLetters = interimLetters;
         if (interimLetters.length) {
-          speechInterimLetters = interimLetters;
           renderPracticeInput();
-          setVoiceStatus(`Listening… possible letters: ${interimLetters.join(" ")}. Wait for the final capture; voice spelling is in BETA.`);
+          setVoiceStatus(blindModeActive
+            ? "Listening… voice input is being processed; its preview stays hidden in Blind mode. Voice spelling is in BETA."
+            : `Listening… possible letters: ${interimLetters.join(" ")}. They will be added when the browser confirms them; voice spelling is in BETA.`);
+        } else if (hadInterimPreview) {
+          renderPracticeInput();
         }
       }
 
@@ -4560,10 +4697,13 @@ const categoryA = [
         clearTimeout(speechStartWatchdog);
         speechStartWatchdog = null;
         speechFinalResultCache.clear();
+        const hadInterimPreview = speechInterimLetters.length > 0;
+        speechInterimLetters = [];
+        if (hadInterimPreview) renderPracticeInput();
 
         if (speechIsActuallyListening() && !speechIsManualStop) {
           setVoiceStatus("Microphone session finished; reconnecting automatically for the next letter… Voice spelling is in BETA.");
-          scheduleSpeechRestart(220);
+          scheduleSpeechRestart(180);
         } else {
           resetVoiceButton();
         }
@@ -4654,9 +4794,11 @@ const categoryA = [
           if (speechIsActuallyListening()) {
             const target = normalizeWord(currentCategory[currentPracticeIndex] || "");
             const progress = practiceInput.length
-              ? `Progress: ${practiceInput.length}/${target.length} — ${practiceInput.join(" ")}. `
+              ? blindModeActive
+                ? `Progress: ${practiceInput.length}/${target.length}. `
+                : `Progress: ${practiceInput.length}/${target.length} — ${practiceInput.join(" ")}. `
               : "";
-            setVoiceStatus(`${progress}Listening for the next English letter. Say it clearly, then pause briefly. Voice spelling is in BETA.`);
+            setVoiceStatus(`${progress}Listening for English letter names. Several letters in one short phrase may be captured together; voice spelling is in BETA.`);
           }
         };
         recognition.onaudiostart = () => {
@@ -4772,7 +4914,10 @@ const categoryA = [
         try {
           const raw = safeStorageGet(getBookmarkKey(category), "[]");
           const arr = JSON.parse(raw);
-          return Array.isArray(arr) ? new Set(arr.map(Number)) : new Set();
+          const words = category === "B" ? categoryB : categoryA;
+          return Array.isArray(arr)
+            ? new Set(arr.map(Number).filter((index) => Number.isInteger(index) && index >= 0 && index < words.length))
+            : new Set();
         } catch { return new Set(); }
       }
 
@@ -4781,7 +4926,7 @@ const categoryA = [
       }
 
       function toggleBookmark(index) {
-        if (!selectedCategory || index < 0) return;
+        if (!selectedCategory || !Number.isInteger(index) || index < 0 || index >= currentCategory.length) return;
         const bookmarks = getBookmarks(selectedCategory);
         if (bookmarks.has(index)) {
           bookmarks.delete(index);
@@ -4792,6 +4937,7 @@ const categoryA = [
         saveBookmarks(selectedCategory, bookmarks);
         refreshBookmarkUI(index, bookmarks.has(index));
         updateBookmarkChipCount();
+        applyGridFilter();
       }
 
       function refreshBookmarkUI(index, isStarred) {
@@ -4807,11 +4953,13 @@ const categoryA = [
         if (practiceBookmarkBtn) {
           practiceBookmarkBtn.textContent = label;
           practiceBookmarkBtn.classList.toggle("bookmarked", isStarred);
+          practiceBookmarkBtn.setAttribute("aria-pressed", String(isStarred));
         }
         const viewBookmarkBtn = $("#viewBookmarkBtn");
         if (viewBookmarkBtn) {
           viewBookmarkBtn.textContent = label;
           viewBookmarkBtn.classList.toggle("bookmarked", isStarred);
+          viewBookmarkBtn.setAttribute("aria-pressed", String(isStarred));
         }
       }
 
@@ -4878,10 +5026,25 @@ const categoryA = [
       const SESSION_KEY = "spellingBeeSession";
 
       function getSessionStats() {
+        const safeCount = (value) => {
+          const count = Number(value);
+          return Number.isSafeInteger(count) && count >= 0 ? count : 0;
+        };
         try {
           const raw = sessionStorage.getItem(SESSION_KEY);
           if (!raw) return { attempted: 0, correct: 0, wrong: 0, bestStreak: 0 };
-          return JSON.parse(raw);
+          const parsed = JSON.parse(raw);
+          if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+            return { attempted: 0, correct: 0, wrong: 0, bestStreak: 0 };
+          }
+          const correct = safeCount(parsed.correct);
+          const wrong = safeCount(parsed.wrong);
+          return {
+            attempted: Math.max(safeCount(parsed.attempted), correct + wrong),
+            correct,
+            wrong,
+            bestStreak: safeCount(parsed.bestStreak),
+          };
         } catch { return { attempted: 0, correct: 0, wrong: 0, bestStreak: 0 }; }
       }
 
@@ -4977,6 +5140,7 @@ const categoryA = [
         const btn = $("#blindModeBtn");
         if (btn) {
           btn.classList.toggle("active", blindModeActive);
+          btn.setAttribute("aria-pressed", String(blindModeActive));
           btn.textContent = blindModeActive ? "👁️ Blind: On" : "👁️ Blind";
         }
         renderPracticeInput();
@@ -5061,12 +5225,38 @@ const categoryA = [
         }
 
         window.launchConfetti = function (count = 180) {
+          if (window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches) {
+            cancelAnimationFrame(animId);
+            animId = null;
+            particles = [];
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            canvas.style.display = "none";
+            return;
+          }
           cancelAnimationFrame(animId);
           canvas.style.display = "block";
           spawn(count);
           tick();
         };
       })();
+
+      const categoryCompletionCelebrated = new Set();
+
+      function isCategoryFullyMastered(category) {
+        const words = category === "B" ? categoryB : categoryA;
+        if (!words.length) return false;
+        const progress = getStoredProgress(category);
+        return words.every((_, index) =>
+          progress[String(index)] === PRACTICE_STATUS.CORRECT ||
+          progress[String(index)] === PRACTICE_STATUS.BLIND_CORRECT
+        );
+      }
+
+      function syncCategoryCompletionCelebration(category) {
+        if (!category) return;
+        if (isCategoryFullyMastered(category)) categoryCompletionCelebrated.add(category);
+        else categoryCompletionCelebrated.delete(category);
+      }
 
       function checkCategoryCompletion() {
         if (!selectedCategory || !currentCategory.length) return;
@@ -5076,22 +5266,16 @@ const categoryA = [
         for (let i = 0; i < total; i++) {
           if (progress[String(i)] === PRACTICE_STATUS.CORRECT || progress[String(i)] === PRACTICE_STATUS.BLIND_CORRECT) correct++;
         }
-        if (correct === total) {
-          window.launchConfetti?.(220);
-          setTimeout(() => {
-            Swal.fire({
-              toast: true,
-              position: "top",
-              icon: "success",
-              title: `🎉 Category ${selectedCategory} Complete! 100% Mastered!`,
-              showConfirmButton: false,
-              timer: 3500,
-              timerProgressBar: true,
-              background: "#14142e",
-              color: "#f0f0f5",
-            });
-          }, 400);
+        if (correct !== total) {
+          categoryCompletionCelebrated.delete(selectedCategory);
+          return;
         }
+        if (categoryCompletionCelebrated.has(selectedCategory)) return;
+
+        categoryCompletionCelebrated.add(selectedCategory);
+        const completedCategory = selectedCategory;
+        window.launchConfetti?.(220);
+        setPracticeResult(`🎉 Category ${completedCategory} complete — 100% mastered!`, "success");
       }
 
       // ── RENDER PATCH: blind slots, star icons ────────────────────────────────
@@ -5108,7 +5292,7 @@ const categoryA = [
                            slot.classList.contains("incorrect") ||
                            slot.classList.contains("present") ||
                            slot.classList.contains("revealed");
-          if (!isResult && slot.classList.contains("filled")) {
+          if (!isResult && (slot.classList.contains("filled") || slot.classList.contains("preview"))) {
             slot.classList.add("blind");
           }
         });
@@ -5122,6 +5306,7 @@ const categoryA = [
         const blindBtn = $("#blindModeBtn");
         if (blindBtn) {
           blindBtn.classList.remove("active");
+          blindBtn.setAttribute("aria-pressed", "false");
           blindBtn.textContent = "👁️ Blind";
         }
         syncBookmarkModalState(index);
@@ -5150,12 +5335,14 @@ const categoryA = [
         if (guessBeforeVerify.length !== targetBeforeVerify.length) return;
         recordSessionAttempt(guessBeforeVerify === targetBeforeVerify);
         if (guessBeforeVerify === targetBeforeVerify) checkCategoryCompletion();
+        else syncCategoryCompletionCelebration(selectedCategory);
       };
 
       // Patch loadCategory to apply bookmarks after grid is built
       const _origLoadCategory = loadCategory;
       loadCategory = function (category) {
         _origLoadCategory(category);
+        if (category === "A" || category === "B") syncCategoryCompletionCelebration(category);
         // Grid is rebuilt inside loadCategory, so apply bookmark stars now
         requestAnimationFrame(() => {
           applyBookmarksToGrid();
@@ -5384,7 +5571,8 @@ const categoryA = [
         if (wordLength >= 10) unlockAchievement("long-word");
         if (timerActive) unlockAchievement("beat-the-clock");
         if ((Number(achievementState.wrongByWord[category][String(index)]) || 0) > 0) unlockAchievement("comeback-kid");
-        if (achievementState.retryByWord[category][String(index)]) unlockAchievement("retry-comeback");
+        if ((Number(achievementState.wrongByWord[category][String(index)]) || 0) > 0 &&
+            achievementState.retryByWord[category][String(index)]) unlockAchievement("retry-comeback");
         const distinctSolvedCount = achievementState.practiceSolved.A.length + achievementState.practiceSolved.B.length;
         if (distinctSolvedCount >= 25) unlockAchievement("marathon-25");
         if (currentStreak >= 3) unlockAchievement("three-drops");
@@ -5504,6 +5692,7 @@ const categoryA = [
         const valid = currentMode === PRACTICE_MODES.PRACTICE && currentPracticeIndex >= 0 && Boolean(currentCategory[currentPracticeIndex]);
         _achievementOriginalReveal();
         if (valid) {
+          syncCategoryCompletionCelebration(selectedCategory);
           achievementState.stats.revealCount += 1;
           saveAchievementState();
           unlockAchievement("truth-seeker");
@@ -5585,7 +5774,7 @@ const categoryA = [
       const _achievementOriginalTimerSetting = changeTimerSetting;
       changeTimerSetting = function (value) {
         _achievementOriginalTimerSetting(value);
-        if (Number(value) > 0) {
+        if (practiceTimerSetting > 0) {
           achievementState.stats.timerEnabled = true;
           saveAchievementState();
         }
@@ -5610,13 +5799,39 @@ const categoryA = [
       });
 
       document.addEventListener("keydown", (event) => {
+        if (typeof Swal !== "undefined" && typeof Swal.isVisible === "function" && Swal.isVisible()) return;
+
         if (event.key === "Escape") {
           closeModal();
           return;
         }
 
-        const modalOpen = $("#wordModal").getAttribute("aria-hidden") === "false";
+        const modal = $("#wordModal");
+        const modalOpen = modal.getAttribute("aria-hidden") === "false";
         if (!modalOpen) return;
+        const targetElement = event.target instanceof Element ? event.target : null;
+        const isInteractiveTarget = Boolean(targetElement?.closest("button, input, select, textarea, a[href], [contenteditable='true']"));
+
+        if (event.key === "Tab") {
+          const focusable = [...modal.querySelectorAll(
+            'button:not(:disabled), input:not(:disabled), select:not(:disabled), textarea:not(:disabled), a[href], [tabindex]:not([tabindex="-1"])'
+          )].filter((element) => !element.closest("[hidden]") && element.getClientRects().length > 0);
+          if (!focusable.length) {
+            event.preventDefault();
+            return;
+          }
+
+          const first = focusable[0];
+          const last = focusable[focusable.length - 1];
+          if (event.shiftKey && (document.activeElement === first || !modal.contains(document.activeElement))) {
+            event.preventDefault();
+            last.focus();
+          } else if (!event.shiftKey && (document.activeElement === last || !modal.contains(document.activeElement))) {
+            event.preventDefault();
+            first.focus();
+          }
+          return;
+        }
 
         // View Mode Navigation & Audio shortcuts
         if (currentMode === PRACTICE_MODES.VIEW) {
@@ -5631,8 +5846,10 @@ const categoryA = [
             return;
           }
           if (event.key === " " || event.code === "Space") {
-            event.preventDefault();
-            playAudio();
+            if (!isInteractiveTarget) {
+              event.preventDefault();
+              playAudio();
+            }
             return;
           }
           return;
@@ -5642,14 +5859,15 @@ const categoryA = [
         if (currentMode !== PRACTICE_MODES.PRACTICE) return;
 
         // Space to hear pronunciation (when not focused on typing input)
-        if ((event.key === " " || event.code === "Space") && document.activeElement.tagName !== "INPUT") {
+        if ((event.key === " " || event.code === "Space") && !isInteractiveTarget) {
           event.preventDefault();
           playAudio();
           return;
         }
 
         // Next word shortcut when solved or revealed
-        if (!$("#practiceNextWordBtn").hidden && (event.key === "ArrowRight" || event.key === "Enter")) {
+        if (!$("#practiceNextWordBtn").hidden &&
+            (event.key === "ArrowRight" || (event.key === "Enter" && !isInteractiveTarget))) {
           event.preventDefault();
           navigateWord(1);
           return;
@@ -5662,7 +5880,7 @@ const categoryA = [
         }
 
         if (event.key === "Enter") {
-          if (!$("#verifyBtn").disabled) {
+          if (!isInteractiveTarget && !$("#verifyBtn").disabled) {
             event.preventDefault();
             verifyPracticeWord();
           }
@@ -5703,7 +5921,7 @@ const categoryA = [
         const rawValue = $("#search-number").value.trim();
         if (!rawValue) return;
 
-        const max = selectedCategory === "B" ? 100 : 60;
+        const max = currentCategory.length;
         const number = Number(rawValue);
 
         // 1. Numeric Search (e.g. 5 -> opens #5)
@@ -5764,7 +5982,10 @@ const categoryA = [
 
       // Initialize SFX button label
       const sfxBtn = $("#toggleSfxBtn");
-      if (sfxBtn) sfxBtn.textContent = SfxEngine.isMuted ? "🔇 SFX: Off" : "🔔 SFX: On";
+      if (sfxBtn) {
+        sfxBtn.textContent = SfxEngine.isMuted ? "🔇 SFX: Off" : "🔔 SFX: On";
+        sfxBtn.setAttribute("aria-pressed", String(!SfxEngine.isMuted));
+      }
       // Restore the last saved mode.
       const storedMode = safeStorageGet("spellingBeeMode", PRACTICE_MODES.VIEW);
       setMode(storedMode, false);
